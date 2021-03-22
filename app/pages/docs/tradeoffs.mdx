@@ -1,89 +1,80 @@
 ---
-title: Tradeoffs
-sidebar_label: Tradeoffs
+title: 权衡
+sidebar_label: 权衡
 ---
 
-As you know, everything has tradeoffs. So what are the tradeoffs of Blitz?
+你应该会知道，一切都需要被权衡。那么 Blitz 需要权衡的是什么？
 
-## Framework Lock-in {#framework-lock-in}
+## 框架限制 {#framework-lock-in}
 
-Every framework has a certain level of lock-in. If you build your app with
-React, it's very locked into React.
+每个框架都有一定程度的限制。如果你使用 React 构建应用，那么就很容易被
+React 限制。
 
-Blitz's level of lock-in is one level higher than Next.js. A Blitz
-codebase is not a _lot_ different than a Next.js codebase. But it is
-enough different that it wouldn't be super simple to "eject" to plain
-Next.js. For example, you'll probably use the Blitz authentication which
-is unique to Blitz. But switching to Next Auth would give you a comparable
-experience with Next.js.
+Blitz 的限制级别比 Next.js 高一个级别。Blitz 代码库与 Next.js 代码库没有
+_太多_ 不同。但这已经够不同了，以至于“弹出”到普通的 Next.js 并不简单。例如
+，你可能将使用 Blitz 所特有的 Blitz 身份验证。但切换到 Next AUth 将为你提
+供与 Next.js 相当的体验。
 
-The Blitz zero-API data layer is unique to Blitz. So if switching to
-Next.js, you'd have to manage your own API code (which you would have to
-do if you started with Next.js, so you haven't lost anything). However,
-all your backend query and mutation logic can be directly ported.
+Blitz 零 API 数据层是 Blitz 独有的。因此，如果此时切换到 Next.js，则必须管
+理自己的 API 代码（而如果从 Next.js 开始，则必须这么做，因此不会丢失任何内
+容）。但是，你所有的后端 query 和 mutation 逻辑都可以直接移植。
 
-## Next.js Upgrades {#next-js-upgrades}
+## 升级 Next.js {#next-js-upgrades}
 
-If you want to be on the bleeding edge of Next.js releases, know that
-Blitz will be slightly behind but not far. Usually we update Blitz within
-a week or less of a new Next.js release.
+如果你想站在 Next.js 版本的最前沿，请知道 Blitz 会稍微落后但不会太远。通常
+，我们会在新的 Next.js 版本发布后不到一周的时间内更新 Blitz。
 
-But if you use yarn, you can use the `resolutions` field in package.json
-to upgrade next.js before we do.
+但如果你使用 yarn，则可以先使用 package.json 中的 `resolutions` 字段来升级
+next.js。
 
-## Multi-Client API {#multi-client-api}
+## 多客户端 API {#multi-client-api}
 
-Some folks say, "you'll eventually need GraphQL so you should start with
-it". While we believe most apps won't grow large enough to warrant
-GraphQL, the question of an API for multiple clients is an excellent
-point.
+有人会说，“迟早你会需要 GraphQL，所以你应该从它开始”。虽然我们认为绝大多数
+应用程序的增长不会足够大以至于不能保证 GraphQL，但是提供多个客户端的 API
+的问题是一个很好的要点。
 
-We fully acknowledge that many web apps will need a mobile app sooner or
-later. And we want to make this integration as simple as possible!
+我们完全承认，许多 Web 应用程序迟早都需要移动应用程序。我们希望这种集成尽
+可能的简单！
 
-That said, you can add a GraphQL server to your Blitz app for other
-clients. This can be an excellent choice and some folks are doing this.
+也就是说，你可以为其他客户端将 GraphQL 服务器添加到 Blitz 应用中，这可能是
+一个很好的选择，有些人已经开始这样做了。
 
-**Currently, as of Feb 17, 2021:**
+**目前，截至 2021 年 2 月 17 日：**
 
-- You can directly access the auto-generated API endpoints and you can use
-  them in any mobile app (we currently have a few people doing this)
-- You can see all generated endpoints in your app using
-  [`blitz routes`](./cli-routes) command
-- You can see the RPC specification for the endpoints here:
-  [RPC Specification](./rpc-specification)
+- 你可以直接访问自动生成的 API 接口，并且可以在任何移动应用中使用它们（我
+  们目前有几个人在建设中）
+- 你可以通过 [`blitz routes`](./cli-routes) 来查看应用程序中生成的 API
+- 你可以在此处查看 API 接口的 RPC 规范
+  ：[RPC Specification](./rpc-specification)
 
-**What we plan to do going forward:**
+**我们计划今后要做的事：**
 
-1. First step, add docs and tools for making it easier to manually use the
-   generated API endpoints. See
-   https://github.com/blitz-js/blitz/discussions/1907 and
+1. 第一步，添加文档和工具，以使手动使用生成的 API 接口变得更加容易，访问：
+   https://github.com/blitz-js/blitz/discussions/1907 和
    https://github.com/blitz-js/blitz/issues/745
-2. Next, add ability to generate a JS/TS client library as a nice way to
-   use the generated endpoints from an app
-3. Next, add some sort of first-class react-native support where you can
-   import blitz queries/mutations directly into your react-native code and
-   have it magically work exactly like it does today with your web app.
-   After the 1.0 release, this will be Brandon's main focus for the year.
+2. 接下来，添加生成一个 JS/TS 客户端库的功能，作为使用从应用生成接口的好方
+   法
+3. 还有，添加某种一流的 react-native 支持，你可以再其中将 Blitz
+   queries/mutations 直接导入到你的 react-native 代码中，并使它神奇地工作
+   ，就像今天在你的 Web 应用程序中一样。在 1.0 版本后，这将是 Brandon 在这
+   一年中的主要工作重点。
 
-## Advanced Backend Architecture {#advanced-backend-architecture}
+## 高阶后端架构 {#advanced-backend-architecture}
 
-Currently Blitz is fairly minimal on backend architecture, especially
-compared so something like Nest.js or AdonisJs. However, that doesn't mean
-you can't use those patterns in Blitz, it means you have to set it up
-yourself. In fact you can use Nest.js in your Blitz app if you need.
+目前，Blitz 在后端架构上的功能还很少，尤其是与 Nest.js 或 AdonisJS 之类的
+东西相比。但是，这并不意味着你不能在 Blitz 中使用这些模式，但你需要自己进
+行设置。实际上，如果需要，你可以在 Blitz 应用中直接使用 Next.js。
 
-But we are very interested in bringing more advanced backend architectures
-to Blitz by default or via simple opt-in. We have an
-[ongoing discussion](https://github.com/blitz-js/blitz/discussions/1841)
-that we'd love you to chime in on if you have ideas.
+但是我们非常有兴趣通过默认支持或简单的植入来加入更先进的后端体系架构到
+Blitz 中。我们有一个
+[正在进行的讨论](https://github.com/blitz-js/blitz/discussions/1841)，如果
+你有想法，我们希望你能加入。
 
-## Single Threaded When Not Deployed Serverless {#single-threaded-when-not-deployed-serverless}
+## 当不部署到 Serverless 时的单线程 {#single-threaded-when-not-deployed-serverless}
 
-This is a tradeoff of Next.js specifically. Next.js is single threaded
-which means if you are doing heavy backend processing you may notice that
-all web requests begin to suffer. The solution to this is spawning
-background processing off into other processes.
+具体来说，这是 Next.js 的折衷方案。Next.js 是单线程的，这意味着如果你在进
+行繁重的后端处理时，你可能会发现所有的 Web 请求都开始受到影响。解决方案是
+让后端处理生成其他进程。
 
-Running multiple background processes isn't super difficult, but we want
-to add docs and APIs that make this as simple as possible.
+运行多个后台进程并不是很困难，但是我们希望添加文档和 API，以使其尽可能简单
+。
