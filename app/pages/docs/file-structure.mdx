@@ -1,15 +1,15 @@
 ---
 id: file-structure
-title: File Structure
-sidebar_label: File Structure
+title: 文件结构
+sidebar_label: 文件结构
 ---
 
-#### Guiding Principles
+#### 指导原则
 
-1. Files that change together should live together.
-2. Minimal requirements, maximum flexibility
+1. 会被一起改动的文件，应该也要放在一起。
+2. 最小的前置需求，最大的可拓展性。
 
-#### Example file structure
+#### 文件结构示例
 
 ```
 ├── app/
@@ -90,66 +90,60 @@ sidebar_label: File Structure
 
 #### `app`
 
-Contains all your core application code.
+包含你的所有关键应用代码。
 
-- The file structure nested inside `app/` can be anything you want, but we
-  recommend the following:
-  - First layer folders to be a "domain context", like `core/`,
-    `projects/`, `users/`, `billing/`, etc.
-  - All other folders like `components/` and `hooks/` go inside one of the
-    above domain context folders
-- Special Folder Names
-  - Can exist at any level of the hierarchy inside `app`.
-  - `pages/` expose a React component at a URL. Follows the same semantics
-    as the Next.js `pages/` folder.
-  - `api/` expose a Node.js request handler at URL. Same semantics as
-    Next.js `pages/api/` folder.
-  - `queries/` and `mutations/` are for your Blitz queries and mutations.
-    Each query and mutation is exposed at a URL corresponding to its file
-    path.
+- 嵌套在 `app/` 中的文件结构可以放置任何想要放置的东西，但是我们有如下建议
+  ：
+  - 第一层文件夹应该作为“域上下文”，例如
+    `core/`、`projects/`、`users/`、`billing/`等。
+  - 所有其它诸如 `components/` 和 `hooks/` 的都位于相关域上下文的文件夹中
+- 特殊的文件夹名称：
+  - 可以放置于 `app` 文件夹内部的任何层次上。
+  - `pages/` 将一个 React 组件挂载到 URL 上。遵循与 Next.js `pages/` 文件
+    夹相同的语义。
+  - `api/` 将一个 Node.js 请求处理器挂载到 URL 上。与 Next.js `pages/api`
+    文件夹也有相同的语义。
+  - `queries/` 和 `mutations/` 用于 Blitz 的 queries 和 mutations。每个
+    query 和 mutation 都挂载到其文件路径相对应的 URL 处。
 
 #### `db`
 
-Contains database configuration, schema, and migration files.
-`db/index.js` exports your initialized database client so you can use it
-anywhere in your app.
+包含数据库配置，schema 和 migration 文件。`db/index.js` 导出已初始化的数据
+库客户端，以便你可以在应用的任何位置中使用到。
 
 #### `integrations`
 
-Contains third-party integration code. Ex: `auth0.js`, `twilio.js`, etc.
-These files are a good place to instantiate a client with shared
-configuration.
+包含第三方集成代码。例如：`auth0.js` 和 `twilio.js` 等。这些文件是使用共享
+配置来实例化客户端的好地方。
 
 #### `pages`
 
-The top level `pages` folder and all nested `pages` folders inside `app`
-are merged together at build time. The build will fail if the same route
-is defined in two places.
+顶层的 `pages` 文件夹和所有在 `app` 中嵌套的文件夹会在构件时合并在一起。如
+果在两个地方定义了相同的路由，构建过程将会失败。
 
-- This top level pages folder is optional.
-- Has the same semantics as the Next.js `pages` folder. All files in here
-  are mapped to the url corresponding to their file paths.
-- While you can place any route files here, we recommend placing route
-  files inside `app`. But if you want, you can instead place all your
-  route files in this top level folders instead of being spread out in
-  various folders inside `app`
+- 此顶层 pages 文件夹是可选的。
+- 具有与 Next.js 中 `pages` 文件夹相同的语义。此处的所有文件都会被挂载到与
+  其文件路由相对应的 URL 上。
+- 尽管你可以在此处放置任何路由文件，但我们建议将路由文件放置在 `app` 中。
+  但是如果你愿意，你可以将所有路由文件放置在此顶层文件夹中，而不必分散在
+  `app` 内的各个文件夹中。
 
 #### `api`
 
-Same as Next.js `pages/api` folder, but not nested inside pages.
+与 Next.js 中的 `pages/api` 文件夹相同，但不嵌套在 pages 中。
 
-And like the `pages` folder, the top level `api` folder and all nested
-`api` folders inside `app` are merged together at build time.
+同时像 `pages` 文件夹一样，顶层的 `api` 文件夹和 `app` 中所有嵌套的 `api`
+文件夹在构建时会合并在一起。
 
 #### `public`
 
-All files in here are served statically from your app's root URL
+此处所的所有文件都是通过你的应用的根 URL 来提供静态资源。
 
 #### `blitz.config.js`
 
-A configuration file with the same format as `next.config.js`
+与 `next.config.js` 具有相同格式的配置文件。
 
-### Other Notes {#other-notes}
+### 其它须知 {#other-notes}
 
-- All top level folders are automatically aliased. So for example you can
-  import from `app/projects/queries/getProject` from anywhere in our app.
+- 所有顶层文件夹都将会自动被起一个别名。因此你可以从应用中的任何位置导入
+  `app/projects/queries/getProject` 样子的路径模块。
