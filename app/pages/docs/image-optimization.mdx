@@ -1,42 +1,35 @@
 ---
-title: Image Component and Image Optimization
-sidebar_label: Image Optimization
+title: 图片组件和图片优化
+sidebar_label: 图片优化
 ---
 
-Blitz has a built-in Image Component and Automatic Image Optimization.
+Blitz 具有内置的 Image 图片组件和自动图片优化功能。
 
-The Blitz Image Component, `Image`, is an extension of the HTML `<img>`
-element, evolved for the modern web.
+Blitz 图片组件 `Image` 是 HTML `<img>` 标签的拓展，从现代 Web 发展而来。
 
-The Automatic Image Optimization allows for resizing, optimizing, and
-serving images in modern formats like
-[WebP](https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types)
-when the browser supports it. This avoids shipping large images to devices
-with a smaller viewport. It also allows Blitz to automatically adopt
-future image formats and serve them to browsers that support those
-formats.
+当浏览器支持时，自动图片优化功能可以调整大小、优化和提供如
+[WebP](https://developer.mozilla.rg/en-US/docs/Web/Media/Formats/Image_types)
+这种前沿格式的图片。这样可以避免将较大图片传送到具有较小窗口的设备。同时允
+许 Blitz 自动采用前沿的图片格式来将图片提供给支持这些格式的浏览器。
 
-Automatic Image Optimization works with any image source. Even if the
-image is hosted by an external data source, like a CMS, it can still be
-optimized.
+自动图片优化功能可以与任何图片源一起使用。即使这个图片是由外部数据源（如
+CMS）托管的，仍可以对其进行优化。
 
-Instead of optimizing images at build time, Blitz optimizes images
-on-demand, as users request them. Unlike static site generators and
-static-only solutions, your build times aren't increased, whether shipping
-10 images or 10 million images.
+Blitz 不会在构建时优化图片，而会根据用户要求按需优化。与静态站点生成器和纯
+静态解决方案不同：无论是发布 10 张图片还是 1000 万张图片，构建时间都不会增
+加。
 
-Images are lazy loaded by default. That means your page speed isn't
-penalized for images outside the viewport. Images load as they are
-scrolled into viewport.
+图片默认是延迟加载的。这意味着你的页面不会因为窗口外的图片而影响加载速度。
+图片仅在滚动到相关窗口时才会加载。
 
-Images are always rendered in such a way as to avoid
-[Cumulative Layout Shift](https://web.dev/cls/), a
-[Core Web Vital](https://web.dev/vitals/) that Google is going to
-[use in search ranking](https://webmasters.googleblog.com/2020/05/evaluating-page-experience.html).
+图片总会以这样的方式渲染，从而避
+免[累积布局偏移](https://web.dev/cls/)（Google 将要
+在[搜索排名](https://webmasters.googleblog.com/2020/05/evaluating-page-experience.html)中
+使用到的[关键 Web 指标](https://web.dev/vitals/)）。
 
-## Image Component {#image-component}
+## 图片组件 {#image-component}
 
-To add an image to your application, import the `Image` component:
+想要增加一个图片到你的应用中，导入 `Image` 组件：
 
 ```jsx
 import {Image} from "blitz"
@@ -59,18 +52,15 @@ function Home() {
 export default Home
 ```
 
-## Configuration {#configuration}
+## 配置 {#configuration}
 
-In addition to using properties available to the `Image` component, you
-can optionally configure Image Optimization for more advanced use cases
-via `blitz.config.js`.
+除了使用 `Image` 组件可用的属性外，你还可以通过 Blitz.config.js 为更多场景
+配置图片优化功能。
 
-### Domains {#domains}
+### 域名 {#domains}
 
-To enable Image Optimization for images hosted on an external website, use
-an absolute url for the Image `src` and specify which `domains` are
-allowed to be optimized. This is needed to ensure that external urls can't
-be abused.
+要为外部网站上托管的图片启用图片优化功能，请在图片的 `src` 属性上使用绝对
+网站，并指定允许优化的域名。这也是确保不滥用外部 URL 不被滥用所必须的。
 
 ```js
 module.exports = {
@@ -80,12 +70,11 @@ module.exports = {
 }
 ```
 
-### Loader {#loader}
+### 加载器 {#loader}
 
-If you want to use a cloud provider to optimize images instead of using
-the Blitz' built-in Image Optimization, you can configure the loader and
-path prefix. This allows you to use relative urls for the Image `src` and
-automatically generate the correct absolute url for your provider.
+如果要使用云提供商来优化图片，而不是使用 Blitz 内置的图片优化，则可以配置
+loader 加载器和 path 路径前缀。这使你可以在图片的 `src` 属性上使用相对
+URL，并自动为你生成完整的 URL 绝对路径。
 
 ```js
 module.exports = {
@@ -96,54 +85,46 @@ module.exports = {
 }
 ```
 
-The following Image Optimization cloud providers are supported:
+如下有图片优化功能的云提供商是支持的：
 
-- [Vercel](https://vercel.com): Works automatically when you deploy on
-  Vercel, no configuration necessary.
-  [Learn more](https://vercel.com/docs/next.js/image-optimization)
+- [Vercel](https://vercel.com): 在 Vercel 上部署时将自动支持，无需进行任何
+  配置。[了解更多](https://vercel.com/docs/next.js/image-optimization)
 - [Imgix](https://www.imgix.com): `loader: 'imgix'`
 - [Cloudinary](https://cloudinary.com): `loader: 'cloudinary'`
 - [Akamai](https://www.akamai.com): `loader: 'akamai'`
-- Default: Works automatically with `blitz dev`, or a custom server
+- 默认: 自动在 `blitz dev` 中支持, 或在自定义服务器上
 
-## Caching {#caching}
+## 缓存 {#caching}
 
-The following describes the caching algorithm for the default
-[loader](#loader). For all other loaders, please refer to your cloud
-provider's documentation.
+下面介绍默认的 [loader](#loader) 缓存算法。对于其它加载器，请参考你的云提
+供商的文档。
 
-Images are optimized dynamically upon request and stored in the
-`<distDir>/cache/images` directory. The optimized image file will be
-served for subsequent requests until the expiration is reached. When a
-request is made that matches a cached but expired file, the cached file is
-deleted before generating a new optimized image and caching the new file.
+图片可以根据用户请求进行动态优化，并存储在 `<distDir>/cache/images` 文件夹
+上。优化的图片文件将会继续用于后续请求直到过期为止。当请求一个已缓存但是已
+过期的文件时，将在删除缓存文件前生成新的优化后的图片并缓存新文件。
 
-The expiration (or rather Max Age) is defined by the upstream server's
-`Cache-Control` header.
+到期时间（或最长时效）由上游服务器的 `Cache-Control` 字段定义。
 
-If `s-maxage` is found in `Cache-Control`, it is used. If no `s-maxage` is
-found, then `max-age` is used. If no `max-age` is found, then 60 seconds
-is used.
+如果在 `Cache-Control` 中找到 `s-maxage`，则使用它。如果未找到，则使用
+`max-age`。如果 `max-age` 也没找到，则设置为 60 秒。
 
-You can configure [`deviceSizes`](#device-sizes) and
-[`imageSizes`](#device-sizes) to reduce the total number of possible
-generated images.
+你可以配置 [`deviceSizes`](#device-sizes) 和 [`imageSizes`](#device-sizes)
+以减少可能生成的图片总数。
 
-## Advanced {#advanced}
+## 进阶 {#advanced}
 
 The following configuration is for advanced use cases and is usually not
 necessary. If you choose to configure the properties below, you will
 override any changes to the Blitz defaults in future updates.
 
-### Device Sizes {#device-sizes}
+### deviceSizes {#device-sizes}
 
-In some cases, where you know the expected device widths from the users of
-your website, you can specify a list of device width breakpoints using the
-`deviceSizes` property. These widths are used when the `Image` component
-uses `layout="responsive"` or `layout="fill"` so that the correct image is
-served for the device visiting your website.
+在某些情况下，如果你知道你的网站用户所使用的的设备宽度，你可以使用
+`deviceSizes` 属性设置设备宽度断点列表。当 `Image` 组件使用
+`layout="responsive"` 或 `layout="fill"` 时，将使用到这个列表，以便为你的
+网站设备提供正确的图片。
 
-If no configuration is provided, the default below is used.
+如果没有提供相关配置，则会默认使用如下值。
 
 ```js
 module.exports = {
@@ -153,15 +134,13 @@ module.exports = {
 }
 ```
 
-### Image Sizes {#image-sizes}
+### imageSizes {#image-sizes}
 
-You can specify a list of image widths using the `imageSizes` property.
-These widths should be different (usually smaller) than the widths defined
-in `deviceSizes` because the arrays will be concatenated. These widths are
-used when the `Image` component uses `layout="fixed"` or
-`layout="intrinsic"`.
+你可以使用 `imageSizes` 属性指定图片宽度的列表。这些宽度应该不同于（通常小
+于）deviceSizes 中定义的宽度，因为两个数组将会被关联在一起。当 `Image` 组
+件使用到 `layout="fixed"` 或 `layout="intrinsic"` 时，将会使用到这些宽度。
 
-If no configuration is provided, the default below is used.
+如果没有提供相关配置，则会默认使用如下值。
 
 ```js
 module.exports = {
@@ -171,18 +150,18 @@ module.exports = {
 }
 ```
 
-## Image API {#image-api}
+## 图片 API {#image-api}
 
-Image Optimization can be enabled via the `Image` component.
+可以通过 `Image` 组件启用图片优化功能。
 
-### Usage {#usage}
+### 使用方式 {#usage}
 
-For an example, consider a project with the following files:
+例如，考虑一个包含如下文件的项目场景：
 
 - `pages/index.js`
 - `public/me.png`
 
-We can serve an optimized image like so:
+我们可以像这样提供经过优化的图片：
 
 ```jsx
 import {Image} from "blitz"
@@ -205,65 +184,63 @@ function Home() {
 export default Home
 ```
 
-### Required Props {#required-props}
+### 必须的 Props {#required-props}
 
-The `Image` component requires the following properties.
+`Image` 组件需要包含如下属性：
 
 #### src
 
-The path or URL to the source image. This is required.
+图片源的路径或 URL。必需。
 
-When using an external URL, you must add it to [domains](#domains) in
-`blitz.config.js`.
+如果使用外部 URL，你必须在 `blitz.config.js` 中添加[域名](#domains)。
 
 #### width
 
-The width of the image, in pixels. Must be an integer without a unit.
+图片的宽度（以像素为单位）。必须是不带单位的整数。
 
-Required unless [layout="fill"`](#layout).
+除非是 [layout="fill"`](#layout)，否则必需。
 
 #### height
 
-The height of the image, in pixels. Must be an integer without a unit.
+图片的高度（以像素为单位）。必须是不带单位的整数。
 
-Required unless [layout="fill"`](#layout).
+除非是 [layout="fill"`](#layout)，否则必需。
 
-### Optional Props {#optional-props}
+### 可选的 Props {#optional-props}
 
-The `<Image />` component optionally accepts the following properties.
+`<Image />` 组件可选性地接收如下属性：
 
 #### layout
 
-The layout behavior of the image as the viewport changes size. Defaults to
-`intrinsic`.
+窗口更改大小时图片的布局行为，默认为 `intrinsic`。
 
-When `fixed`, the image dimensions will not change as the viewport changes
-(no responsiveness) similar to the native `img` element.
+当 `fixed` 时，图片尺寸不会随着窗口的变化而变化（不会响应），类似于原生的
+`img` 元素。
 
-When `intrinsic`, the image will scale the dimensions down for smaller
-viewports but maintain the original dimensions for larger viewports.
+当 `intrinsic` 时, 图片将按比例缩小尺寸以用于较小的窗口，但会保留原始尺寸
+以用于较大的窗口。
 
-When `responsive`, the image will scale the dimensions down for smaller
-viewports and scale up for larger viewports.
+当 `responsive` 时, 图片将缩小尺寸以用于较小的窗口，并会在较大的窗口下放大
+。
 
-When `fill`, the image will stretch both width and height to the
-dimensions of the parent element, usually paired with
-[object-fit](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit).
+当 `fill` 时, 图片会将宽度和高度都拉伸到父元素的尺寸，通常与
+[object-fit](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit)
+对象匹配。
 
-Try it out:
+试试看：
 
-- [Demo the `fixed` layout](https://image-component.nextjs.gallery/layout-fixed)
-- [Demo the `intrinsic` layout](https://image-component.nextjs.gallery/layout-intrinsic)
-- [Demo the `responsive` layout](https://image-component.nextjs.gallery/layout-responsive)
-- [Demo the `fill` layout](https://image-component.nextjs.gallery/layout-fill)
-- [Demo background image](https://image-component.nextjs.gallery/background)
+- [`fixed` 布局的 Demo](https://image-component.nextjs.gallery/layout-fixed)
+- [`intrinsic` 布局的 Demo](https://image-component.nextjs.gallery/layout-intrinsic)
+- [`responsive` 布局的 Demo](https://image-component.nextjs.gallery/layout-responsive)
+- [`fill` 布局的 Demo](https://image-component.nextjs.gallery/layout-fill)
+- [图片背景图的 Demo](https://image-component.nextjs.gallery/background)
 
 ### loader {#loader-1}
 
-A custom function used to resolve URLs. Defaults to
-[`images` object in `blitz.config.js`](/docs/basic-features/image-optimization.md#loader).
+用于解析 URL 的自定义函数。默认为
+[`blitz.config.js` 中的 `images` 对象](/docs/basic-features/image-optimization.md#loader)
 
-`loader` is a function returning a string, given the following parameters:
+`loader` 是给定以下参数且返回字符串的函数：
 
 - [`src`](#src)
 - [`width`](#width)
@@ -291,70 +268,64 @@ const MyImage = (props) => {
 
 #### sizes
 
-A string mapping media queries to device sizes. Defaults to `100vw`.
+将媒体查询映射到设备大小的字符串。默认为 `100vw`。
 
-We recommend setting `sizes` when `layout="responsive"` and your image
-will not be the same width as the viewport.
+我们建议在 `layout="responsive"` 时设置 `sizes`，并且图片的宽度与窗口的宽
+度不同。
 
-[Learn more](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-sizes).
+[了解更多](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-sizes).
 
 #### quality
 
-The quality of the optimized image, an integer between 1 and 100 where 100
-is the best quality. Defaults to 75.
+优化图片的质量，1~100 之间的整数，其中 100 是最佳质量。默认值为 75。
 
 #### priority
 
-When true, the image will be considered high priority and
-[preload](https://web.dev/preload-responsive-images/).
+当设置为 true 时，图片将视为高优先级并
+被[预加载](https://web.dev/preload-responsive-images/)。
 
-Should only be used when the image is visible above the fold. Defaults to
-false.
+仅在图片在首屏上可见时才能使用。默认为 false。
 
-### Advanced Props {#advanced-props}
+### 进阶的 Props {#advanced-props}
 
-In some cases, you may need more advanced usage. The `Image` component
-optionally accepts the following advanced properties.
+在某些情况下，你可能需要使用更高级的用法。`Image` 组件可以选择接受以下高级
+属性。
 
 #### objectFit
 
-The image fit when using `layout="fill"`.
+当 `layout="fill"` 时，图片如何适应。
 
-[Learn more](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit)
+[了解更多](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit)。
 
 #### objectPosition
 
-The image position when using `layout="fill"`.
+当 `layout="fill"` 时，图片的位置。
 
-[Learn more](https://developer.mozilla.org/en-US/docs/Web/CSS/object-position)
+[了解更多](https://developer.mozilla.org/en-US/docs/Web/CSS/object-position)。
 
 #### loading
 
-> **Attention**: This property is only meant for advanced usage. Switching
-> an image to load with `eager` will normally **hurt performance**.
->
-> We recommend using the [`priority`](#priority) property instead, which
-> properly loads the image eagerly for nearly all use cases.
+> **注意：**：此属性仅用于进阶用途。将图片切换为 `eager` 加载通常会 **损坏
+> 性能** 我们建议替换为 [`priority`](#priority) 属性，该属性可以在几乎所有
+> 用例中迅速加载图片。
 
-The loading behavior of the image. Defaults to `lazy`.
+图片的加载行为。默认为 `lazy`。
 
-When `lazy`, defer loading the image until it reaches a calculated
-distance from the viewport.
+当 `lazy` 时，图片将在滚动到计算出的窗口位置上延迟加载。
 
-When `eager`, load the image immediately.
+当 `eager` 时，立即加载图片。
 
-[Learn more](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-loading)
+[了解更多](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-loading)
 
 #### unoptimized
 
-When true, the source image will be served as-is instead of changing
-quality, size, or format. Defaults to false.
+设置为 true 时，将按原样提供图片源，而不更改质量、尺寸或格式。默认为
+false。
 
-### Other Props {#other-props}
+### 其它 Props {#other-props}
 
-Other properties on the `Image` component will be passed to the underlying
-`img` element with the exception of the following:
+除了以下内容外，`Image` 组件上的其它属性将传递给基础的 img 元素：
 
-- `style`. Use `className` instead.
-- `srcSet`. Use [Device Sizes](#device-sizes) instead.
-- `decoding`. It is always `"async"`.
+- `style`。请改用 `className`。
+- `srcSet`。请改用 [设备尺寸](#device-sizes)。
+- `decoding`。始终是 `"async"`。
