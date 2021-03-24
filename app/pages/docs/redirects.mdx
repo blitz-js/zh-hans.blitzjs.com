@@ -1,12 +1,12 @@
 ---
-title: Redirects
-sidebar_label: Redirects
+title: 重定向
+sidebar_label: 重定向
 ---
 
-## On the Client {#on-the-client}
+## 在客户端上 {#on-the-client}
 
-One common use case is conditionally redirecting a user to a different
-page based on their session data. Here's how you can do that:
+一种常见的用例是根据用户的会话数据有条件地将用户重定向到其他页面。这是你可
+以执行的操作：
 
 ```tsx
 import {useRouter, useSession} from "blitz"
@@ -25,12 +25,11 @@ const LoginPage: BlitzPage = () => {
 }
 ```
 
-## On the Server {#on-the-server}
+## 在服务器上 {#on-the-server}
 
-If you don't want the "flash of invalid content" that you get with client
-side redirects, you can use
-[`getServerSideProps`](./get-server-side-props) to conditionally redirect
-from the server. Here's how you can do that:
+如果你不希望通过客户端重定向获得“无效内容更新”，则可以使用
+[`getServerSideProps`](./get-server-side-props) 有条件地从服务器重定向。这
+是你可以执行的操作：
 
 ```ts
 import {getSession} from "blitz"
