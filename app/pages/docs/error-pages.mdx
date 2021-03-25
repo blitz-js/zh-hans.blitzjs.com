@@ -1,17 +1,17 @@
 ---
-title: Error Pages
-sidebar_label: Error Pages
+title: 错误页面
+sidebar_label: 错误页面
 ---
 
-## 404 Page {#404-page}
+## 404 页面 {#404-page}
 
-A 404 page may be accessed very often so Blitz provides a static 404 page
-by default without having to add any additional files.
+404 页面可能经常被访问，因此 Blitz 默认情况下会提供静态 404 页面，而无需添
+加任何其他文件。
 
-### Customizing The 404 Page {#customizing-the-404-page}
+### 自定义 404 页面 {#customizing-the-404-page}
 
-To create a custom 404 page you can create a `app/pages/404.js` file. This
-file is statically generated at build time.
+要创建自定义 404 页面，你可以创建一个 `app/pages/404.js` 文件。该文件在编
+译时静态生成。
 
 ```jsx
 // app/pages/404.js
@@ -20,18 +20,16 @@ export default function Custom404() {
 }
 ```
 
-## 500 Page {#500-page}
+## 500 页面 {#500-page}
 
-By default Blitz provides a 500 error page that matches the default 404
-page’s style. This page is not statically optimized as it allows
-server-side errors to be reported. This is why 404 and 500 (other errors)
-are separated.
+默认情况下，Blitz 提供了一个 500 错误页面，该页面与默认 404 页面的样式相匹
+配。此页面不是静态优化的页面，因为它允许展示服务端错误。这就是为什么将 404
+和 500（其他错误）分开的原因。
 
-### Customizing The Error Page {#customizing-the-error-page}
+### 自定义错误页面 {#customizing-the-error-page}
 
-500 errors are handled both client-side and server-side by the `Error`
-component. If you wish to override it, define the file
-`app/pages/_error.js` and add the following code:
+`Error` 组件可同时在客户端和服务端处理 500 错误。如果你想要覆盖它，请定义
+文件 `app/pages/_error.js` 并添加如下代码：
 
 ```jsx
 function Error({statusCode}) {
@@ -52,33 +50,34 @@ Error.getInitialProps = ({res, err}) => {
 export default Error
 ```
 
-> `app/pages/_error.js` is only used in production. In development you’ll
-> get an error with the call stack to know where the error originated
-> from.
+> `app/pages/_error.js` 仅在生产中使用。在开发中，你会在调用堆栈中遇到错误
+> ，以便了解错误的出处。
 
-## Customize the Error Boundary Fallback Component {#custom-error-boundary-component}
+## 自定义错误边界回退组件 {#custom-error-boundary-component}
 
-The default `app/pages/_app.tsx` configures an error boundary which catches errors that happen during render, on the client side. This will also catch errors within `useQuery` or `useMutation` because they happen in suspense.
+`app/pages/_app.tsx` 默认配置一个错误边界，该边界捕获客户端渲染期间发生的
+错误。这也将捕获意外情况下的 `useQuery` 或 `useMutation` 错误。
 
-In essence, the default configuration is:
+本质上，默认配置为：
 
 ```tsx
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({Component, pageProps}: AppProps) {
   return (
-    <ErrorBoundary
-      FallbackComponent={RootErrorFallback}
-      {...etc}
-    >
+    <ErrorBoundary FallbackComponent={RootErrorFallback} {...etc}>
       {getLayout(<Component {...pageProps} />)}
     </ErrorBoundary>
   )
 }
 ```
 
-The `RootErrorFallback` is rendered when a error happens within render, or a suspended mutation or query. By default:
+当渲染内发生错误或暂停 mutation 或 query 时，将渲染 `RootErrorFallback`。
+默认情况下：
 
 ```tsx
-function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
+function RootErrorFallback({
+  error,
+  resetErrorBoundary,
+}: ErrorFallbackProps) {
   if (error instanceof AuthenticationError) {
     return <LoginForm onSuccess={resetErrorBoundary} />
   } else if (error instanceof AuthorizationError) {
@@ -90,46 +89,67 @@ function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
     )
   } else {
     return (
-      <ErrorComponent statusCode={error.statusCode || 400} title={error.message || error.name} />
+      <ErrorComponent
+        statusCode={error.statusCode || 400}
+        title={error.message || error.name}
+      />
     )
   }
 }
 ```
 
-### Authentication Error Component (401) {#custom-authentication-error-component}
+### 身份验证错误组件（401） {#custom-authentication-error-component}
 
-If your query, mutation, or render function `throw new AuthenticationError()` when the user is not authenticated, you can detect that within the error fallback:
+如果你的 query、mutation 或渲染函数在用户身份未验证通过时
+`throw new AuthenticationError()`，则可以再错误回调中检测到该错误。
 
 ```tsx
-function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
+function RootErrorFallback({
+  error,
+  resetErrorBoundary,
+}: ErrorFallbackProps) {
   if (error instanceof AuthenticationError) {
     return <MyCustomError error={error} onRetry={resetErrorBoundary} />
   }
-  return <ErrorComponent statusCode={error.statusCode || 400} title={error.message || error.name} />
+  return (
+    <ErrorComponent
+      statusCode={error.statusCode || 400}
+      title={error.message || error.name}
+    />
+  )
 }
 ```
 
-### Authorization Error Component (403) {#custom-authorization-error-component}
+### 鉴权错误组件（403） {#custom-authorization-error-component}
 
-Your query, mutation, or render function may call `throw new AuthorizationError()` when a user is authenticated but not authorized to do something. The error fallback may handle that:
+当用户通过身份验证但无权做某事时，你的 query、mutation 或渲染函数可能会调
+用 `throw new AuthorizationError()`。错误回调可能会这样处理：
 
 ```tsx
-function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
+function RootErrorFallback({
+  error,
+  resetErrorBoundary,
+}: ErrorFallbackProps) {
   if (error instanceof AuthorizationError) {
     return <MyCustomError error={error} onRetry={resetErrorBoundary} />
   }
-  return <ErrorComponent statusCode={error.statusCode || 400} title={error.message || error.name} />
+  return (
+    <ErrorComponent
+      statusCode={error.statusCode || 400}
+      title={error.message || error.name}
+    />
+  )
 }
 ```
 
-## Reusing the built-in error page {#reusing-the-built-in-error-page}
+## 重用内置错误页面 {#reusing-the-built-in-error-page}
 
-You can render the built-in error page by importing `ErrorComponent`.
+你可以通过导入 `ErrorComponent` 渲染内置错误页面。
 
-It accepts two props:
+它接收两个 props：
 
-- `statusCode` - a number to display as the error code
-- `title` - a string to display as the error message
+- `statusCode` - 一个用来显示错误代码的数字
+- `title` - 一个用来显示错误代码的字符串
 
 ```jsx
 import {ErrorComponent} from "blitz"
