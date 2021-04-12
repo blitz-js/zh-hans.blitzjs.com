@@ -1,33 +1,32 @@
 ---
-title: Error Handing
-sidebar_label: Error Handling
+title: 错误处理
+sidebar_label: 错误处理
 ---
 
-## Built-In Errors {#built-in-errors}
+## 内置错误 {#built-in-errors}
 
-Blitz comes with a number of useful errors you can use throughout your
-application.
+Blitz 带有许多有用的错误，你可以在整个应用程序中使用。
 
 - `AuthenticationError`
   - `name`: "AuthenticationError"
   - `statusCode`: 401
-  - Default `message`: "You must be logged in to access this"
+  - 默认 `message`: "You must be logged in to access this"
 - `CSRFTokenMismatchError`
   - `name`: "CSRFTokenMismatchError"
   - `statusCode`: 401
-  - Default `message`: "You must be logged in to access this"
+  - 默认 `message`: "You must be logged in to access this"
 - `AuthorizationError`
   - `name`: "AuthorizationError"
   - `statusCode`: 403
-  - Default `message`: "You are not authorized to access this"
+  - 默认 `message`: "You are not authorized to access this"
 - `NotFoundError`
   - `name`: "NotFoundError"
   - `statusCode`: 404
-  - Default `message`: "This could not be found"
+  - 默认 `message`: "This could not be found"
 
-To use, import from `blitz` and use like any JavaScript Error. If you're
-curious, you can
-[see the source code for these](https://github.com/blitz-js/blitz/blob/canary/packages/core/src/errors.ts).
+为了使用，从 `blitz` 中导入并像任何 JavaScript Error 对象一样使用。如果你
+好奇，你可以
+[查看这些代码的源代码](https://github.com/blitz-js/blitz/blob/canary/packages/core/src/errors.ts)。
 
 ```ts
 import {AuthenticationError} from "blitz"
@@ -43,17 +42,17 @@ try {
 }
 ```
 
-You can throw these or any other errors from anywhere in your app, whether
-on the server or on the client.
+你可以从应用中的任何位置跑出这些错误或其它任何错误，无论是在服务器上还是在
+客户端上。
 
-## Catching and Handling Errors on the Client {#catching-and-handling-errors-on-the-client}
+## 在客户端上捕获和处理错误 {#catching-and-handling-errors-on-the-client}
 
-By default, new Blitz applications come with
-[`react-error-boundary`](https://github.com/bvaughn/react-error-boundary)
-installed with a top-level `ErrorBoundary` and `FallbackComponent` in
-`app/pages/_app.tsx`.
+默认情况下，新的 Blitz 应用带有
+[`react-error-boundary`](https://github.com/bvaughn/react-error-boundary)，
+在应用的 `app/pages/_app.tsx` 中安装了顶层的 `ErrorBoundary` and
+`FallbackComponent`。
 
-It looks something like this:
+看起来像这样：
 
 ```tsx
 // app/pages/_app.tsx
@@ -98,31 +97,28 @@ function RootErrorFallback({error, resetErrorBoundary}) {
 }
 ```
 
-That means all errors will at least be caught at the root level. However,
-you can also add `<ErrorBoundary>` anywhere else in your app for more
-localized error handiling. If an error is caught by an `<ErrorBoundary>`
-somewhere down inside your app tree, then it will not reach the root
-ErrorBoundary unless you re-throw it.
+这意味着所有错误至少将在根级别被捕获。但是，你还可以在应用中的任何其它地方
+添加 `<ErrorBoundary>`，以进行更局部的错误处理。如果错误在应用程序树中的某
+个位置的某个地方被 `<ErrorBoundary>` 捕获，除非重新抛出该错误，否则它将不
+会到达根 `<ErrorBoundary>`。
 
-### Handling Server Errors on the Client {#handling-server-errors-on-the-client}
+### 在客户端上处理服务器错误 {#handling-server-errors-on-the-client}
 
-A really awesome feature of Blitz is that you can throw any error from a
-Blitz query or mutation and then use an ErrorBoundary on the frontend to
-catch and handle it.
+Blitz 的一个真正令人敬畏的功能是，你可以引发 Blitz query 或 mutation 中的
+任何错误，然后在前端中使用 ErrorBoundary 来捕获并处理它。
 
-For example, with the above `_app.tsx`, you can throw
-`AuthenticationError` inside a Blitz query and then a login screen will
-automatically show in the client because that root ErrorBoundary is
-rendering `<LoginForm>` if `error.name === 'AuthenticationError'`.
+例如，使用上面的 `app.tsx`，你可以在 Blitz query 中抛出
+`AuthenticationError`，然后登陆页面将自动显示在客户端中，因为如果
+`error.name === 'AuthenticationError'`，根 ErrorBoundary 将会渲染
+`<LoginForm>`。
 
-### Custom Errors {#custom-errors}
+### 自定义错误 {#custom-errors}
 
-For errors other than what Blitz provides, it's recommended to create
-custom Error classes. You can then add custom data attributes that help
-you handle the error.
+对于 Blitz 提供的错误类型以外的错误，建议创建自定义 Error 类。然后，你可以
+添加自定义数据属性，以帮助你处理错误。
 
-Here's an example of how to create a custom error. It's a JavaScript
-class, so you can be as creative as you want.
+这是有关如何创建自定义错误的示例。这是一个 JavaScript 类，因此你可以根据需
+要发挥创造力。
 
 ```ts
 import SuperJson from "superjson"
@@ -134,20 +130,19 @@ export class UsernameTakenError extends Error {
     this.suggestedUserName = suggestedUserName
   }
 }
-// Register with SuperJson serializer so it's reconstructed on the client
+// 使用 SuperJSON 序列化器注册，以便在客户端上对齐复用
 SuperJson.registerClass(UsernameTakenError)
 SuperJson.allowErrorProps("suggestedUserName")
 
 throw new UsernameTakenError({suggestedUserName: "second_best"})
 ```
 
-Note that you **must register it with SuperJson** as shown above in order
-for `instanceof` to work on the client. And you must also tell SuperJson
-about any special error propertries you want to be serialized. By default
-custom error properties are omitted for security concerns.
+请注意，你**必须向上面那也使用 SuperJSON 注册**，以便 `instanceof` 可以在
+客户端上运行。而且，你还必须告诉 SuperJSON 你要序列化的任何特殊错误属性。
+出于安全考虑，默认情况下你将忽略自定义错误属性。
 
-Then on the client, you can use a `FallbackComponent` like above, or you
-can handle the error in your form submit handler like this.
+接下来在客户端上，你可以使用上述的 `FallbackComponent`，也可以像这样处理表
+单提交处理程序的错误‘：
 
 ```tsx
 <Form
@@ -163,6 +158,7 @@ can handle the error in your form submit handler like this.
 />
 ```
 
-## Error Pages {#error-pages}
+## 错误页面 {#error-pages}
 
-See the [Error Pages documentation](./error-pages) to learn about custom error pages and error fallback components.
+查看[错误页面文档](./error-pages)来了解关于自定义错误页面和错误处理组件的
+信息。
