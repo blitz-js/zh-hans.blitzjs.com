@@ -1,82 +1,67 @@
 ---
-title: Get Started with Blitz
-sidebar_label: Get Started
+title: 快速入手 Blitz
+sidebar_label: 快速入手
 ---
 
-### Set Up Your Computer {#set-up-your-computer}
+### 配置你的环境 {#set-up-your-computer}
 
-You need Node.js 12 or newer. You can verify this by running `node -v` in
-your terminal. If you don't have Node or need a newer version, we
-recommend using a node version manager like
-[fnm](https://github.com/Schniz/fnm). That will allow you to easily change
-node versions and even have different versions for each project.
+你需要使用 Node 12 或者更新的版本。你可以通过在终端中运行 `node -v` 来验证。如果你没有 Node 或需要一个更新的版本，我们建议使用一个像 [fnm](https://github.com/Schniz/fnm) 这样的 Node 版本管理器。fnm 允许你很方便地更改 Node 版本甚至可以为每个项目提供不同的版本。
 
-### Install Blitz {#install-blitz}
+### 安装 Blitz {#install-blitz}
 
-Run `yarn global add blitz` or `npm install -g blitz --legacy-peer-deps`
-(legacy-peer-deps is needed because npm totally change behavior of peer
-deps and some dependencies haven't caught up)
+运行 `yarn global add blitz` 或 `npm install -g blitz --legacy-peer-deps`（需要提供 legacy-peer-deps 的原因在于，npm 完全改变了 peer deps 的行为，有些依赖还没有及时跟进）。
 
-### Create a New App {#create-a-new-app}
+### 创建一个新项目 {#create-a-new-app}
 
 1. `blitz new myAppName`
 2. `cd myAppName`
 3. `blitz dev`
-4. View your brand new app at
-   [http://localhost:3000](http://localhost:3000)
+4. 访问你的新项目 [http://localhost:3000](http://localhost:3000)
 
-## Welcome to the Blitz Community 👋 {#welcome-to-the-blitz-community}
+## 欢迎来到 Blitz 社区 👋 {#welcome-to-the-blitz-community}
 
-The Blitz community is warm, safe, diverse, inclusive, and fun! LGBTQ+,
-women, and minorities are especially welcome.
+Blitz 社区是个温暖、安全、多样化、包容也不失有趣的社区！ LGBTQ+、女生和少
+数派欢迎你们的到来。
 
-[Join our Discord Community](https://discord.blitzjs.com) where we help
-each other build Blitz apps. It's also where we collaborate on building
-Blitz itself.
+[加入我们的 Discord 社区](https://discord.blitzjs.com)，我们会在这里帮助每
+个人搭建 Blitz 应用。这里也是我们协作共建 Blitz 本身的重要场地。
 
-For questions and longer form discussions,
-[post in our forum.](https://github.com/blitz-js/blitz/discussions)
+对于提问以及会花费较长时间的讨论
+，[可以发帖到我们的论坛中](https://github.com/blitz-js/blitz/discussions)。
 
-For a full introduction, read
-[How the Community Operates](./how-the-community-operates). This details
-everything, including how to get help, how to report bugs, how to suggest
-new features, etc.
+有关完整的介绍，请阅读 [社区是如何运作的](./how-the-community-operates)。
+文中包括了如何获得帮助、如何报告错误以及如何提出新功能建议等的详细指导。
 
-#### You are invited to help make Blitz the best it can be! 🤝
+#### 欢迎你的帮助来使 Blitz 变得更好！ 🤝
 
-We have an awesome community that's working together to make Blitz the
-best framework the world has ever seen.
+我们有一个很棒的社区正在共同努力让 Blitz 成为世界上一流的框架。
 
-How you can help:
+你该如何提供帮助：
 
-1. Report bugs by
-   [opening an issue on GitHub](https://github.com/blitz-js/blitz/issues/new/choose)
-1. Contribute code:
-   [Read the contributing guide so see how to get started](./contributing).
-1. [Sponsorships & donations](https://github.com/blitz-js/blitz#sponsors-and-donations),
-   which start at $5/month
-1. Any other way you want! We totally appreciate any type of contribution,
-   such as documentation, videos, blog posts, etc. If you have an unusual
-   idea, feel free to run it past us in Discord! :)
+1. 通过
+   [在 GitHub 上提交 issue](https://github.com/blitz-js/blitz/issues/new/choose)
+   来反馈 Bug。
+1. 贡献代码： [阅读贡献指南，以了解如何开始](./contributing)。
+1. [赞助 & 捐赠](https://github.com/blitz-js/blitz#sponsors-and-donations)，
+   可以从 $5/月 开始。
+1. 以及你觉得可以的其它任何方式！我们非常感谢你的任何贡献（如文档、视频、
+   博客等）。如果你遇到任何阻碍，欢迎来 Discord 上与我们交流！:)
 
-## Next Steps {#next-steps}
+## 下一步 {#next-steps}
 
-### Tutorial {#tutorial}
+### 教程 {#tutorial}
 
-The [Tutorial](./tutorial) is a full walkthrough through all the
-fundamental parts of Blitz, including adding models to your database and
-reading and updating data from your frontend.
+[教程篇](./tutorial) 是有关 Blitz 所有基本内容的完整练习，其中包括将模型添
+加到数据库以及从前端读取和更新数据。
 
-### Learning {#learning}
+### 学习 {#learning}
 
-And here's major aspects of Blitz that you'll want to become familiar
-with.
+这里有你想要熟悉的 Blitz 的关键概念：
 
-- How to [make Pages](./pages)
-- How to [use the File-System Routing](./routing)
-- How to set up and [use a Database](./database-overview)
-- How to use Blitz [Queries](./query-resolvers) and
-  [Mutations](./mutation-resolvers) for reading and writing data to your
-  database
-- How to scaffold all the code for database models with the
-  [`blitz generate`](./cli-generate) command
+- 如何 [新建页面](./pages)
+- 如何 [使用文件路由系统](./routing)
+- 如何设置并 [使用数据库](./database-overview)
+- 如何使用 Blitz [Queries](./query-resolvers) 和
+  [Mutations](./mutation-resolvers) 来读写你的数据库。
+- 如何通过 [`blitz generate`](./cli-generate) 命令来用脚手架生成数据库模型
+  的所有代码。
