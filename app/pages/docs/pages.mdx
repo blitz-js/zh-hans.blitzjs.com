@@ -1,21 +1,21 @@
 ---
-title: Pages
-sidebar_label: Pages
+title: 页面
+sidebar_label: 页面
 ---
 
-In Blitz, a **page** is a
-[React Component](https://reactjs.org/docs/components-and-props.html)
-exported from a `.js`, `.jsx`, `.ts`, or `.tsx` file in a `pages`
-directory. Each page is associated with a route based on its file path.
+在 Blitz 中，一个 **页面**是一个在 `pages` 目录下，从
+`.js`、`.jsx`、`.ts`或`.tsx` 中导出的
+[React 组件](https://reactjs.org/docs/components-and-props.html)。每个页面
+都会基于其文件路径而与路由关联。
 
-All of the following are valid pages:
+如下所示都是一个有效的页面：
 
 - `app/pages/about.tsx`
 - `app/projects/pages/projects/index.tsx`
 - `app/tasks/pages/projects/[projectId]/tasks/[taskId].tsx`
 
-**Example**: If you create `app/pages/about.js` that exports a React
-component like below, it will be accessible at `/about`.
+**示例**：如果你创建一个像下面这样导出一个 React 组件的的
+`app/pages/about.js` 文件，它将会被绑定到 `/about`。
 
 ```jsx
 function About() {
@@ -25,32 +25,29 @@ function About() {
 export default About
 ```
 
-### Pages with Dynamic Routes {#pages-with-dynamic-routes}
+### 页面与动态路由 {#pages-with-dynamic-routes}
 
-Blitz supports pages with dynamic routes. For example, if you create a
-file called `app/pages/posts/[id].js`, then it will be accessible at
-`posts/1`, `posts/2`, etc.
+Blitz 支持具有动态路由的页面。例如，如果你创建一个名为
+`app/pages/posts/[id].js` 的文件，将会被绑定到 `posts/1` 和 `posts/2` 等路
+由上。
 
-> To learn more about routing, check the
-> [Routing documentation](./routing).
+> 想要学更多路由的知识，请阅读 [路由文档](./routing).
 
-### Automatic Static Optimization {#automatic-static-optimization}
+### 自动静态优化 {#automatic-static-optimization}
 
-By default, Blitz pre-renders the static HTML for every page unless you
-explicitly opt-in to server-side rendering.
+默认情况下，除非你明确选择加入服务端渲染，否则 Blitz 会为每个页面预先渲染
+出静态 HTML。
 
-For pages with dynamic data, the page's loading state will be
-pre-rendered.
+对于具有动态数据的页面，页面的加载状态将被预先渲染。
 
-#### First Render UX
+#### 首次渲染的用户体验
 
-In some cases, the static optimization can cause an undesirable UX where
-the first render shows one thing but the second render shows another. For
-example this happens when using `useSession()`.
+在某些情况下，静态优化可能会导致不良的 UX（用户体验），其中第一次渲染显示
+一种，第二次渲染却显示另一种。例如，在使用 `useSession()` 时会出现这种情况
+。
 
-In this case you can set `Page.suppressFirstRenderFlicker = true`, and
-Blitz will hide the first render's content. This will result in a tiny
-delay of first paint but will greatly improve the perceived UX.
+在此时，你可以设置 `Page.suppressFirstRenderFlicker = true`，Blitz 将隐藏
+第一次渲染内容。这将导致首次渲染的微小延迟，但将大大改善用户的体验。
 
 ```tsx
 const Page: BlitzPage = () => {
@@ -64,32 +61,26 @@ Page.suppressFirstRenderFlicker = true
 export default Page
 ```
 
-### Static Page Generation for Unauthenticated Pages {#static-page-generation-for-unauthenticated-pages}
+### 未认证页面的静态页面生成 {#static-page-generation-for-unauthenticated-pages}
 
-For pages accessible by anyone without authentication, we recommend using
-`getStaticProps` so the page, along with it's data, is 100% statically
-generated during pre-rendering (like Gatsby). Then the entire static page
-can be cached on a CDN. This is perfect for public pages like blog posts.
+对于未经身份验证任何人都可以访问的页面，我们建议使用 `getStaticProps`，以
+便页面及其数据在预渲染期间（例如 Gatsby）是 100% 静态生成的。然后可以将整
+个静态页面缓存在 CDN 上。这对于诸如博客文章之类的公共页面来说是完美的。
 
-There are two methods for use with static generation, and you'll often use
-both together.
+静态生成有两种方法，你经常会同时使用这两种方法。
 
-1. `getStaticProps` - To load the **data** for your page. See the
-   [`getStaticProps` documentation](./get-static-props) for more details.
-2. `getStaticPaths` - To load the possible **paths** for your page. See
-   the [`getStaticPaths` documentation](./get-static-paths) for more
-   details.
+1. `getStaticProps` - 为你的页面加载**数据**。 参考
+   [`getStaticProps` 文档](./get-static-props) 了解更多。
+2. `getStaticPaths` - 为你的页面加载可能的**路径**。参考
+   [`getStaticPaths` 文档](./get-static-paths) 了解更多。
 
-### Server-side Rendering {#server-side-rendering}
+### 服务端渲染 {#server-side-rendering}
 
-> Also referred to as "SSR" or "Dynamic Rendering".
+> 也成为“SSR”或“动态渲染”。
 
-If a page uses **Server-side Rendering**, the page HTML is generated on
-**each request**.
+如果一个页面使用**服务端渲染**，则这个页面 HTML 是根据“每个请求”生成的。
 
-To use Server-side Rendering for a page, you need to `export` an `async`
-function called `getServerSideProps`. This function will be called by the
-server on every request.
+要在页面上使用服务端渲染，你需要 `export` 一个名为 `getServerSideProps` 的
+`async` 函数。服务器将在每次请求时调用此函数。
 
-See the [`getServerSideProps` documentation](./get-server-side-props) for
-more details.
+参考 [`getServerSideProps` 文档](./get-server-side-props) 了解更多。
