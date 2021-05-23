@@ -1,19 +1,19 @@
 ---
-title: Routing Conventions
-sidebar_label: Conventions
+title: 路由约定
+sidebar_label: 约定
 ---
 
-We copied the conventions from Ruby on Rails, where it has stood the test
-of time. The Blitz CLI uses these conventions for code scaffolding. If you
-don't like them, you are free to deviate and do anything you want.
+我们从经受住时间考验的 Ruby on Rails 中复制了约定规则.Blitz CLI 使用这些约
+定来构建代码脚手架。如果你不喜欢，你可以随意偏离这个结构，按自己的意愿去做
+。
 
-- Entity names are plural
-- Each of the following have their own page: entity index, single entity
-  show page, new entity page, and edit entity page
-- `entityId` is used from the dynamic url slug
+- 实体名称是复数
+- 以下每一项都有自己的页面：实体索引，单一实体显示页面，新实体页面以及编辑
+  实体页面
+- `entityId`来自于动态 url slug
 
-Example: You have a `Project` model and a `Task` model which belongs to a
-`Project`. Your routes will be:
+例如: 你有一个`Project`模型和一个属于`Project`的`Task`模型，你的路由形式如
+下:
 
 | URL Path                                  | File                                                        |
 | ----------------------------------------- | ----------------------------------------------------------- |
