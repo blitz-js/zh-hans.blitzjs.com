@@ -1,48 +1,45 @@
 ---
-title: File-Based Routing
-sidebar_label: File-Based Routing
+title: 基于文件的路由
+sidebar_label: 基于文件的路由
 ---
 
-Blitz uses a file-system based router that's built on
-[Next.js](https://nextjs.org/docs/routing/introduction).
+Blitz 使用一个基于文件系统的路由器，该路由器基
+于[Next.js](https://nextjs.org/docs/routing/introduction)。
 
-- All components in `pages/` are mapped to a URL.
-  ([Pages documentation](./pages))
-- All http handlers in `api/` are mapped to a URL.
+- `pages/`中的所有组件都映射到一个 URL ([Pages 文档](./pages))
+- `api/`中的所有 http 处理程序都映射到一个 URL
   ([API routes documentation](./api-routes))
-- Queries and mutations are automatically exposed as an API endpoint
-  - The `app/projects/queries/getProjects.js` query is exposed at
-    `/api/projects/queries/getProjects`
-  - See the [RPC Specification](./rpc-specification) for more details
+- 查询和分发会自动作为一个 API 端点暴露出来
+- `app/projects/queries/getProjects.js` 的查询暴露在
+  `/api/projects/queries/getProjects`中
+- 请参考[RPC 规范](./rpc-specification)了解更多详细信息
 
-### Index routes {#index-routes}
+### 索引路由 {#index-routes}
 
-The router will automatically route files named `index` to the root of the
-directory.
+路由器会自动将名为`index`的文件映射到根目录。
 
 - `app/pages/index.js` → `/`
 - `app/pages/blog/index.js` → `/blog`
 
-### Nested routes {#nested-routes}
+### 嵌套路由 {#nested-routes}
 
-The router supports nested files. If you create a nested folder structure
-files will be automatically routed in the same way still.
+路由器支持嵌套文件。如果你创建一个嵌套的文件结构，其中的文件将会以用同样的
+方式自动路由。
 
 - `app/pages/blog/first-post.js` → `/blog/first-post`
 - `app/pages/dashboard/settings/username.js` →
   `/dashboard/settings/username`
 
-### Dynamic route segments {#dynamic-route-segments}
+### 动态路由段 {#dynamic-route-segments}
 
-To match a dynamic segment you can use the bracket syntax. This allows you
-to match named parameters.
+为了匹配一个动态段，你可以使用括号语法。这允许你匹配命名参数。
 
 - `app/pages/blog/[slug].js` → `/blog/:slug` (`/blog/hello-world`)
 - `app/pages/[username]/settings.js` → `/:username/settings`
   (`/foo/settings`)
 - `app/pages/post/[...all].js` → `/post/*` (`/post/2020/id/title`)
 
-Consider the following page `app/pages/post/[pid].js`:
+考虑以下页面`app/pages/post/[pid].js`:
 
 ```jsx
 import { useParam } from "blitz"
@@ -56,74 +53,70 @@ const Post = () => {
 export default Post
 ```
 
-Any route like `/post/1`, `/post/abc`, etc. will be matched by
-`app/pages/post/[pid].js`. The matched path parameter will be sent as a
-query parameter to the page, and it will be merged with the other query
-parameters.
+任何诸如`/post/1`, `/post/abc`这样的路由将会被`app/pages/post/[pid].js`匹
+配到，
 
-For example, the route `/post/abc` will have the following `query` object:
+匹配的参数将被作为一个查询参数发送给页面，并与其它查询参数合并。
+
+例如，`/post/abc`路由将会有以下的 query 对象:
 
 ```json
 { "pid": "abc" }
 ```
 
-Similarly, the route `/post/abc?foo=bar` will have the following `query`
-object:
+同理， `/post/abc?foo=bar`也将会有以下的 query 对象:
 
 ```json
 { "foo": "bar", "pid": "abc" }
 ```
 
-However, route parameters will override query parameters with the same
-name. For example, the route `/post/abc?pid=123` will have the following
-`query` object:
+然而，路由参数将覆盖同名的查询参数。例如，`/post/abc?pid=123`将会有如下
+的`query`对象。
 
 ```json
 { "pid": "abc" }
 ```
 
-Multiple dynamic route segments work the same way. The page
-`app/pages/post/[pid]/[comment].js` will match the route
-`/post/abc/a-comment` and its `query` object will be:
+多个动态路由段的工作原理相同，`app/pages/post/[pid]/[comment].js` 页将会匹
+配到路由`/post/abc/a-comment`，它的`query`对象如下:
 
 ```json
 { "pid": "abc", "comment": "a-comment" }
 ```
 
-### Catch all routes {#catch-all-routes}
+### 捕获所有路由 {#catch-all-routes}
 
-Dynamic routes can be extended to catch all paths by adding three dots
-(`...`) inside the brackets. For example:
+通过在方括号内添加三个英文句点(`...`)即可将动态路由扩展为能够捕获所有路径
+的路由。例如:
 
-- `app/pages/post/[...slug].js` matches `/post/a`, but also `/post/a/b`,
-  `/post/a/b/c` and so on.
+- `app/pages/post/[...slug].js` 匹配 `/post/a`, 也匹配 `/post/a/b`、
+  `/post/a/b/c` 等。
 
-> **Note**: You can use names other than `slug`, such as: `[...param]`
+> **注意**: 你可以使用除了`slug`之外的其它名称, 比如: `[...param]`
 
-Matched parameters will be sent as a query parameter (`slug` in the
-example) to the page, and it will always be an array, so, the path
-`/post/a` will have the following `query` object:
+匹配的参数将作为查询参数发送 (本例中的`slug`)传递给页面，并且始终是数组格
+式，因此，路径 `/post/a`将具有以下`query`对象：
 
 ```json
 { "slug": ["a"] }
 ```
 
-And in the case of `/post/a/b`, and any other matching path, new
-parameters will be added to the array, like so:
+对于`/post/a/b`路径，以及任何其它匹配的路径，新参数将被添加至数组中,如下所
+示:
 
 ```json
 { "slug": ["a", "b"] }
 ```
 
-### Optional catch all routes {#optional-catch-all-routes}
+### 可选的捕获所有路由 {#optional-catch-all-routes}
 
-Catch all routes can be made optional by including the parameter in double
-brackets (`[[...slug]]`).
+通过将参数包含在双方括号中(`[[...slug]]`)的方式，可以使所有路径成为可选路
+径。
 
-For example, `app/pages/post/[[...slug]].js` will match `/post`,
-`/post/a`, `/post/a/b`, and so on.
+例如,`app/pages/post/[[...slug]].js`会匹
+配`/post`、`/post/a`、`/post/a/b`等等。
 
-The `query` objects are as follows:
+该`query`对象的内容如下:
 
 ```json
 { } // GET `/post` (empty object)
@@ -131,19 +124,17 @@ The `query` objects are as follows:
 { "slug": ["a", "b"] } // `GET /post/a/b` (multi-element array)
 ```
 
-## Caveats {#caveats}
+## 注意事项 {#caveats}
 
-- Predefined routes take precedence over dynamic routes, and dynamic
-  routes over catch all routes. Take a look at the following examples:
-  - `app/pages/post/create.js` - Will match `/post/create`
-  - `app/pages/post/[pid].js` - Will match `/post/1`, `/post/abc`, etc.
-    But not `/post/create`
-  - `app/pages/post/[...slug].js` - Will match `/post/1/2`, `/post/a/b/c`,
-    etc. But not `/post/create`, `/post/abc`
-- Pages that are statically optimized by
-  [Automatic Static Optimization](./pages#automatic-static-optimization)
-  will be hydrated without their route parameters provided, i.e `query`
-  will be an empty object (`{}`).
+- 预定义的路由优先于动态路由,而动态路由优先于捕获所有路由。看下面的例子：
+  - `app/pages/post/create.js` - 会匹配 `/post/create`
+  - `app/pages/post/[pid].js` - 会匹配`/post/1`, `/post/abc`等，但不匹
+    配`/post/create`
+  - `app/pages/post/[...slug].js`- 会匹配 /post/1/2, /post/a/b/c 等等. 但
+    不匹配 `/post/create`、`/post/abc`
+- 通过[自动静态优化](./pages#automatic-static-optimization)方式进行静态优
+  化的页面，将在没有提供路由参数的情况下被水合(hydrated)，即`query` 将会是
+  一个空对象(`{}`)。
 
-  After hydration, Blitz will trigger an update to your application to
-  provide the route parameters in the `query` object.
+  水合(hydration)之后，Blitz 将会触发对你的应用程序的更新，以便在`query`
+  对象中提供路由参数。
