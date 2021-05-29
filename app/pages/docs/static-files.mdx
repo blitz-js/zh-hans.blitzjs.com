@@ -1,14 +1,13 @@
 ---
-title: Static Files & Images
-sidebar_label: Static Files & Images
+title: 静态文件和图片
+sidebar_label: 静态文件和图片
 ---
 
-Blitz can serve static files, like images, under a folder called `public`
-in the root directory. Files inside `public` can then be referenced by
-your code starting from the base URL (`/`).
+Blitz 可以在根目录下的 `public` 文件夹中提供例如图片一样的静态文件。在
+`public` 中的文件均可以在代码中通过绝对路径 URL（`/`）来引入。
 
-For example, if you add an image to `public/my-image.png`, the following
-code will access the image:
+例如，如果你创建了一个 `public/my-image.png` 图片文件，下面这段代码可以正
+确访问到这个图片：
 
 ```jsx
 function MyImage() {
@@ -18,13 +17,13 @@ function MyImage() {
 export default MyImage
 ```
 
-This folder is also useful for `robots.txt`, Google Site Verification, and
-any other static files (including `.html`)!
+这个文件夹对于 `robots.txt`、谷歌网站验证服务（Google Site Verification）
+和任何其它静态文件（包含 `.html`）来说都很有用！
 
-> **Note**: Don't name the `public` directory anything else. The name
-> cannot be changed and is the only directory used to serve static assets.
+> **注意**：请不要将 `public` 文件夹重命名为其它名称。该名称不能被改变，且
+> 只有这个文件夹是用来服务静态文件。
 
-> **Note**: Be sure to not have a static file with the same name as a file
-> in a `pages/` directory, as this will result in an error.
+> **注意**：请确保静态文件的名称和任何在 `pages/` 文件夹下的文件名称没有任
+> 何同名冲突，否则会导致意外错误。
 >
-> Read more: <http://err.sh/next.js/conflicting-public-file-page>
+> 查阅更多：<http://err.sh/next.js/conflicting-public-file-page>
