@@ -1,50 +1,44 @@
 ---
-title: Static HTML Export
-sidebar_label: Static HTML Export
+title: 静态 HTML 导出
+sidebar_label: 静态 HTML 导出
 ---
 
-[`blitz export`](cli-export) allows you to export your app to static HTML,
-which can be run standalone without the need of a Node.js server.
+[`blitz export`](cli-export) 允许你导出你的应用为可以独立运行而无需
+Node.js 服务器的静态 HTML。
 
-The exported app supports only some features of Blitz, like
-[dynamic routes](routing#dynamic-route-segments), prefetching, preloading
-and dynamic imports. It does **not** support queries / mutations,
-authentication or database access.
+导出的应用仅支持 Blitz 的部分功能，像
+[动态路由](routing#dynamic-route-segments)，预请求，预加载和动态导入。它
+**不** 支持 queries / mutations，权限验证或数据库访问。
 
-`blitz export` works by prerendering all pages to HTML. For dynamic
-routes, your page can export a [`getStaticPaths`](get-static-paths)
-function to let the exporter know which HTML pages to generate for that
-route.
+`blitz export` 的工作原理是通过预渲染将页面导出为 HTML。对于动态路由，你的
+页面可以导出一个 [`getStaticPaths`](get-static-paths) 函数来让导出器知道要
+为该路由生成哪些页面。
 
-`blitz export` is intended for scenarios where **none** of your pages have
-server-side or incremental data requirements (though statically-rendered
-pages can still fetch data on the client side normally).
+`blitz export` 可以用于以下情况：你**没有**页面需要服务端渲染或增量数据的
+要求（尽管静态渲染的页面仍可以正常从客户端获取数据）。
 
 <Card type="info">
 
-If you're looking to make a hybrid site where only some pages are
-prerendered to static HTML, Blitz already does that automatically for you!
-If your page doesn't use `getServerSideProps`, then it will be a static
-HTML page.
+如果你要创建一个仅将某些页面呈现为静态 HTML 的混合站点，Blitz 已经为你自动
+完成了！如果你的页面不适用 `getServerSideProps`，那么它将是一个静态 HTML
+页面。
 
 </Card>
 
-`blitz export` also causes features like
-[Incremental Static Generation and Regeneration](get-static-props#incremental-static-regeneration)
-to be disabled, as they require `blitz start` or a serverless deployment
-to function.
+`blitz export` 还会导致
+[增量静态生成和再生](get-static-props#incremental-static-regeneration) 等
+功能被禁用，因为它们需要 `blitz start` 或 Serverless 部署才能运行。
 
-## How to use it {#how-to-use-it}
+## 如何使用 {#how-to-use-it}
 
-Develop your app as you normally do with Blitz. Then run:
+像平常使用 Blitz 一样开发应用。然后运行：
 
 ```bash
 blitz build
 blitz export
 ```
 
-For that you may want to update the scripts in your `package.json` like
-this:
+为此，你可能需要像这样更新 `package.json` 中的脚本：
 
 ```json
 "scripts": {
@@ -52,36 +46,33 @@ this:
 }
 ```
 
-And run it with:
+然后运行：
 
 ```bash
 yarn build
 ```
 
-Then you'll have a static version of your app in the out directory.
+然后你将在输出的目录中拥有应用的静态版本。
 
-By default, `blitz export` doesn't require any configuration. It will
-output a static HTML file for each page in your pages directory (or more
-for [dynamic routes](routing#dynamic-route-segments), where it will call
-`getStaticPaths` and generate pages based on the result). For more
-advanced scenarios, you can define a parameter called
-[`exportPathMap`](blitz-config#export-path-map) in your blitz.config.js
-file to configure exactly which pages will be generated.
+默认情况下，`blitz export` 不需要任何配置。它将为页面目录中的每个页面输出
+一个静态 HTML 文件（或为 [动态路由](routing#dynamic-route-segments) 输出更
+多的 HTML 文件，在此它将调用 `getStaticPaths` 并根据结果生成页面）。对于更
+高级的方案，你可以在你的 blitz.config.js 文件中定义一个名为
+[`exportPathMap`](blitz-config#export-path-map) 的参数，以准确配置要生成的
+页面。
 
-## Deployment {#deployment}
+## 部署 {#deployment}
 
-By default, `blitz export` will generate an out directory, which can be
-served by any static hosting service or CDN.
+默认情况下，`blitz export` 将会生成一个输出目录，任何静态托管服务或 CDN 均
+可支持该目录。
 
-## Caveats {#caveats}
+## 注意事项 {#caveats}
 
-- `getServerSideProps` cannot be used within pages because the method
-  requires a server. Consider using `getStaticProps` instead.
-- The `fallback: true` mode of `getStaticPaths` is not supported when
-  using `blitz export`.
-- API Routes, Queries, and Mutations are not supported by this method
-  because they can't be prerendered to HTML.
-- Internationalized Routing is not supported as it requires server-side
-  routing.
-- The Image component's default loader is not supported when using
-  `blitz export`. However, other loader options will work.
+- `getServerSideProps` 不能在页面中使用，因为该方法需要服务器支持。考虑改
+  用 `getStaticProps`。
+- 使用 `blitz export` 时，不支持 `getStaticPaths` 的 `fallback: true` 模式
+  。
+- 不支持 API 路由，Queries 和 Mutations，因为它们无法预渲染为 HTML。
+- 不支持国际化路由，因为它需要服务端路由。
+- 使用 `blitz export` 时不支持 Image 组件的默认加载器。但其它加载器选项可
+  以使用。
