@@ -1,37 +1,29 @@
 ---
-title: Code Splitting
-sidebar_label: Code Splitting
+title: 代码分割
+sidebar_label: 代码分割
 ---
 
-Blitz automatically optimizes your JavaScript bundles for each page, so
-your users will only download the required assets for a given route
-(without any extra effort on your part!). This technique is known as
-[code splitting](https://reactjs.org/docs/code-splitting.html).
+Blitz 自动为你的每个页面优化你的 JavaScript 包，因此你的用户将会在指定的路
+由下仅下载所需的资源（而不需你付出任何额外的工作！）。这项技术被熟称为
+[代码分割](https://reactjs.org/docs/code-splitting.html)。
 
-In the event you need to split or lazy-load assets within a page, Blitz
-supports ES2020
-[dynamic `import()`](https://github.com/tc39/proposal-dynamic-import) for
-JavaScript. With it you can import JavaScript modules (React components,
-libraries, etc.) dynamically and work with them. You can think of dynamic
-imports as another way to split your code into manageable chunks.
+如果需要在页面内拆分或延迟加载资源，Blitz 支持 ES2020 JavaScript
+的[动态 `import()`](https://github.com/tc39/proposal-dynamic-import)。此时
+你可以动态导入 JavaScript 模块（React 组件，库等）来使用。你可以将动态导入
+理解为将代码拆分为可管理的代码块的另一种方法。
 
-One reason you may want to do this is when a feature on page relies on a
-very large library that you don't want the user's browser to have to
-download unless they need it (and not all visitors to the page will need
-it). You can use dynamic imports to load the library only after the user
-has clicked a button or toggled an option somewhere on the page, for
-example. This helps keep the initial page load nice and fast for everyone.
+一个你可能想这样做的原因是，当一个页面上的功能依赖一个非常大的库，你不想要
+让用户的浏览器在不需要的使用下载它（且并不是所有用户在这个页面都会使用）。
+例如，你可以使用动态导入来当用户在页面某个位置点击一个按钮或勾选一个选项时
+，动态地加载这个库。这可以让每个用户访问最初页面时的加载体验很好且很快。
 
-Another scenario that may benefit from dynamic imports is using a library
-that only works in the browser (perhaps it uses the `window` object
-without first checking if it's available). In this case, dynamically
-importing the library will prevent it from throwing an error when Blitz
-performs server-side rendering.
+另一个可以从动态导入来获益的场景是，使用仅在浏览器上用到的库（或许它使用
+`window` 对象无需事先检查是否可用）。在这种情况下，动态导入这个库会防止
+Blitz 在执行服务端渲染时报出错误。
 
-## Basic usage {#basic-usage}
+## 基本使用 {#basic-usage}
 
-In the following example, the module `../components/hello` will be
-dynamically loaded by the page:
+在下面的示例中，`../components/hello` 模块将会被动态导入到页面中：
 
 ```jsx
 import { dynamic } from "blitz"
@@ -51,23 +43,20 @@ function Home() {
 export default Home
 ```
 
-`DynamicComponent` will be the default component returned by
-`../components/hello`. It works like a regular React Component, and you
-can pass props to it as you normally would.
+`DynamicComponent` 将会成为 `../components/hello` 返回的默认组件。它像常规
+React 组件一样工作，你可以在像往常一样将 props 传递给它。
 
-> **Note**: In `import('path/to/component')`, the path must be explicitly
-> written. It can't be a template string nor a variable. Furthermore the
-> `import()` has to be inside the `dynamic()` call for Next.js to be able
-> to match webpack bundles / module ids to the specific `dynamic()` call
-> and preload them before rendering. `dynamic()` can't be used inside of
-> React rendering as it needs to be marked in the top level of the module
-> for preloading to work, similar to `React.lazy`.
+> **注意**：在 `import('path/to/component')` 中，路径必须明确地被说明。它
+> 不能是一个模板字符串或一个变量。此外，`import()` 必须在 `dynamic()` 中调
+> 用，以便 Next.js 能够将 Webpack 包/模块 ID 与特定的 `dynamic()` 调用进行
+> 匹配，并在渲染之前预先加载他们。`dynamic()` 无法在 React 渲染过程中使用
+> ，因为它需要在模块的顶层进行标记以进行预加载才能工作，类似于
+> `React.lazy`。
 
-## With named exports {#with-named-exports}
+## 命名导出 {#with-named-exports}
 
-If the dynamic component is not the default export, you can use a named
-export too. Consider the module `../components/hello.js` which has a named
-export `Hello`:
+如果动态组件不是默认导出的，你也可以使用命名导出。考虑有一个导出时名为
+`Hello` 的 `../components/hello.js` 模块：
 
 ```jsx
 export function Hello() {
@@ -75,11 +64,11 @@ export function Hello() {
 }
 ```
 
-To dynamically import the `Hello` component, you can return it from the
+要动态导入 `Hello` 组件，你可以从
+[`import()`](https://github.com/tc39/proposal-dynamic-import#example) 返回
+的
 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
-returned by
-[`import()`](https://github.com/tc39/proposal-dynamic-import#example),
-like so:
+中将其返回，如下所示：
 
 ```jsx
 import { dynamic } from "blitz"
@@ -101,10 +90,9 @@ function Home() {
 export default Home
 ```
 
-## With custom loading component {#with-custom-loading-component}
+## 带有自定义加载组件 {#with-custom-loading-component}
 
-An optional `loading` component can be added to render a loading state
-while the dynamic component is being loaded. For example:
+可以添加一个可选的 `loading` 组件，以在加载动态组件时呈现加载状态。例如：
 
 ```jsx
 import { dynamic } from "blitz"
@@ -129,12 +117,12 @@ function Home() {
 export default Home
 ```
 
-## With no SSR {#with-no-ssr}
+## 没有 SSR {#with-no-ssr}
 
-You may not always want to include a module on server-side. For example,
-when the module includes a library that only works in the browser.
+你可能并不总是希望在服务器端包含一个模块。例如，当模块包含仅在浏览器中可用
+的库时。
 
-Take a look at the following example:
+看看下面这个例子：
 
 ```jsx
 import { dynamic } from "blitz"
