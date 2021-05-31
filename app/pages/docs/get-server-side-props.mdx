@@ -3,47 +3,42 @@ title: getServerSideProps API
 sidebar_label: getServerSideProps API
 ---
 
-If you export an `async` function called `getServerSideProps` from a
-[page](./pages), Blitz will pre-render this page on each request using the
-data returned by `getServerSideProps`.
+如果你从一个[页面](./pages)中导出一个成为 `getServerSideProps` 的 `async`
+函数， Blitz 将会通过 `getServerSideProps` 返回的数据在每个请求上预渲染此
+页面。
 
 ```js
 export async function getServerSideProps(context) {
   return {
-    props: {}, // will be passed to the page component as props
+    props: {}, // 将会以 props 形式传递给页面组件
   }
 }
 ```
 
-The `context` parameter is an object containing the following keys:
+`context` 参数是一个拥有如下键的对象：
 
-- `params`: If this page uses a dynamic route, `params` contains the route
-  parameters. If the page name is `[id].js` , then `params` will look like
-  `{ id: ... }`. To learn more, take a look at the
-  [Dynamic Routing documentation](/docs/routing#dynamic-route-segments).
-- `req`:
-  [The HTTP IncomingMessage object](https://nodejs.org/api/http.html#http_class_http_incomingmessage).
-- `res`:
-  [The HTTP response object](https://nodejs.org/api/http.html#http_class_http_serverresponse).
-- `query`: The query string.
-- `preview`: `preview` is `true` if the page is in the preview mode and
-  `false` otherwise. See the [Preview Mode documentation](./preview-mode).
-- `previewData`: The preview data set by `setPreviewData`. See the
-  [Preview Mode documentation](./preview-mode).
-- `resolvedUrl`: A normalized version of the request URL that strips the
-  `_next/data` prefix for client transitions and includes original query
-  values.
-- `locale` contains the active locale (if enabled).
-- `locales` contains all supported locales (if enabled).
-- `defaultLocale` contains the configured default locale (if enabled).
+- `params`：如果这个页面使用动态路由，`params` 包含这个路由参数。如果页面
+  名字是 `[id].js`，那么 `params` 将会像 `{ id: ... }`。想要了解更多请查
+  阅[动态路由文档](/docs/routing#dynamic-route-segments)。
+- `req`：[HTTP IncomingMessage 对象](https://nodejs.org/api/http.html#http_class_http_incomingmessage)。
+- `res`：[HTTP response 对象](https://nodejs.org/api/http.html#http_class_http_serverresponse)。
+- `query`：请求字符串。
+- `preview`：如果这个页面是预览模式则 `preview` 为 `true`，否则为
+  `false`。请查阅[预览模式文档](./preview-mode)。
+- `previewData`：通过 `setPreviewData` 设置的预览数据。请查
+  阅[预览模式文档](./preview-mode)。
+- `resolveUrl`：请求 URL 的规范化版本，可为客户端转换去除 `_next/data` 前
+  缀，并包括了原始的查询值。
+- `locale` 包含目前激活的 locale 配置（如果已开启）。
+- `locales` 包含所有支持的 locales（如果已开启）。
+- `defaultLocale` 包含配置后的默认 local（如果已开启）。
 
-`getServerSideProps` should return an object with:
+`getServerSideProps` 应该返回包含如下的对象：
 
-- `props` - A **required** object with the props that will be received by
-  the page component. It should be a
-  [serializable object](https://en.wikipedia.org/wiki/Serialization)
-- `notFound` - An **optional** boolean value to allow the page to return a
-  404 status and page. Below is an example of how it works:
+- `props`——一个**必须的**对象，其值将会被页面组件获取到。必须
+  是[可序列化](https://en.wikipedia.org/wiki/Serialization)。
+- `notFound`——一个**可选的**布尔值，允许页面返回一个 404 状态及页面。下方
+  是如何使用的示例：
 
   ```js
   export async function getServerSideProps(context) {
@@ -56,18 +51,16 @@ The `context` parameter is an object containing the following keys:
     }
 
     return {
-      props: {}, // will be passed to the page component as props
+      props: {}, // 将会以 props 形式传递给页面组件
     }
   }
   ```
 
-- `redirect` - An **optional** redirect value to allow redirecting to
-  internal and external resources. It should match the shape of
-  `{ destination: string, permanent: boolean }`. In some rare cases, you
-  might need to assign a custom status code for older HTTP Clients to
-  properly redirect. In these cases, you can use the `statusCode` property
-  instead of the `permanent` property, but not both. Below is an example
-  of how it works:
+- `redirect`——一个**可选的**对象，允许重定向到内部或外部资源。格式需要匹配
+  `{ destination: string, permanent: boolean }`。在某些罕见的场景中，你可
+  能会需要用来将一个自定义的状态码给一个老的 HTTP 客户端以正确地重定向。在
+  这时，你可以使用 `statusCode` 属性而非 `permanent` 属性，但不要同时使用
+  两者。下方是如何使用的示例：
 
   ```js
   export async function getServerSideProps(context) {
@@ -83,55 +76,51 @@ The `context` parameter is an object containing the following keys:
     }
 
     return {
-      props: {}, // will be passed to the page component as props
+      props: {}, // 将会以 props 形式传递给页面组件
     }
   }
   ```
 
-> **Note**: You can import modules in top-level scope for use in
-> `getServerSideProps`. Imports used in `getServerSideProps` will not be
-> bundled for the client-side.
+> **注意**：你可以在顶层作用域来导入模块，以供在 `getStaticProps` 中使用。
+> 在 `getStaticProps` 中使用的导入将不捆绑在客户端中。
 >
-> This means you can write **server-side code directly in
-> `getServerSideProps`**. This includes reading from the filesystem or a
-> database.
+> 这意味着你可以**在 `getStaticProps` 中直接编写服务端代码**。包括从文件系
+> 统或数据库中的读取操作。
 
-### Simple example {#simple-example}
+### 简单示例 {#simple-example}
 
-Here’s an example which uses `getServerSideProps` to fetch data at request
-time and pre-renders it.
+这是一个有关如何使用 `getServerSideProps` 在请求时获取数据并进行预渲染的示
+例。
 
 ```jsx
 function Page({data}) {
-  // Render data...
+  // 渲染数据...
 }
 
-// This gets called on every request
+// 该函数在每一次请求中都会被调用
 export async function getServerSideProps() {
   const data = /* ... */
 
-  // Pass data to the page via props
+  // 通过 props 来将数据传递给页面
   return {props: {data}}
 }
 
 export default Page
 ```
 
-### When should I use `getServerSideProps`? {#when-should-i-use-get-server-side-props}
+### 我该何时使用 `getServerSideProps`? {#when-should-i-use-get-server-side-props}
 
-You should use `getServerSideProps` only if you need to pre-render a page
-whose data must be fetched at request time. Time to first byte (TTFB) will
-be slower than `getStaticProps` because the server must compute the result
-on every request, and the result cannot be cached by a CDN without extra
-configuration.
+当你需要预渲染一个必须预先在请求过程中获取到数据的页面时，可以使用
+`getServerSideProps`。浏览器接收第一个字节的时间（TTFB）将会被
+`getStaticProps` 慢，因为服务器必须在每次请求来时计算结果，且结果无法在没
+有额外配置的时候被 CDN 缓存。
 
-If you don’t need to pre-render the data, then you should consider
-fetching data on the client side.
-[Click here to learn more](/docs/query-usage).
+如果你不需要预渲染数据，你应该考虑在客户端获取数据
+。[点击这里查看更多](/docs/query-usage)。
 
-### TypeScript: Use `GetServerSideProps` {#type-script-use-get-server-side-props}
+### TypeScript：使用 `GetServerSideProps` {#type-script-use-get-server-side-props}
 
-For TypeScript, you can use the `GetServerSideProps` type from `blitz`:
+对于 TypeScript，你可以从 `blitz` 中使用 `GetServerSideProps` 类型：
 
 ```ts
 import { GetServerSideProps } from "blitz"
@@ -141,8 +130,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 }
 ```
 
-If you want to get inferred typings for your props, you can use
-`InferGetServerSidePropsType<typeof getServerSideProps>`, like this:
+如果你想要为你的 props 获取推断的类型，你可以使用
+`InferGetServerSidePropsType<typeof getServerSideProps>`，像这样：
 
 ```tsx
 import { InferGetServerSidePropsType } from 'blitz'
@@ -160,49 +149,45 @@ export const getServerSideProps = async () => {
 }
 
 function Page({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  // will resolve posts to type Data
+  // 将推断 posts 为 Data 类
 }
 
 export default Page
 ```
 
-### Technical details {#technical-details}
+### 技术细节 {#technical-details}
 
-#### Only runs on server-side
+#### 仅在服务端支持
 
-`getServerSideProps` only runs on server-side and never runs on the
-browser. If a page uses `getServerSideProps` , then:
+`getServerSideProps` 仅在服务端运行并且永远不会在浏览器上运行。如果一个页
+面使用 `getServerSideProps`，那么：
 
-- When you request this page directly, `getServerSideProps` runs at the
-  request time, and this page will be pre-rendered with the returned
-  props.
-- When you request this page on client-side page transitions through
-  `<Link>` or `router` ([documentation](/docs/router)), Blitz sends an API
-  request to the server, which runs `getServerSideProps`. It’ll return
-  JSON that contains the result of running `getServerSideProps`, and the
-  JSON will be used to render the page. All this work will be handled
-  automatically by Blitz, so you don’t need to do anything extra as long
-  as you have `getServerSideProps` defined.
+- 当你直接请求这个页面，`getServerSideProps` 将在请求过程中执行，且这个页
+  面将会通过返回的 props 来预渲染。
+- 当你通过客户端页面 `<Link>` 或 `router`（[文档](/docs/router)）过渡时请
+  求这个页面，Blitz 会发送一个 API 请求到服务器上，来执行
+  `getServerSideProps`。它将返回包括执行 `getServerSideProps` 结果的
+  JSON，并且这个 JSON 将会被用来渲染这个页面。所有这些工作将会自动被 Blitz
+  执行，所以你只要在 `getServerSideProps` 定义后不需要做任何额外的工作。
 
-You can use [this tool](https://next-code-elimination.now.sh/) to verify
-what Blitz eliminates from the client-side bundle.
+你可以使用[这个工具](https://next-code-elimination.now.sh/) 来验证 Blitz
+从客户端打包后删除的内容。
 
-#### Only allowed in a page
+你可以使用
 
-`getServerSideProps` can only be exported from a [page](./pages). You
-can’t export it from non-page files.
+#### 仅在页面中支持
 
-Also, you must use `export async function getServerSideProps() {}` — it
-will **not** work if you add `getServerSideProps` as a property of the
-page component.
+`getServerSideProps` 仅能在一个[页面](./pages)中被导出。你无法在一个非页面
+文件中导出。
 
-#### First Render UX
+同时，你必须使用 `export async function getServerSideProps() {}`——如果你
+将`getServerSideProps`作为一个页面组件的属性，它将**无法**正常工作。
 
-Even though a page with `getServerSideProps` will be pre-rendered on the
-server, it may fallback to the page's loading state if your page contains
-queries that request data missing from the initial page props. This can
-create a flickering effect where the contents of the page rapidly changes
-when the query data gets loaded into the app.
+#### 首屏渲染的用户体验
 
-[Click here](./pages#first-render-ux) to discover ways you can improve the
-first render User Experience (UX) of your pages.
+尽管带有 `getServerSideProps` 的页面将会在服务端上被预渲染，但如果你的页面
+包含着初始页面需要但缺失的属性的查询，则回退到页面正在加载的状态。当查询到
+的数据加载到应用中时，由于页面内容会快速更改，从而导致产生闪烁的意外效果。
+
+[点击这里](./pages#first-render-ux) 来探索改善你的页面在首屏渲染时的用户体
+验（UX）的方法。
