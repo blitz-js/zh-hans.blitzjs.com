@@ -3,32 +3,28 @@ title: getStaticPaths API
 sidebar_label: getStaticPaths API
 ---
 
-If a page has dynamic routes
-([documentation](/docs/routing/dynamic-routes.md)) and uses
-`getStaticProps` it needs to define a list of paths that have to be
-rendered to HTML at build time.
+如果一个页面有动态路由（[文档](/docs/routing/dynamic-routes.md)）并且使用
+`getStaticProps`，则需要定义在构建过程中必须渲染为 HTML 的路径列表。
 
-If you export an `async` function called `getStaticPaths` from a page that
-uses dynamic routes, Blitz will statically pre-render all the paths
-specified by `getStaticPaths`.
+如果你从使用动态路由的页面中导出一个称为 `getStaticProps` 的 `async` 函数
+，Blitz 将静态地预渲染 `getStaticPaths` 指定的所有路径。
 
 ```jsx
 export async function getStaticPaths() {
   return {
     paths: [
-      { params: { ... } } // See the "paths" section below
+      { params: { ... } } // 查阅下方 "paths" 章节
     ],
-    fallback: true or false // See the "fallback" section below
+    fallback: true or false // 查阅下方 "fallback" 章节
   };
 }
 ```
 
-#### The `paths` key (required)
+#### `paths` 键（必须）
 
-The `paths` key determines which paths will be pre-rendered. For example,
-suppose that you have a page that uses dynamic routes named
-`app/posts/pages/posts/[id].js`. If you export `getStaticPaths` from this
-page and return the following for `paths`:
+`paths` 键确定了哪些路径将被预渲染。例如，假设你有一个页面使用动态路由的名
+为 `app/posts/pages/posts/[id].js` 的文件。如果你从这个页面导出
+`getStaticPaths` 并为 `path` 返回以下内容：
 
 ```js
 return {
@@ -40,72 +36,65 @@ return {
 }
 ```
 
-Then Blitz will statically generate `posts/1` and `posts/2` at build time
-using the page component in `app/posts/pages/posts/[id].js`.
+那么 Blitz 将会在 `app/posts/pages/posts/[id].js` 页面组件的构建过程中静态
+生成 `posts/1` 和 `posts/2`。
 
-Note that the value for each `params` must match the parameters used in
-the page name:
+请注意，每个 `params` 的值必须与页面名称中使用的参数匹配：
 
-- If the page name is `app/posts/pages/posts/[postId]/[commentId]`, then
-  `params` should contain `postId` and `commentId`.
-- If the page name uses catch-all routes, for example `pages/[...slug]`,
-  then `params` should contain `slug` which is an array. For example, if
-  this array is `['foo', 'bar']`, then Blitz will statically generate the
-  page at `/foo/bar`.
-- If the page uses an optional catch-all route, supply `null`, `[]`,
-  `undefined` or `false` to render the root-most route. For example, if
-  you supply `slug: false` for `pages/[[...slug]]`, Blitz will statically
-  generate the page `/`.
+- 如果页面的名称是 `app/posts/pages/posts/[postId]/[commentId]`，那么
+  `params` 应该包括 `postId` 和 `commentId`。
+- 如果页面名称使用捕获所有路由的模式，例如 `pages/[...slug]`，那么
+  `params` 应该包含值为数组的 `slug`。例如，如果这个数组是
+  `['foo', 'bar']`，那么 Blitz 会为 `/foo/bar` 静态生成页面。
+- 如果页面使用一个可选的捕获所有路由的模式，可提供
+  `null`、`[]`、`undefined` 或 `faluse` 来渲染最根目录的路由。例如，如果你
+  为 `pages/[[...slug]]` 提供 `slug: false`，Blitz 会静态生成页面 `/`。
 
-#### The `fallback` key (required)
+#### `fallback` 键（必须）
 
-The object returned by `getStaticPaths` must contain a boolean `fallback`
-key.
+`getStaticPaths` 返回的对象必须包含一个布尔值的 `fallback` 键。
 
 #### `fallback: false`
 
-If `fallback` is `false`, then any paths not returned by `getStaticPaths`
-will result in a **404 page**. You can do this if you have a small number
-of paths to pre-render - so they are all statically generated during build
-time. It’s also useful when the new pages are not added often. If you add
-more items to the data source and need to render the new pages, you’d need
-to run the build again.
+如果 `fallback` 是 `false`，那么没有被 `getStaticPaths` 返回的任何路径将会
+导致一个 **404 页面**。当你有一个数量少的路径来渲染的时候可以这么做——因此
+这些是在构建过程中静态生成的。当新的页面不常被更新的时候也会很有用。如果你
+要为数据源新增很多元素并且需要渲染新的页面，你最好再次执行构建。
 
-Here’s an example which pre-renders one blog post per page called
-`app/posts/pages/posts/[id].js`. The list of blog posts will be fetched
-from your database or a CMS and returned by `getStaticPaths` . Then, for
-each page, it fetches the data for a single post using `getStaticProps`.
+这是一个 `app/posts/pages/posts/[id].js` 示例，其中每页渲染一个博客文章。
+博客文章的类别将从你的数据库或 CMS 获取，并由 `getStaticPaths` 返回。接着
+，针对每个页面，使用 `getStaticPaths` 获取单个文章的数据。
 
 ```jsx
 // app/posts/pages/posts/[id].js
 
 function Post({post}) {
-  // Render post...
+  // 渲染文章...
 }
 
-// This function gets called during pre-rendering
+// 该函数在预渲染时被调用
 export async function getStaticPaths() {
-  // 1. Use a blitz query to get all posts
-  // 2. Or call an external API endpoint to get posts
+  // 1. 使用 blitz query 来获取所有文章
+  // 2. 或调用外部 API 端口来获取文章
   const posts = /* ... */
 
-  // Get the paths we want to pre-render based on posts
+  // 基于 posts 获取我们想要预渲染的路径
   const paths = posts.map((post) => ({
     params: {id: post.id},
   }))
 
-  // We'll pre-render only these paths at build time.
-  // { fallback: false } means other routes should 404.
+  // 我们将只在构建过程中预渲染这些路径
+  // { fallback: false } 意味着其它路由将会 404。
   return {paths, fallback: false}
 }
 
-// This also gets called at build time
+// 这个也在构建过程中被调用
 export async function getStaticProps({params}) {
-  // params contains the post `id`.
-  // If the route is like /posts/1, then params.id is 1
+  // params 包含文章 `id`。
+  // 如果路由像 /posts/1 这样，那么 params.id 就是 1
   const post = /* get one post */
 
-  // Pass post data to the page via props
+  // 通过 props 来传递文章数据到页面中
   return {props: {post}}
 }
 
@@ -114,33 +103,28 @@ export default Post
 
 #### `fallback: true`
 
-If `fallback` is `true`, then the behavior of `getStaticProps` changes:
+如果 `fallback` 是 `true`，那么 `getStatickProps` 改变时的行为是：
 
-- The paths returned from `getStaticPaths` will be rendered to HTML at
-  build time.
-- The paths that have not been generated at build time will **not** result
-  in a 404 page. Instead, Blitz will serve a “fallback” version of the
-  page on the first request to such a path (see
-  [“Fallback pages”](#fallback-pages) below for details).
-- In the background, Blitz will statically generate the requested path
-  HTML and JSON. This includes running `getStaticProps`.
-- When that’s done, the browser receives the JSON for the generated path.
-  This will be used to automatically render the page with the required
-  props. From the user’s perspective, the page will be swapped from the
-  fallback page to the full page.
-- At the same time, Blitz adds this path to the list of pre-rendered
-  pages. Subsequent requests to the same path will serve the generated
-  page, exactly like other pages pre-rendered at build time.
+- `getStaticPaths` 返回的路径将会在构建过程中被渲染为 HTML。
+- 在构建过程中没有没生成的路径将**不会**导致一个 404 页面。反之，Blitz 将
+  会提供一个页面在第一次请求到这个路径（查阅下方的
+  [“预备页面“](#fallback-pages)来了解更多）时的“fallback”版本。
+- 在背后，Blitz 将静态生成请求的路径 HTML 和 JSON。其中包括运行
+  `getStaticProps`。
+- 当上述结束，浏览器将接收到生成路径的 JSON。这将被用来自动渲染具有所需
+  props 的页面。从用户的角度来看，该页面将从预备页面切换到整页。
+- 与此同时，Blitz 将此路径添加到预渲染页面的列表中。对相同路径的后续请求，
+  将提供已生成的页面，就像在构建时预渲染的其他页面一样。
 
-#### Fallback pages
+#### 预备页面
 
-In the “fallback” version of a page:
+在页面的 “fallback” 版本中：
 
-- The page’s props will be empty.
-- Using the [router](/docs/router), you can detect if the fallback is
-  being rendered, `router.isFallback` will be `true`.
+- 页面的 props 将为空。
+- 使用 [路由](docs/router)，你可以检测到是否正在渲染
+  fallback，`router.isFallback` 将会为 `true`。
 
-Here’s an example that uses `isFallback`:
+这是一个使用 `isFallback` 的示例：
 
 ```jsx
 // app/posts/pages/posts/[id].js
@@ -149,94 +133,83 @@ import {useRouter} from "blitz"
 function Post({post}) {
   const router = useRouter()
 
-  // If the page is not yet generated, this will be displayed
-  // initially until getStaticProps() finishes running
+  // 如果当前页面还没被生成，则将最初显示如下加载动画，直到 `getStaticProps` 运行完成为止。
   if (router.isFallback) {
     return <div>Loading...</div>
   }
 
-  // Render post...
+  // 渲染文章...
 }
 
-// This function gets called at build time
+// 该函数在构建过程中被调用
 export async function getStaticPaths() {
   return {
-    // Only `/posts/1` and `/posts/2` are generated at build time
+    // 仅仅 `/posts/1` 和 /posts/2/ 在构建过程中被生成。
     paths: [{params: {id: "1"}}, {params: {id: "2"}}],
-    // Enable statically generating additional pages
-    // For example: `/posts/3`
+    // 启用静态生成额外页面：
+    // 例如：`/posts/3`
     fallback: true,
   }
 }
 
-// This also gets called at build time
+// 这也在构建过程中被调用
 export async function getStaticProps({params}) {
-  // params contains the post `id`.
-  // If the route is like /posts/1, then params.id is 1
+  // 参数包含文章 `id`。
+  // 如果路由像 /posts/1，那么 params.id 是 1
   const post = /* ... */
 
-  // Pass post data to the page via props
+  // 通过 props 来传递文章数据到页面中
   return {props: {post}}
 }
 
 export default Post
 ```
 
-#### When is `fallback: true` useful?
+#### `fallback: true` 什么时候有用？
 
-`fallback: true` is useful if your app has a very large number of static
-pages that depend on data (think: a very large e-commerce site). You want
-to pre-render all product pages, but then your builds would take forever.
+如果你的应用具有大量依赖于数据的静态页面（请想象：一个很大的电商网站）时
+，`fallback: true` 将会很有用。你想要预渲染所有产品页面的话，你的构建过程
+将会非常之久。
 
-Instead, you may statically generate a small subset of pages and use
-`fallback: true` for the rest. When someone requests a page that’s not
-generated yet, the user will see the page with a loading indicator.
-Shortly after, `getStaticProps` finishes and the page will be rendered
-with the requested data. From now on, everyone who requests the same page
-will get the statically pre-rendered page.
+相反，你可以静态生成页面的一小部分，其余部分使用 `fallback: true`。当有人
+请求尚未生成的页面时，用户将看到带有加载动画的页面。此后不久
+，`getStaticProps` 完成，此页面将使用刚请求的数据渲染。从现在开始，请求同
+一个页面的每个人都将获得静态预渲染的页面。
 
-This ensures that users always have a fast experience while preserving
-fast builds and the benefits of Static Generation.
+这可以确保用户在保持快速构建的同时始终能获得快速的体验，并获得“静态生成”的
+好处。
 
-`fallback: true` will not _update_ generated pages, for that take a look
-at
-[Incremental Static Regeneration](/docs/get-static-props#incremental-static-regeneration).
+`fallback: true` 将不会 _更新_ 生成的页面，相关请查
+阅[增量静态再生](/docs/get-static-props#incremental-static-regeneration)。
 
 #### `fallback: 'blocking'`
 
-If `fallback` is `'blocking'`, new paths not returned by `getStaticPaths`
-will wait for the HTML to be generated, identical to SSR (hence why
-_blocking_), and then be cached for future requests so it only happens
-once per path.
+如果 `fallback` 被 `'blocking'`，新的没有被 `getStaticPaths` 返回的路径将
+生成 HTML，该 HTML 与 SSR 相同（因此为何 _blocking_），然后被缓存以用于将
+来的请求，因此每个路径仅产生一次。
 
-`getStaticProps` will behave as follows:
+`getStaticProps` 的表现形式如下：
 
-- The paths returned from `getStaticPaths` will be rendered to HTML at
-  build time by `getStaticProps`.
-- The paths that have not been generated at build time will **not** result
-  in a 404 page. Instead, Blitz will SSR on the first request and return
-  the generated HTML.
-- When that’s done, the browser receives the HTML for the generated path.
-  From the user’s perspective, it will transition from "the browser is
-  requesting the page" to "the full page is loaded". There is no flash of
-  loading/fallback state.
-- At the same time, Blitz adds this path to the list of pre-rendered
-  pages. Subsequent requests to the same path will serve the generated
-  page, like other pages pre-rendered at build time.
+- `getStaticPath` 返回的路径将被 `getStaticProps` 在构建过程渲染为 HTML。
+- 构建过程中没有被生成的路由将**不会**导致 404 页面。反而 Blitz 将会对第一
+  个请求进行 SSR 并返回生成的 HTML。
+- 完成后，浏览器将接收生成路径的 HTML。从用户的角度来看，它将从“浏览器正在
+  请求页面”过渡到“已加载整个页面”。没有加载/预备状态的页面闪烁。
+- 与此同时，Blitz 添加这个路径到预渲染页面的列表中。对同一路径的后续请求将
+  提供已渲染好的页面，就像在构建过程中预渲染的其他页面一样。
 
-`fallback: 'blocking'` will not _update_ generated pages by default. To
-update generated pages, use
-[Incremental Static Regeneration](/docs/get-static-props#incremental-static-regeneration)
-in conjunction with `fallback: 'blocking'`.
+`fallback: 'blocking'` 将默认**不会**更新已生成的页面。要更新已生成的页面
+，请结合使
+用[增量静态再生](/docs/get-static-props#incremental-static-regeneration)
+和 `fallback: 'blocking'`。
 
-### When should I use `getStaticPaths`? {#when-should-i-use-get-static-paths}
+### 我什么时候可以使用 `getStaticPaths`? {#when-should-i-use-get-static-paths}
 
-You should use `getStaticPaths` if you’re statically pre-rendering pages
-that use dynamic routes.
+如果你要静态预渲染使用动态路由的页面，则应使用 `getStaticPaths` 。
 
-### TypeScript: Use `GetStaticPaths` {#type-script-use-get-static-paths}
+### TypeScript：使用 `GetStaticPaths` {#type-script-use-get-static-paths}
 
-For TypeScript, you can use the `GetStaticPaths` type from `blitz`:
+对于 TypeScript，你可以使用 `blitz` 中的 `GetStaticPaths` 类型：
 
 ```ts
 import { GetStaticPaths } from "blitz"
@@ -246,29 +219,26 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 ```
 
-### Technical details {#technical-details}
+### 技术细节 {#technical-details}
 
-#### Use together with `getStaticProps`
+#### 与 `getStaticProps` 搭配使用
 
-When you use `getStaticProps` on a page with dynamic route parameters, you
-must use `getStaticPaths`.
+当你在有动态路由参数的页面中使用 `getStaticProps` 时，你必须使用
+`getStaticPaths`。
 
-You cannot use `getStaticPaths` with `getServerSideProps`.
+你无法和 `getServerSideProps` 一起使用 `getStaticPaths`。
 
-#### Only runs at build time on server-side
+#### 仅在服务端构建过程中执行
 
-`getStaticPaths` only runs at build time on server-side.
+`getStaticPaths` 仅在服务端构建过程中执行。
 
-#### Only allowed in a page
+#### 仅在页面中支持
 
-`getStaticPaths` can only be exported from a **page**. You can’t export it
-from non-page files.
+`getStaticPaths` 仅能从一个**页面**中导出。你无法从一个非页面文件中导出。
 
-Also, you must use `export async function getStaticPaths() {}` — it will
-**not** work if you add `getStaticPaths` as a property of the page
-component.
+同时，你必须使用 `export async function getStaticPaths() {}`——如果你将
+`getStaticPaths` 作为一个页面组件的属性，它将**不能**运行。
 
-#### Runs on every request in development
+#### 在开发环境中每次请求都会执行
 
-In development (`blitz dev`), `getStaticPaths` will be called on every
-request.
+在开发环境中（`blitz dev`），`getStaticPaths` 将会在每一次请求中被调用。
