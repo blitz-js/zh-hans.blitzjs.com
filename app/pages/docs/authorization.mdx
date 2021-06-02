@@ -1,23 +1,20 @@
 ---
-title: Authorization & Security
-sidebar_label: Authorization & Security
+title: 授权 & 安全
+sidebar_label: 授权 & 安全
 ---
 
-Authorization is the act of allowing or disallowing access to data and
-pages in your application.
+授权是允许或禁止访问应用程序中特定数据和页面的行为。
 
-## Secure Your Data {#secure-your-data}
+## 保护你的数据 {#secure-your-data}
 
-You secure data by calling
-[`ctx.session.$authorize()`](#ctxsessionauthorize) inside all the queries
-and mutations that you want secured. (Or if using
-[`resolver.pipe`](./resolver-server-utilities#resolverpipe), by using
-[`resolver.authorize`](./resolver-server-utilities#resolverauthorize)).
-You can also secure [API routes](./api-routes) the same way.
+你可以通过在你想要保护的 queries 和 mutations 中调用
+[`ctx.session.$authorize()`](#ctxsessionauthorize) 来保护数据。（或当使用
+[`resolver.pipe`](./resolver-server-utilities#resolverpipe) 时使用
+[`resolver.authorize`](./resolver-server-utilities#resolverauthorize)）。
+你还可以通过相同的方式保护 [API 路由](./api-routes)。
 
-Those will throw `AuthenticationError` if the user is not logged in, and
-it will throw `AuthorizationError` if the user is logged in but doesn't
-have the required permissions.
+这些将会当用户没有登录时抛出 `AuthenticationError`，且在用户登录后但没有所
+需权限时抛出 `AuthorizationError`。
 
 <!-- prettier-ignore -->
 ```ts
@@ -36,14 +33,14 @@ export default resolver.pipe(
   resolver.authorize(),
   // highlight-end
   async (input, ctx) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+    // 待做：在多终端应用中，你必须增加验证来保证正确的终端
     const projects = await db.projects.create({data: input})
     return projects
   },
 )
 ```
 
-or
+或
 
 <!-- prettier-ignore -->
 ```ts
@@ -64,18 +61,17 @@ export default function createProject(input: CreateProjectType, ctx: Ctx) {
   ctx.session.$authorize(),
   // highlight-end
 
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+    // 待做：在多终端应用中，你必须增加验证来保证正确的终端
   const projects = await db.projects.create({data})
   return projects
 }
 ```
 
-### Input Validation {#input-validation}
+### 输入验证 {#input-validation}
 
-For security, it's very important to validate all input values in your
-mutations. We recommended using [zod](https://github.com/colinhacks/zod),
-which we include in all our code generation templates. Without this, users
-may be able to access data or perform actions that are forbidden.
+为了安全起见，验证你的所有输入值会很重要。我们建议使用已经内置在我们代码生
+成模板中的 [zod](https://github.com/colinhacks/zod)。如果没有这个，用户可
+能能访问特殊数据或执行被禁止的操作。
 
 ```ts
 import { resolver } from "blitz"
@@ -96,21 +92,20 @@ export default resolver.pipe(
   // highlight-end
   resolver.authorize(),
   async (input, ctx) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+    // 待做：在多终端应用中，你必须增加验证来保证正确的终端
     const projects = await db.projects.create({ data: input })
     return projects
   }
 )
 ```
 
-## Secure Your Pages {#secure-your-pages}
+## 保护你的页面 {#secure-your-pages}
 
-Set `Page.authenticate = true` on all pages that require a user to be
-logged in. If a user is not logged in, an `AuthenticationError` will be
-thrown and caught by your top level Error Boundary.
+在所有需要用户登录过的页面中设置 `Page.authenticate = true`。如果一个用户
+没有登录，`AuthenticationError` 将会被抛出并在你的顶层错误边界处被捕获。
 
-Or if instead you want to redirect the user, set
-`Page.authenticate = {redirectTo: '/login'}`
+或者你想改为重定向用户，设置
+`Page.authenticate = {redirectTo: '/login'}`。
 
 ```tsx
 const Page: BlitzPage = () => {
@@ -119,17 +114,17 @@ const Page: BlitzPage = () => {
 
 // highlight-start
 Page.authenticate = true
-// or Page.authenticate = {redirectTo: '/login'}
+// 或 Page.authenticate = {redirectTo: '/login'}
 // highlight-end
 
 export default Page
 ```
 
-### Redirecting Logged In Users {#redirecting-logged-in-users}
+### 重定向登录过的用户 {#redirecting-logged-in-users}
 
-For pages that are only for logged out users, such as login and signup
-pages, set `Page.redirectAuthenticatedTo = '/'` to automatically redirect
-logged in users to another page.
+对于只提供给未登录用户的页面，例如登录页和注册页，设置
+`Page.redirectAuthenticatedTo = '/'` 来自动重定向登陆过的用户到另一个页面
+上。
 
 ```tsx
 import { Routes } from "blitz"
@@ -139,37 +134,35 @@ const Page: BlitzPage = () => {
 }
 
 // highlight-start
-// using full path
+// 使用完整路径
 Page.redirectAuthenticatedTo = "/"
-// using route manifest
+// 使用路由清单
 Page.redirectAuthenticatedTo = Routes.Home()
 // highlight-end
 
 export default Page
 ```
 
-## UX for Unauthorized Users {#ux-for-unauthorized-users}
+## 未授权用户的用户体验 {#ux-for-unauthorized-users}
 
-While you can use redirects to and from a `/login` page, we recommended to
-use Error Boundaries instead of redirects.
+虽然你可以在 `/Login` 页面之间使用重定向，我们建议使用错误边界而不是重定向
+。
 
-In React, the way you catch errors in your UI is to use an
-[error boundary](https://reactjs.org/docs/error-boundaries.html).
+在 React 中，你在页面中捕获错误的方法是
+：[错误边界](https://reactjs.org/docs/error-boundaries.html)。
 
-You should have a top level error boundary inside `_app.tsx` so that these
-errors are handled from everywhere in our app. And then if you need, you
-can also place more error boundaries at other places in your app.
+你应该在 `app.tsx` 内有个顶层错误边界，此时应用中的各处错误才都能捕获到。
+同时如果你需要，你可以在你的应用中添加更多的错误边界。
 
-The default error handling setup in new Blitz apps is as follows:
+默认在新的 Blitz 应用中内置的错误处理过程如下：
 
-- If `AuthenticationError` is thrown, directly show the user a login form
-  instead of redirecting to a separate route. This prevents the need to
-  manage redirect URLs. Once the user logs in, the error boundary will
-  reset and the user can access the original page they wanted to access.
-- If `AuthorizationError` is thrown, display an error stating such.
+- 如果 `AuthenticationError` 被抛出，直接给用户显示登陆表格而非跳转到一个
+  独立的路由上。这放置了管理重定向链接的需要。一旦用户登录，错误边界将会重
+  置，并且用户可以访问原先想要访问的页面。
+- 如果 `AuthorizationError` 被抛出，显示错误说明等。
 
-And here's the default `RootErrorFallback` that's in `app/pages/_app.tsx`.
-You can customize it as required for your needs.
+如下是在 `app/pages/_app.tsx` 里默认的 `RootErrorFallback`。你可以根据你的
+需求自定义它。
 
 ```tsx
 import {
@@ -203,27 +196,25 @@ function RootErrorFallback({
 }
 ```
 
-For more information on error handling in Blitz, see the
-[Error Handling documentation](./error-handling).
+更多关于 Blitz 中错误处理的内容，请查阅[错误处理文档](./error-handling)。
 
-## Displaying Different Content Based on User Role {#displaying-different-content-based-on-user-role}
+## 根据用户角色显示不同的内容 {#displaying-different-content-based-on-user-role}
 
-There's two approaches you can use to check the user role in your UI.
+如下是两种你可以在你的页面中使用来检查用户角色的方法。
 
 #### `useSession()`
 
-The first way is to use the
-[`useSession()`](./session-management#session-on-the-client) hook to read
-the user role from the session's `publicData`.
+第一个方法是使用
+[`useSession()`](./session-management#session-on-the-client) hook 来从会话
+的 `publicData` 中读取用户权限。
 
-This is available on the client without making a network call to the
-backend, so it's available faster than the `useCurrentUser()` approach
-described below.
+这在客户端上是可用的，同时无需对后端进行网络调用，因此它比下面描述的
+`useCurrentUser()` 方法更快。
 
-However, due to the nature of static pre-rendering, the `session` will not
-exist on the very first render on the client. This causes a quick "flash"
-on first load. You can fix that by setting
+然而，由于静态渲染的性质，在客户端的第一次渲染中将存在 `session`。这会在第
+一次加载时导致快速“闪光”。你可以通过设置
 [`Page.suppressFirstRenderFlicker = true`](./pages##automatic-static-optimization)
+来解决这个问题。
 
 ```tsx
 import { useSession } from "blitz"
@@ -231,16 +222,16 @@ import { useSession } from "blitz"
 const session = useSession()
 
 if (session.role === "admin") {
-  return /* admin stuff */
+  return /* 管理员类处理 */
 } else {
-  return /* normal stuff */
+  return /* 正常处理 */
 }
 ```
 
 #### `useCurrentUser()`
 
-New Blitz apps by default have a `useCurrentUser()` hook and a
-corresponding `getCurrentUser` query.
+新的 Blitz 应用默认内置 `useCurrentUser()` hook 和一个相应的
+`getCurrentUser` 查询。
 
 ```tsx
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
@@ -248,26 +239,25 @@ import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 const user = useCurrentUser()
 
 if (user.isFunny) {
-  return /* funny stuff */
+  return /* 有趣的处理 */
 } else {
-  return /* normal stuff */
+  return /* 正常的处理 */
 }
 ```
 
-## `isAuthorized` Adapters {#is-authorized-adapters}
+## `isAuthorized` 适配器 {#is-authorized-adapters}
 
-The implementation of `ctx.session.$isAuthorized()` and
-`ctx.session.$authorize()` are defined by an adapter which you set in the
-`sessionMiddleware()` config.
+`ctx.session.$isAuthorized()` 和 `ctx.session.$authorize()` 的实现由你在
+`sessionMiddleware()` 配置中设置的适配器定义。
 
 ##### `ctx.session.$isAuthorized()`
 
-Always returns a boolean indicating if user is authorized
+总是返回一个布尔值，标识用户是否被授权。
 
 ##### `ctx.session.$authorize()`
 
-**Throws an error** if the user is not authorized. This is what you most
-commonly use to secure your queries and mutations.
+当用户没有被授权时**抛出一个错误**。这是你常用于保护 queries 和 mutations
+的方法。
 
 ```ts
 import { Ctx } from "blitz"
@@ -284,10 +274,10 @@ export default async function getUser({ where }: GetUserInput, ctx: Ctx) {
 
 #### `simpleRolesIsAuthorized` (default in new apps)
 
-##### Setup
+##### 设置
 
-To use, add it to your `sessionMiddleware` configuration (this is already
-set up by default in new apps).
+要使用，请将其添加到你的 `sessionMiddleware` 配置中（这在新应用程序中已默
+认设置）。
 
 ```js
 // blitz.config.js
@@ -304,7 +294,7 @@ module.exports = {
 }
 ```
 
-And if using Typescript, set the type in `types.ts` like this:
+如果使用 TypeScript，像这样在 `types.ts` 中设置类型：
 
 ```ts
 import { SimpleRolesIsAuthorized } from "blitz"
@@ -322,13 +312,13 @@ declare module "blitz" {
 
 ##### `ctx.session.$isAuthorized(roleOrRoles?: string | string[])`
 
-Example usage:
+示例用法：
 
 ```ts
-// User not logged in
+// 没有登录的用户
 ctx.session.$isAuthorized() // false
 
-// User logged in with 'customer' role
+// 通过 'customer' 角色登录的用户
 ctx.session.$isAuthorized() // true
 ctx.session.$isAuthorized("customer") // true
 ctx.session.$isAuthorized("admin") // false
@@ -336,41 +326,40 @@ ctx.session.$isAuthorized("admin") // false
 
 ##### `ctx.session.$authorize(roleOrRoles?: string | string[])`
 
-Example usage:
+示例用法：
 
 ```ts
-// User not logged in
+// 没有登录的用户
 ctx.session.$authorize() // throws AuthenticationError
 
-// User logged in with 'customer' role
+// 通过 'customer' 角色登录的用户
 ctx.session.$authorize() // success - no error
 ctx.session.$authorize("customer") // success - no error
 ctx.session.$authorize("admin") // throws AuthorizationError
 ctx.session.$authorize(["admin", "customer"]) // success - no error
 ```
 
-### Making a Custom Adapter {#making-a-custom-adapter}
+### 制作自定义适配器 {#making-a-custom-adapter}
 
-An `isAuthorized` adapter must conform to the following function
-signature.
+`isAuthorized` 适配器必须符合以下函数签名。
 
 ```ts
 type CustomIsAuthorizedArgs = {
   ctx: any
-  args: [/* args that you want for session.$authorize(...args) */]
+  args: [/* 你想要为 session.$authorize(...args) 使用的参数 */]
 }
 export function customIsAuthorized({
   ctx,
   args,
 }: CustomIsAuthorizedArgs) {
-  // can access ctx.session, ctx.session.userId, etc
+  // 可以访问 ctx.session，ctx.session.userId 等
 }
 ```
 
-##### Example
+##### 示例
 
-Here's the source code for the `simpleRolesIsAuthorized` adapter include
-in Blitz core as of Jan 26, 2021.
+下面是截至 2021 年 1 月 26 日包含在 Blitz 内核中的
+`simpleRolesIsAuthorized` 适配器的源代码。
 
 ```ts
 type SimpleRolesIsAuthorizedArgs = {
@@ -385,9 +374,9 @@ export function simpleRolesIsAuthorized({
   const [roleOrRoles, options = {}] = args
   const condition = options.if ?? true
 
-  // No roles required, so all roles allowed
+  // 不需要角色，所以所有角色都被允许
   if (!roleOrRoles) return true
-  // Don't enforce the roles if condition is false
+  // 如果条件为假，则不强制执行角色
   if (!condition) return true
 
   const rolesToAuthorize = []
