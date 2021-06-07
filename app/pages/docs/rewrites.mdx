@@ -3,13 +3,11 @@ title: Rewrites
 sidebar_label: Rewrites
 ---
 
-Rewrites allow you to map an incoming request path to a different
-destination path.
+重写允许您将传入的请求路径映射到不同的目标路径。
 
-Rewrites are only available on the Node.js environment and do not affect
-client-side routing.
+重写仅在 Node.js 环境中可用，不会影响客户端路由。
 
-To use rewrites you can use the `rewrites` key in `blitz.config.js`:
+要使用重写，您可以使用 `blitz.config.js` 中的 `rewrites` 键：
 
 ```js
 module.exports = {
@@ -24,46 +22,39 @@ module.exports = {
 }
 ```
 
-`rewrites` is an async function that expects an array to be returned
-holding objects with `source` and `destination` properties:
+`rewrites` 是一个异步函数，期望返回一个包含具有 `source` 和 `destination`
+属性的对象的数组：
 
-- `source`: `String` - is the incoming request path pattern.
-- `destination`: `String` is the path you want to route to.
-- `basePath`: `false` or `undefined` - if false the basePath won't be
-  included when matching, can be used for external rewrites only.
-- `locale`: `false` or `undefined` - whether the locale should not be
-  included when matching.
-- `has` is an array of [has objects](#header-cookie-and-query-matching)
-  with the `type`, `key` and `value` properties.
+- `source`：`String`——是传入请求的路径模式
+- `destination`：`String` 是你想要路由到的目标路径
+- `locale`: `false` 或 `undefined`——匹配时是否不应该包含语言环境。
+- `has`：具有 `type`、`key` 和 `value` 属性的
+  [has 对象](#header-cookie-and-query-matching) 数组。
 
-Rewrites are applied after checking the filesystem (pages and `/public`
-files) and before dynamic routes by default.
+默认情况下，在检查文件系统（页面和 `/public` 文件）之后和动态路由之前使用
+重写。
 
 ```js
 module.exports = {
   async rewrites() {
     return {
       beforeFiles: [
-        // These rewrites are checked after headers/redirects
-        // and before pages/public files which allows overriding
-        // page files
+        // 在 headers/redirects 之后，允许覆盖页面文件的页面/公共文件之前检查这些重写
         {
           source: "/some-page",
           destination: "/somewhere-else",
-          has: [{type: "query", key: "overrideMe"}],
+          has: [{ type: "query", key: "overrideMe" }],
         },
       ],
       afterFiles: [
-        // These rewrites are checked after pages/public files
-        // are checked but before dynamic routes
+        // 在检查页面/公共文件之后但在动态路由之前检查这些重写
         {
           source: "/non-existent",
           destination: "/somewhere-else",
         },
       ],
       fallback: [
-        // These rewrites are checked after both pages/public files
-        // and dynamic routes are checked
+        // 在检查页面/公共文件和动态路由后检查这些重写
         {
           source: "/:path*",
           destination: "https://my-old-site.com",
@@ -74,11 +65,10 @@ module.exports = {
 }
 ```
 
-## Rewrite parameters {#parameters}
+## 重写参数 {#parameters}
 
-When using parameters in a rewrite the parameters will be passed in the
-query by default when none of the parameters are used in the
-`destination`.
+在重写中使用参数时，如果在 `destination` 中没有使用任何参数，则默认情况下
+将在查询中传递参数。
 
 ```js
 module.exports = {
@@ -86,15 +76,14 @@ module.exports = {
     return [
       {
         source: "/old-about/:path*",
-        destination: "/about", // The :path parameter isn't used here so will be automatically passed in the query
+        destination: "/about", // 这里没有使用 :path 参数，所以会在查询中自动传递
       },
     ]
   },
 }
 ```
 
-If a parameter is used in the destination none of the parameters will be
-automatically passed in the query.
+如果在目标中使用了参数，则查询中将不会自动传递任何参数。
 
 ```js
 module.exports = {
@@ -102,15 +91,15 @@ module.exports = {
     return [
       {
         source: "/docs/:path*",
-        destination: "/:path*", // The :path parameter is used here so will not be automatically passed in the query
+        destination: "/:path*", // :path 参数在此处使用，因此不会在查询中自动传递
       },
     ]
   },
 }
 ```
 
-You can still pass the parameters manually in the query if one is already
-used in the destination by specifying the query in the `destination`.
+如果 `destination` 中已经使用了参数，你仍然可以通过在 `destination` 中指定
+查询来手动在查询中传递参数。
 
 ```js
 module.exports = {
@@ -119,19 +108,17 @@ module.exports = {
       {
         source: "/:first/:second",
         destination: "/:first?second=:second",
-        // Since the :first parameter is used in the destination the :second parameter
-        // will not automatically be added in the query although we can manually add it
-        // as shown above
+        // 由于 :first 参数用于目标中，因此 :second 参数不会自动添加到查询中，尽管我们可以手动添加它，如上所示
       },
     ]
   },
 }
 ```
 
-## Path Matching {#path-matching}
+## 路径匹配 {#path-matching}
 
-Path matches are allowed, for example `/blog/:slug` will match
-`/blog/hello-world` (no nested paths):
+允许路径匹配，例如 `/blog/:slug` 将匹配 `/blog/hello-world`（无法嵌套路径
+）：
 
 ```js
 module.exports = {
@@ -139,17 +126,17 @@ module.exports = {
     return [
       {
         source: "/blog/:slug",
-        destination: "/news/:slug", // Matched parameters can be used in the destination
+        destination: "/news/:slug", // 匹配到的参数均可以被当做目标路径
       },
     ]
   },
 }
 ```
 
-### Wildcard Path Matching {#wildcard}
+### 路径通配符匹配 {#wildcard}
 
-To match a wildcard path you can use `*` after a parameter, for example
-`/blog/:slug*` will match `/blog/a/b/c/d/hello-world`:
+要匹配通配符路径，你可以在参数后使用 `*`，例如 `/blog/:slug*` 将匹配
+`/blog/a/b/c/d/hello-world`：
 
 ```js
 module.exports = {
@@ -157,18 +144,17 @@ module.exports = {
     return [
       {
         source: "/blog/:slug*",
-        destination: "/news/:slug*", // Matched parameters can be used in the destination
+        destination: "/news/:slug*", // 匹配到的参数均可以被当做目标路径
       },
     ]
   },
 }
 ```
 
-### Regex Path Matching {#regex}
+### 路径正则匹配 {#regex}
 
-To match a regex path you can wrap the regex in parenthesis after a
-parameter, for example `/blog/:slug(\\d{1,})` will match `/blog/123` but
-not `/blog/abc`:
+要匹配正则路径，你可以将正则括在参数后的括号中，例如
+`/blog/:slug(\\d{1,})` 将匹配 `/blog/123` 而不是 `/blog/abc`：
 
 ```js
 module.exports = {
@@ -176,23 +162,23 @@ module.exports = {
     return [
       {
         source: "/old-blog/:post(\\d{1,})",
-        destination: "/blog/:post", // Matched parameters can be used in the destination
+        destination: "/blog/:post", // 匹配到的参数均可以被当做目标路径
       },
     ]
   },
 }
 ```
 
-The following characters `(`, `)`, `{`, `}`, `:`, `*`, `+`, `?` are used
-for regex path matching, so when used in the `source` as non-special
-values they must be escaped by adding `\\` before them:
+以下字符 `(`、`)`、`{`、`}`、`:`、`*`、`+`、`?` 可用于正则表达式路径匹配，
+所以在 `source` 中使用时作为非特殊值，它们必须通过在它们之前添加 `\\` 来转
+义：
 
 ```js
 module.exports = {
   async redirects() {
     return [
       {
-        // this will match `/english(default)/something` being requested
+        // 这将匹配欲请求的 `/english(default)/something`
         source: "/english\\(default\\)/:slug",
         destination: "/en-us/:slug",
         permanent: false,
@@ -202,29 +188,26 @@ module.exports = {
 }
 ```
 
-## Header, Cookie, and Query Matching {#header-cookie-matching}
+## Header、Cookie 和查询匹配 {#header-cookie-matching}
 
-To only match a rewrite when header, cookie, or query values also match
-the `has` field can be used. Both the `source` and all `has` items must
-match for the rewrite to be applied.
+要仅在 header、cookie 或查询值也匹配 `has` 字段时才匹配重写并使用
+。`source` 和所有 `has` 项都必须匹配才能使用重写。
 
-`has` items have the following fields:
+`has` 具有以下字段：
 
-- `type`: `String` - must be either `header`, `cookie`, `host`, or
-  `query`.
-- `key`: `String` - the key from the selected type to match against.
-- `value`: `String` or `undefined` - the value to check for, if undefined
-  any value will match. A regex like string can be used to capture a
-  specific part of the value, e.g. if the value `first-(?<paramName>.*)`
-  is used for `first-second` then `second` will be usable in the
-  destination with `:paramName`.
+- `type`：`String`——必须是 `header`、`cookie`、`host` 或 `query`。
+- `key`：`String`——所选类型中要匹配的键。
+- `value`：`String` 或 `undefined`——要检查的值，如果 undefined 将匹配任意
+  值。像字符串这样的正则表达式可用于捕获值的特定部分，例如如果
+  值`first-(?<paramName>.*)` 用于 `first-second`，那么 `second` 将在目的地
+  中使用 `:paramName`。
 
 ```js
 module.exports = {
   async rewrites() {
     return [
-      // if the header `x-rewrite-me` is present,
-      // this rewrite will be applied
+      // 如果 header 中有 `x-redirect-me` 存在，
+      // 将使用此重写
       {
         source: "/:path*",
         has: [
@@ -235,17 +218,16 @@ module.exports = {
         ],
         destination: "/another-page",
       },
-      // if the source, query, and cookie are matched,
-      // this rewrite will be applied
+      // 如果源、查询和 cookie 匹配，
+      // 将使用此重写
       {
         source: "/specific/:path*",
         has: [
           {
             type: "query",
             key: "page",
-            // the page value will not be available in the
-            // destination since value is provided and doesn't
-            // use a named capture group e.g. (?<page>home)
+            // 页面值在目标路径中将不可用，因为提供了值并且不适用命名的捕获组，
+            // 例如（?<page>home）
             value: "home",
           },
           {
@@ -256,8 +238,7 @@ module.exports = {
         ],
         destination: "/:path*/home",
       },
-      // if the header `x-authorized` is present and
-      // contains a matching value, this rewrite will be applied
+      // 如果 header `x-authorized` 存在且包含一个匹配到的值，将使用此重写
       {
         source: "/:path*",
         has: [
@@ -269,8 +250,8 @@ module.exports = {
         ],
         destination: "/home?authorized=:authorized",
       },
-      // if the host is `example.com`,
-      // this rewrite will be applied
+      // 如果当前域名是 `example.com`，
+      // 当前重写将被使用
       {
         source: "/:path*",
         has: [
@@ -286,10 +267,10 @@ module.exports = {
 }
 ```
 
-## Rewriting to an external URL {#external}
+## 重写为外部 URL {#external}
 
-Rewrites allow you to rewrite to an external url. This is especially
-useful for incrementally adopting Blitz.js
+重写允许你重写到一个外部的 URL。尤其对于一个逐步采用 Blitz.js 的场景来说很
+重要。
 
 ```js
 module.exports = {
@@ -304,13 +285,11 @@ module.exports = {
 }
 ```
 
-### Incremental adoption of Blitz.js {#incremental}
+### 逐步采用 Blitz.js {#incremental}
 
-You can also have Blitz.js fall back to proxying to an existing website
-after checking all Blitz.js routes.
+在检查所有 Blitz.js 路由后，你还可以让 Blitz.js 回退来代理到现有网站。
 
-This way you don't have to change the rewrites configuration when
-migrating more pages to Blitz.js
+这样你就不必在更多页面迁移到 Blitz.js 时更改重写配置。
 
 ```js
 module.exports = {
@@ -327,11 +306,11 @@ module.exports = {
 }
 ```
 
-### Rewrites with basePath support {#basepath}
+### 使用 basePath 支持重写 {#basepath}
 
-When leveraging [`basePath` support](./blitz-config#base-path) with
-rewrites each `source` and `destination` is automatically prefixed with
-the `basePath` unless you add `basePath: false` to the rewrite:
+当利用 [`basePath` 支持](./blitz-config#base-path) 进行重写时，每个
+`source` 和 `destination` 都会自动以 `basePath` 为前缀，除非你向重写添加
+`basePath: false`：
 
 ```js
 module.exports = {
@@ -340,12 +319,12 @@ module.exports = {
   async rewrites() {
     return [
       {
-        source: "/with-basePath", // automatically becomes /docs/with-basePath
-        destination: "/another", // automatically becomes /docs/another
+        source: "/with-basePath", // 自动变成 /docs/with-basePath
+        destination: "/another", // 自动变成 /docs/another
       },
       {
-        // does not add /docs to /without-basePath since basePath: false is set
-        // Note: this can not be used for internal rewrites e.g. `destination: '/another'`
+        // 自从 basePath: false 被设置后，将不添加前缀 /docs 到 /without-basePath 上
+        // 注意：这不能用于内部重写，例如 `destination: '/another'`
         source: "/without-basePath",
         destination: "https://example.com",
         basePath: false,
@@ -355,13 +334,12 @@ module.exports = {
 }
 ```
 
-### Rewrites with i18n support {#18n}
+### 使用 i18n 支持重写 {#18n}
 
-When leveraging [`i18n` support](./i18n-routing) with rewrites each
-`source` and `destination` is automatically prefixed to handle the
-configured `locales` unless you add `locale: false` to the rewrite. If
-`locale: false` is used you must prefix the `source` and `destination`
-with a locale for it to be matched correctly.
+当利用 [`i18n` 支持](./i18n-routing) 重写时，每个 `source` 和
+`destination` 都会自动添加前缀来处理配置的 `locales`，除非你将
+`locale: false` 添加到重写中。 如果使用 `locale: false`，你必须在 `source`
+和 `destination` 前面加上一个 locale 设置，才能正确匹配。
 
 ```js
 module.exports = {
@@ -373,24 +351,24 @@ module.exports = {
   async rewrites() {
     return [
       {
-        source: "/with-locale", // automatically handles all locales
-        destination: "/another", // automatically passes the locale on
+        source: "/with-locale", // 自动处理所有 locales
+        destination: "/another", // 自动传递 locales
       },
       {
-        // does not handle locales automatically since locale: false is set
+        // 自从 locale: false 被设置后，将不自动处理 locales
         source: "/nl/with-locale-manual",
         destination: "/nl/another",
         locale: false,
       },
       {
-        // this matches '/' since `en` is the defaultLocale
+        // 自动 `en` 是 defaultLocale，将匹配 `/`
         source: "/en",
         destination: "/en/another",
         locale: false,
       },
       {
-        // this gets converted to /(en|fr|de)/(.*) so will not match the top-level
-        // `/` or `/fr` routes like /:path* would
+        // 这被转换为 /(en|fr|de)/(.*) 所以不会像 /:path*
+        // 这样地匹配顶级 `/` 或 `/fr` 路由
         source: "/(.*)",
         destination: "/another",
       },
