@@ -1,22 +1,19 @@
 ---
-title: API Routes
-sidebar_label: API Routes
+title: API 路由
+sidebar_label: API 路由
 ---
 
 <Card type="info">
 
-Unlike Next.js, your `api/` folder should be a sibling of `pages/` instead
-of being nested inside. But `pages/api` is still supported for
-compatibility with Next.js.
+与 Next.js 不同，你的 `api/` 文件夹应该是 `pages/` 的兄弟，而不是嵌套在里
+面。 但是为了与 Next.js 兼容，仍然支持 `pages/api`。
 
 </Card>
 
-Any file inside an `api/` folder are accessible at a URL corresponding to
-its path inside `api/`. So `app/projects/api/webhook.ts` will be at
-`localhost:3000/api/webhook`.
+`api/` 文件夹中的任何文件都可以通过与其在 `api/` 中的路径相对应的 URL 访问
+。所以 `app/projects/api/webhook.ts` 将位于 `localhost:3000/api/webhook`。
 
-For example, the following API route `app/api/hello.js` handles a `json`
-response:
+例如，以下 API 路由 `app/api/hello.js` 处理 `json` 响应：
 
 ```ts
 const handler = (req: BlitzApiRequest, res: BlitzApiResponse) => {
@@ -27,18 +24,17 @@ const handler = (req: BlitzApiRequest, res: BlitzApiResponse) => {
 export default handler
 ```
 
-For an API route to work, you need to export as default a function (a.k.a
-**request handler**), which then receives the following parameters:
+要使 API 路由正常工作，你需要默认导出一个函数（又名 **request handler**）
+，然后该函数接收以下参数：
 
-- `req: BlitzApiRequest`: An instance of
-  [http.IncomingMessage](https://nodejs.org/api/http.html#http_class_http_incomingmessage),
-  plus some pre-built middlewares you can see [here](#default-middlewares)
-- `res: BlitzApiResponse`: An instance of
-  [http.ServerResponse](https://nodejs.org/api/http.html#http_class_http_serverresponse),
-  plus some helper functions you can see [here](#response-helpers)
+- `req: BlitzApiRequest`：[http.IncomingMessage](https://nodejs.org/api/http.html#http_class_http_incomingmessage)
+  的一个实例，加上一些你可以在[这里](#default-middlewares)看到的预构建中间
+  件。
+- `res: BlitzApiResponse`：[http.ServerResponse](https://nodejs.org/api/http.html#http_class_http_serverresponse)
+  的一个实例，加上一些你可以在[这里](#response-helpers)看到的辅助函数。
 
-If you want to avoid writting the types `BlitzApiRequest` and
-`BlitzApiResponse` everywhere, you can use `BlitzApiHandler`:
+如果你想避免到处写类型 `BlitzApiRequest` 和 `BlitzApiResponse`，你可以使用
+`BlitzApiHandler`：
 
 ```ts
 const handler: BlitzApiHandler = (req, res) => {
@@ -49,36 +45,34 @@ const handler: BlitzApiHandler = (req, res) => {
 export default handler
 ```
 
-To handle different HTTP methods in an API route, you can use `req.method`
-in your request handler, like so:
+要在 API 路由中处理不同的 HTTP 方法，你可以在请求处理程序中使用
+`req.method`，如下所示：
 
 ```ts
 const handler: BlitzApiHandler = (req, res) => {
   if (req.method === "POST") {
-    // Process a POST request
+    // 处理一个 POST 请求
   } else {
-    // Handle any other HTTP method
+    // 处理任何其它的 HTTP 方法
   }
 }
 export default handler
 ```
 
-To fetch API endpoints, take a look into any of the examples at the start
-of this section.
+要请求 API 端口，请查看本节开头的任何示例。
 
-> API Routes
-> [do not specify CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS),
-> meaning they are **same-origin only** by default. You can customize such
-> behavior by wrapping the request handler with the
-> [cors middleware](/docs/api-routes#connectexpress-middleware-support).
+> API 路由
+> [不指定 CORS header](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)，
+> 这意味着它们默认是**同源**。 你可以通过使用
+> [cors 中间件](/docs/api-routes#connectexpress-middleware-support) 包装请
+> 求处理程序来自定义此类行为。
 
-> API Routes do not increase your client-side bundle size. They are
-> server-side only bundles.
+> API 路由不会增加你的客户端包大小。它们只是服务器端的打包。
 
-## Authentication and Session Context {#authentication-and-session-context}
+## 身份验证和会话上下文 {#authentication-and-session-context}
 
-You can use the `getSession` function to get the session of the user. Here
-is an example using session in a API route `app/api/customRoute.tsx`:
+你可以使用 `getSession` 函数来获取用户的会话。这是在 API 路由
+`app/api/customRoute.tsx` 中使用会话的示例：
 
 ```ts
 import { getSession, BlitzApiRequest, BlitzApiResponse } from "blitz"
@@ -96,7 +90,7 @@ export default async function customRoute(
 }
 ```
 
-This is called in the frontend like this:
+这在前端是这样调用的：
 
 ```ts
 import { getAntiCSRFToken } from "blitz"
@@ -110,13 +104,13 @@ const response = await window.fetch("/api/customRoute", {
 })
 ```
 
-[Read more about Session Management](/docs/session-management)
+[阅读更多关于 Session 管理的内容](/docs/session-management)
 
-## Dynamic API Routes {#dynamic-api-routes}
+## 动态 API 路由 {#dynamic-api-routes}
 
-Dynamic API routes follow the same file naming rules used for `pages`.
+动态 API 路由遵循与 `pages` 相同的文件命名规则。
 
-For example, the API route `app/api/post/[pid].js` has the following code:
+例如 API 路由 `app/api/post/[pid].js` 有如下代码：
 
 ```ts
 const handler: BlitzApiHandler = (req, res) => {
@@ -129,53 +123,50 @@ const handler: BlitzApiHandler = (req, res) => {
 export default handler
 ```
 
-Now, a request to `/api/post/abc` will respond with the text: `Post: abc`.
+现在，对 `/api/post/abc` 的请求将以这段文本响应：`Post: abc`。
 
-#### Index routes and Dynamic API routes
+#### 索引路由和动态 API 路由
 
-A very common RESTful pattern is to set up routes like this:
+一个非常常见的 RESTful 模式是像这样设置路由：
 
-- `GET api/posts/` - gets a list of posts, probably paginated
-- `GET api/posts/12345` - gets post id 12345
+- `GET api/posts/` - 获取帖子列表，可能是分页的
+- `GET api/posts/12345` - 获取帖子 ID 12345
 
-We can model this in two ways:
+我们可以通过两种方式对此进行建模：
 
-- Option 1:
+- 选择 1：
   - `/api/posts.js`
   - `/api/posts/[postId].js`
-- Option 2:
-
+- 选择 2：
   - `/api/posts/index.js`
   - `/api/posts/[postId].js`
 
-Both are equivalent.
+两者是等价的。
 
-#### Catch all API routes
+#### 捕获所有 API 路由
 
-API Routes can be extended to catch all paths by adding three dots (`...`)
-inside the brackets. For example:
+通过在括号内添加三个点（`...`），可以扩展 API 路由以捕获所有路径。 例如：
 
-- `app/api/post/[...slug].js` matches `/api/post/a`, but also
-  `/api/post/a/b`, `/api/post/a/b/c` and so on.
+- `app/api/post/[...slug].js` 匹配 `/api/post/a`，但也匹配
+  `/api/post/a/b`、`/api/post/a/b/ c` 等等。
 
-> **Note**: You can use names other than `slug`, such as: `[...param]`
+> **注意**：你可以使用 `slug` 以外的名称，例如：`[...param]`
 
-Matched parameters will be passed as a query parameter (`slug` in the
-example) to the api handler, and it will always be an array, so, the path
-`/api/post/a` will have the following `query` object:
+匹配的参数将作为查询参数（示例中的`slug`）传递给 api 处理程序，并且它始终
+是一个数组，因此，路径 `/api/post/a` 将具有以下 `query` 对象 ：
 
 ```json
 { "slug": ["a"] }
 ```
 
-And in the case of `/api/post/a/b`, and any other matching path, new
-parameters will be added to the array, like so:
+而在`/api/post/a/b`和任何其他匹配路径的情况下，新参数将被添加到数组中，如
+下所示：
 
 ```json
 { "slug": ["a", "b"] }
 ```
 
-An API route for `app/api/post/[...slug].js` could look like this:
+`app/api/post/[...slug].js` 的 API 路由可能如下所示：
 
 ```ts
 const handler: BlitzApiHandler = (req, res) => {
@@ -188,41 +179,38 @@ const handler: BlitzApiHandler = (req, res) => {
 export default handler
 ```
 
-Now, a request to `/api/post/a/b/c` will respond with the text:
-`Post: a, b, c`.
+现在，对 `/api/post/a/b/c` 的请求将响应文本：`Post: a, b, c`。
 
-#### Optional catch all API routes
+#### 可选捕获所有路由
 
-Catch all routes can be made optional by including the parameter in double
-brackets (`[[...slug]]`).
+通过在双括号（`[[...slug]]`）中包含参数，可以将捕获所有路由设为可选。
 
-For example, `app/api/post/[[...slug]].js` will match `/api/post`,
-`/api/post/a`, `/api/post/a/b`, and so on.
+例如，`app/api/post/[[...slug]].js` 将匹配
+`/api/post`、`/api/post/a`、`/api/post/a/b` 等等。
 
-The `query` objects are as follows:
+`query` 对象如下：
 
 ```json
-{ } // GET `/api/post` (empty object)
-{ "slug": ["a"] } // `GET /api/post/a` (single-element array)
-{ "slug": ["a", "b"] } // `GET /api/post/a/b` (multi-element array)
+{ } // GET `/api/post`（空对象）
+{ "slug": ["a"] } // `GET /api/post/a`（单元素数组）
+{ "slug": ["a", "b"] } // `GET /api/post/a/b`（多元素数组）
 ```
 
-#### Caveats
+#### 注意事项
 
-- Predefined API routes take precedence over dynamic API routes, and
-  dynamic API routes over catch all API routes. Take a look at the
-  following examples:
-  - `app/api/post/create.js` - Will match `/api/post/create`
-  - `app/api/post/[pid].js` - Will match `/api/post/1`, `/api/post/abc`,
-    etc. But not `/api/post/create`
-  - `app/api/post/[...slug].js` - Will match `/api/post/1/2`,
-    `/api/post/a/b/c`, etc. But not `/api/post/create`, `/api/post/abc`
+- 预定义的 API 路由优先于动态 API 路由，动态 API 路由优先于捕获所有 API 路
+  由。看看下面的例子：
+  - `app/api/post/create.js` - 将匹配 `/api/post/create`
+  - `app/api/post/[pid].js` - 将匹配 `/api/post/1`、`/api/post/abc` 等，但
+    不匹配 `/api/post/create`
+  - `app/api/post/[...slug].js` - 将匹配
+    `/api/post/1/2`、`/api/post/a/b/c` 等，但不匹配
+    `/ api/post/create`、`/api/post/abc`
 
-## Response Helpers {#response-helpers}
+## 响应助手 {#response-helpers}
 
-The response (`res`) includes a set of Express.js-like methods to improve
-the developer experience and increase the speed of creating new API
-endpoints, take a look at the following example:
+响应（`res`）包含一组类似 Express.js 的方法来改善开发人员体验并提高创建新
+API 端口的速度，请看以下示例：
 
 ```ts
 const handler: BlitzApiHandler = (req, res) => {
@@ -231,33 +219,28 @@ const handler: BlitzApiHandler = (req, res) => {
 export default handler
 ```
 
-The included helpers are:
+包含的助手有：
 
-- `res.status(code)` - A function to set the status code. `code` must be a
-  valid
-  [HTTP status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
-- `res.json(json)` - Sends a JSON response. `json` must be a valid JSON
-  object
-- `res.send(body)` - Sends the HTTP response. `body` can be a `string`, an
-  `object` or a `Buffer`
+- `res.status(code)` - 设置状态代码的函数。 `code` 必须是有效的
+  [HTTP 状态代码](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
+- `res.json(json)` - 发送 JSON 响应。 `json` 必须是有效的 JSON 对象
+- `res.send(body)` - 发送 HTTP 响应。 `body` 可以是 `string`、`object` 或
+  `Buffer`
 
-## Default Middlewares {#default-middlewares}
+## 默认中间件 {#default-middlewares}
 
-API routes provide built in middlewares which parse the incoming request
-(`req`). Those middlewares are:
+API 路由提供内置的中间件来解析传入的请求（`req`）。 这些中间件是：
 
-- `req.cookies` - An object containing the cookies sent by the request.
-  Defaults to `{}`
-- `req.query` - An object containing the
-  [query string](https://en.wikipedia.org/wiki/Query_string). Defaults to
-  `{}`
-- `req.body` - An object containing the body parsed by `content-type`, or
-  `null` if no body was sent
+- `req.cookies` - 一个包含请求发送的 cookie 的对象。 默认为 `{}`
+- `req.query` - 一个包含
+  [查询字符串](https://en.wikipedia.org/wiki/Query_string) 的对象。默认
+  为`{}`
+- `req.body` - 一个包含由 `content-type` 解析的正文的对象，如果没有发送正
+  文，则为 `null`
 
-### Custom config {#custom-config}
+### 自定义配置 {#custom-config}
 
-Every API route can export a `config` object to change the default
-configs, which are the following:
+每个 API 路由都可以导出一个 `config` 对象来更改默认配置，如下所示：
 
 ```ts
 export const config = {
@@ -269,10 +252,9 @@ export const config = {
 }
 ```
 
-The `api` object includes all configs available for API routes.
+`api` 对象包括所有可用于 API 路由的配置。
 
-`bodyParser` enables body parsing, you can disable it if you want to
-consume it as a `Stream`:
+`bodyParser` 启用 body 解析，如果您想将其作为 `Stream` 使用，可以禁用它：
 
 ```ts
 export const config = {
@@ -282,9 +264,9 @@ export const config = {
 }
 ```
 
-`bodyParser.sizeLimit` is the maximum size allowed for the parsed body, in
-any format supported by [bytes](https://github.com/visionmedia/bytes.js),
-like so:
+`bodyParser.sizeLimit` 是解析正文允许的最大大小，采用
+[bytes](https://github.com/visionmedia/bytes.js) 支持的任何格式，如下所示
+：
 
 ```ts
 export const config = {
@@ -296,9 +278,8 @@ export const config = {
 }
 ```
 
-`externalResolver` is an explicit flag that tells the server that this
-route is being handled by an external resolver like _express_ or
-_connect_. Enabling this option disables warnings for unresolved requests.
+`externalResolver` 是一个显式标志，它告诉服务器此路由正在由外部解析器（如
+_express_ 或 _connect_）处理。启用此选项将禁用未解决请求的警告。
 
 ```ts
 export const config = {
@@ -308,17 +289,15 @@ export const config = {
 }
 ```
 
-### Connect/Express middleware support {#connect-express-middleware-support}
+### Connect/Express 中间件支持 {#connect-express-middleware-support}
 
-You can also use [Connect](https://github.com/senchalabs/connect)
-compatible middleware.
+您还可以使用 [Connect](https://github.com/senchalabs/connect) 兼容的中间件
+。
 
-For example,
-[configuring CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
-for your API endpoint can be done leveraging the
-[cors](https://www.npmjs.com/package/cors) package.
+例如，可以利用 [cors](https://www.npmjs.com/package/cors)) 包为您的 API 端
+口 [配置 CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)。
 
-First, install `cors`:
+首先，安装 `cors`:
 
 ```bash
 npm i cors
@@ -326,18 +305,18 @@ npm i cors
 yarn add cors
 ```
 
-Now, let's add `cors` to the API route:
+接下来，让我们添加 `cors` 到 API 端口上：
 
 ```ts
 import Cors from "cors"
 
-// Initializing the cors middleware
+// 初始化 cors 中间件
 const cors = Cors({
   methods: ["GET", "HEAD"],
 })
 
-// Helper method to wait for a middleware to execute before continuing
-// And to throw an error when an error happens in a middleware
+// 在继续之前等待中间件执行的辅助方法
+// 并在中间件发生错误时抛出错误
 function runMiddleware(req, res, fn) {
   return new Promise((resolve, reject) => {
     fn(req, res, (result) => {
@@ -351,10 +330,10 @@ function runMiddleware(req, res, fn) {
 }
 
 async function handler(req: BlitzApiRequest, res: BlitzApiResponse) {
-  // Run the middleware
+  // 运行中间件
   await runMiddleware(req, res, cors)
 
-  // Rest of the API logic
+  // 其它 API 逻辑
   res.json({ message: "Hello Everyone!" })
 }
 
