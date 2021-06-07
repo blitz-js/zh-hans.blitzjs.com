@@ -1,18 +1,16 @@
 ---
-title: Redirects
-sidebar_label: Redirects
+title: 重定向
+sidebar_label: 重定向
 ---
 
-Redirects allow you to redirect an incoming request path to a different
-destination path.
+重定向允许你重定向一个到来的请求路径到一个不同的目标路径。
 
-Redirects are only available on the Node.js environment and do not affect
-client-side routing.
+重定向仅在 Node.js 环境中可用，并不影响客户端路由。
 
-## On the Client {#on-the-client}
+## 在客户端上 {#on-the-client}
 
-One common use case is conditionally redirecting a user to a different
-page based on their session data. Here's how you can do that:
+一个常见的用例是根据用户的会话数据有条件地将用户重定向到不同的页面。你可以
+这样做：
 
 ```tsx
 import { useRouter, useSession } from "blitz"
@@ -27,16 +25,15 @@ const LoginPage: BlitzPage = () => {
     }
   })
 
-  return /* stuff */
+  return /* 填充 */
 }
 ```
 
-## On the Server {#on-the-server}
+## 在服务端上 {#on-the-server}
 
-If you don't want the "flash of invalid content" that you get with client
-side redirects, you can use
-[`getServerSideProps`](./get-server-side-props) to conditionally redirect
-from the server. Here's how you can do that:
+如果你不想让客户端重定向出现“无效内容闪现”现象，你可以使用
+[`getServerSideProps`](./get-server-side-props) 有条件地从服务器重定向。你
+可以这样做：
 
 ```ts
 import { getSession } from "blitz"
@@ -57,10 +54,9 @@ export const getServerSideProps = async ({ req, res }) => {
 }
 ```
 
-## Global Redirects {#global}
+## 全局重定向 {#global}
 
-To use global redirects, you can use the `redirects` key in
-`blitz.config.js`:
+要使用全局重定向，你可以使用 `blitz.config.js` 中的 `redirects` 键：
 
 ```js
 module.exports = {
@@ -76,26 +72,24 @@ module.exports = {
 }
 ```
 
-`redirects` is an async function that expects an array to be returned
-holding objects with `source`, `destination`, and `permanent` properties:
+`redirects` 是一个异步函数，它期望返回一个具有 `source`、`destination` 和
+`permanent` 属性的对象的数组：
 
-- `source` is the incoming request path pattern.
-- `destination` is the path you want to route to.
-- `permanent` if the redirect is permanent or not.
-- `basePath`: `false` or `undefined` - if false the basePath won't be
-  included when matching, can be used for external rewrites only.
-- `locale`: `false` or `undefined` - whether the locale should not be
-  included when matching.
-- `has` is an array of [has objects](#header-cookie-and-query-matching)
-  with the `type`, `key` and `value` properties.
+- `source` 是传入的请求路径模式。
+- `destination` 是你想要路由到的路径。
+- `permanent` 重定向是否是永久性的。
+- `basePath`：`false` 或 `undefined`——如果为 false，匹配时将不包含
+  basePath，只能用于外部重写。
+- `locale`：`false` 或 `undefined`——匹配时是否不应该包含语言环境。
+- `has` 是具有 `type`、`key` 和 `value` 属性的
+  [has 对象](#header-cookie-and-query-matching) 数组。
 
-Redirects are checked before the filesystem which includes pages and
-`/public` files.
+在包含页面和 `/public` 文件的文件系统之前重定向将被检查。
 
-### Path Matching {#path-matching}
+### 路径匹配 {#path-matching}
 
-Path matches are allowed, for example `/old-blog/:slug` will match
-`/old-blog/hello-world` (no nested paths):
+允许路由匹配，例如 `/old-blog/:slug` 将匹配 `/old-blog/hello-world`（无嵌
+套路径）：
 
 ```js
 module.exports = {
@@ -103,7 +97,7 @@ module.exports = {
     return [
       {
         source: "/old-blog/:slug",
-        destination: "/news/:slug", // Matched parameters can be used in the destination
+        destination: "/news/:slug", // 匹配到的参数均可以被当做目标路径
         permanent: true,
       },
     ]
@@ -111,10 +105,10 @@ module.exports = {
 }
 ```
 
-#### Wildcard Path Matching
+#### 路由通配符匹配
 
-To match a wildcard path you can use `*` after a parameter, for example
-`/blog/:slug*` will match `/blog/a/b/c/d/hello-world`:
+要匹配通配符路径，你可以在参数后使用 `*`，例如 `/blog/:slug*` 将匹配
+`/blog/a/b/c/d/hello-world`：
 
 ```js
 module.exports = {
@@ -122,7 +116,7 @@ module.exports = {
     return [
       {
         source: "/blog/:slug*",
-        destination: "/news/:slug*", // Matched parameters can be used in the destination
+        destination: "/news/:slug*", // 匹配到的参数均可以被当做目标路径
         permanent: true,
       },
     ]
@@ -130,11 +124,10 @@ module.exports = {
 }
 ```
 
-#### Regex Path Matching
+#### 路由正则匹配
 
-To match a regex path you can wrap the regex in parentheses after a
-parameter, for example `/post/:slug(\\d{1,})` will match `/post/123` but
-not `/post/abc`:
+要匹配正则表达式路径，你可以将正则表达式括在参数后的括号中，例如
+`/post/:slug(\\d{1,})` 将匹配 `/post/123` 而不是 `/post/abc`：
 
 ```js
 module.exports = {
@@ -142,7 +135,7 @@ module.exports = {
     return [
       {
         source: "/post/:slug(\\d{1,})",
-        destination: "/news/:slug", // Matched parameters can be used in the destination
+        destination: "/news/:slug", // 匹配到的参数均可以被当做目标路径
         permanent: false,
       },
     ]
@@ -150,16 +143,16 @@ module.exports = {
 }
 ```
 
-The following characters `(`, `)`, `{`, `}`, `:`, `*`, `+`, `?` are used
-for regex path matching, so when used in the `source` as non-special
-values they must be escaped by adding `\\` before them:
+以下字符 `(`、`)`、`{`、`}`、`:`、`*`、`+`、`?` 可用于正则表达式路径匹配，
+所以在 `source` 中使用时作为非特殊值，它们必须通过在它们之前添加 `\\` 来转
+义：
 
 ```js
 module.exports = {
   async redirects() {
     return [
       {
-        // this will match `/english(default)/something` being requested
+        // 这将匹配欲请求的 `/english(default)/something`：
         source: "/english\\(default\\)/:slug",
         destination: "/en-us/:slug",
         permanent: false,
@@ -169,29 +162,26 @@ module.exports = {
 }
 ```
 
-### Header, Cookie, and Query Matching {#header-cooking-matching}
+### Header，Cookie 和查询匹配 {#header-cooking-matching}
 
-To only match a redirect when header, cookie, or query values also match
-the `has` field can be used. Both the `source` and all `has` items must
-match for the redirect to be applied.
+要仅在 header、cookie 或查询值也匹配 `has` 字段时才匹配重定向并使用
+。`source` 和所有 `has` 项都必须匹配才能使用重定向。
 
-`has` items have the following fields:
+`has` 具有以下字段：
 
-- `type`: `String` - must be either `header`, `cookie`, `host`, or
-  `query`.
-- `key`: `String` - the key from the selected type to match against.
-- `value`: `String` or `undefined` - the value to check for, if undefined
-  any value will match. A regex like string can be used to capture a
-  specific part of the value, e.g. if the value `first-(?<paramName>.*)`
-  is used for `first-second` then `second` will be usable in the
-  destination with `:paramName`.
+- `type`：`String`——必须是 `header`、`cookie`、`host` 或 `query`。
+- `key`：`String`——所选类型中要匹配的键。
+- `value`：`String` 或 `undefined`——要检查的值，如果 undefined 将匹配任意
+  值。像字符串这样的正则表达式可用于捕获值的特定部分，例如如果值
+  `first-(?<paramName>.*)` 用于 `first-second`，那么 `second` 将在目的地中
+  使用 `:paramName`。
 
 ```js
 module.exports = {
   async redirects() {
     return [
-      // if the header `x-redirect-me` is present,
-      // this redirect will be applied
+      // 如果 header 中有 `x-redirect-me` 存在，
+      // 将使用此重定向
       {
         source: "/:path*",
         has: [
@@ -203,17 +193,16 @@ module.exports = {
         permanent: false,
         destination: "/another-page",
       },
-      // if the source, query, and cookie are matched,
-      // this redirect will be applied
+      // 如果源、查询和 cookie 匹配，
+      // 将使用此重定向
       {
         source: "/specific/:path*",
         has: [
           {
             type: "query",
             key: "page",
-            // the page value will not be available in the
-            // destination since value is provided and doesn't
-            // use a named capture group e.g. (?<page>home)
+            // 页面值在目标路径中将不可用，因为提供了值并且不适用命名的捕获组，
+            // 例如（?<page>home）
             value: "home",
           },
           {
@@ -225,8 +214,7 @@ module.exports = {
         permanent: false,
         destination: "/:path*/:page",
       },
-      // if the header `x-authorized` is present and
-      // contains a matching value, this redirect will be applied
+      // 如果 header `x-authorized` 存在且包含一个匹配到的值，将使用此重定向
       {
         source: "/:path*",
         has: [
@@ -239,8 +227,8 @@ module.exports = {
         permanent: false,
         destination: "/home?authorized=:authorized",
       },
-      // if the host is `example.com`,
-      // this redirect will be applied
+      // 如果当前域名是 `example.com`，
+      // 当前重定向将被使用
       {
         source: "/:path*",
         has: [
@@ -256,11 +244,11 @@ module.exports = {
 }
 ```
 
-#### Redirects with basePath support
+#### 使用 basePath 支持重定向
 
-When leveraging [`basePath` support](./blitz-config#base-path) with
-redirects each `source` and `destination` is automatically prefixed with
-the `basePath` unless you add `basePath: false` to the redirect:
+当利用 [`basePath` 支持](./blitz-config#base-path)进行重定向时，每个
+`source` 和 `destination` 都会自动以 `basePath` 为前缀，除非你向重定向添加
+`basePath: false`：
 
 ```js
 module.exports = {
@@ -269,12 +257,12 @@ module.exports = {
   async redirects() {
     return [
       {
-        source: "/with-basePath", // automatically becomes /docs/with-basePath
-        destination: "/another", // automatically becomes /docs/another
+        source: "/with-basePath", // 自动变成 /docs/with-basePath
+        destination: "/another", // 自动变成 /docs/another
         permanent: false,
       },
       {
-        // does not add /docs since basePath: false is set
+        // 自从 basePath: false 被设置后，将不添加前缀 /docs
         source: "/without-basePath",
         destination: "/another",
         basePath: false,
@@ -285,13 +273,12 @@ module.exports = {
 }
 ```
 
-#### Redirects with i18n support
+#### 使用 i18n 支持重定向
 
-When leveraging [`i18n` support](./i18n-routing) with redirects each
-`source` and `destination` is automatically prefixed to handle the
-configured `locales` unless you add `locale: false` to the redirect. If
-`locale: false` is used you must prefix the `source` and `destination`
-with a locale for it to be matched correctly.
+当利用 [`i18n 支持`](./i18n-routing) 进行重定向时，每个 `source` 和
+`destination` 都会自动添加前缀来处理配置的 `locales`，除非你向重定向添加
+`locale: false`。如果使用 `locale: false`，你必须在 `source` 和
+`destination` 前面加上一个区域设置，才能正确匹配。
 
 ```js
 module.exports = {
@@ -303,27 +290,27 @@ module.exports = {
   async redirects() {
     return [
       {
-        source: "/with-locale", // automatically handles all locales
-        destination: "/another", // automatically passes the locale on
+        source: "/with-locale", // 自动处理所有 locales
+        destination: "/another", // 自动传递 locales
         permanent: false,
       },
       {
-        // does not handle locales automatically since locale: false is set
+        // 自从 locale: false 被设置后，将不自动处理 locales
         source: "/nl/with-locale-manual",
         destination: "/nl/another",
         locale: false,
         permanent: false,
       },
       {
-        // this matches '/' since `en` is the defaultLocale
+        // 自动 `en` 是 defaultLocale，将匹配 `/`
         source: "/en",
         destination: "/en/another",
         locale: false,
         permanent: false,
       },
       {
-        // this gets converted to /(en|fr|de)/(.*) so will not match the top-level
-        // `/` or `/fr` routes like /:path* would
+        // 这被转换为 /(en|fr|de)/(.*) 所以不会像 /:path*
+        // 这样地匹配顶级 `/` 或 `/fr` 路由
         source: "/(.*)",
         destination: "/another",
         permanent: false,
@@ -333,12 +320,11 @@ module.exports = {
 }
 ```
 
-In some rare cases, you might need to assign a custom status code for
-older HTTP Clients to properly redirect. In these cases, you can use the
-`statusCode` property instead of the `permanent` property, but not both.
-Note: to ensure IE11 compatibility a `Refresh` header is automatically
-added for the 308 status code.
+在极少数情况下，你可能需要为较旧的 HTTP 客户端分配自定义状态代码以正确重定
+向。在这种情况下，你可以使用 `statusCode` 属性代替 `permanent` 属性，但不
+能同时使用两者。注意：为了确保 IE11 兼容性，会自动为 308 状态码添加一个
+`Refresh` header。
 
-### Other Redirects {#other}
+### 其它重定向 {#other}
 
-- Inside [API Routes](./api-routes), you can use `res.redirect()`.
+- 在 [API 路由](./api-routes)中，你可以使用 `res.redirect()`.
