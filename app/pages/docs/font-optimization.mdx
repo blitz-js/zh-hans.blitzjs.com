@@ -1,33 +1,31 @@
 ---
-title: Font Optimization
-sidebar_label: Font Optimization
+title: 字体优化
+sidebar_label: 字体优化
 ---
 
-By default, Blitz.js will automatically inline font CSS at build time,
-eliminating an extra round trip to fetch font declarations. This results
-in improvements to [First Contentful Paint (FCP)](https://web.dev/fcp/)
-and
-[Largest Contentful Paint (LCP)](https://vercel.com/blog/core-web-vitals#largest-contentful-paint).
+默认情况下，Blitz.js 将在构建时自动内联字体 CSS，从而消除额外的往返来获取
+字体声明。这改进了 [第一次内容绘制 (FCP)](https://web.dev/fcp/) 和
+[最大内容绘制 (LCP)](https://vercel.com/blog/core-web-vitals#largest-contentful-paint)。
 
-For example:
+例如：
 
 ```js
-// Before
+// 之前
 <link
   href="https://fonts.googleapis.com/css2?family=Inter"
   rel="stylesheet"
 />
 
-// After
+// 此后
 <style data-href="https://fonts.googleapis.com/css2?family=Inter">
   @font-face{font-family:'Inter';font-style:normal...
 </style>
 ```
 
-## Usage {#usage}
+## 用法 {#usage}
 
-To add a web font to your Blitz.js application, use `<Head>`. You can add
-a font to a specific page like this:
+要向 Blitz.js 应用添加 Web 字体，请使用 `<Head>`。你可以将字体添加到特定页
+面，如下所示：
 
 ```js
 // pages/index.js
@@ -49,8 +47,7 @@ export default function IndexPage() {
 }
 ```
 
-or to your entire application with a
-[Custom `Document`](./document-component).
+或使用 [自定义 `Document`](./document-component) 到你的整个应用。
 
 ```js
 // pages/_document.js
@@ -79,14 +76,14 @@ class MyDocument extends Document {
 export default MyDocument
 ```
 
-Automatic Webfont Optimization currently supports Google Fonts and Typekit
-with support for other font providers coming soon. We're also planning to
-add control
-over [loading strategies](https://github.com/vercel/next.js/issues/21555) and `font-display` values.
+自动 Web 字体优化（Automatic Webfont Optimization）目前支持 Google Fonts
+和 Typekit，即将支持其他字体提供商。我们还计划添加对
+[加载策略](https://github.com/vercel/next.js/issues/21555) 和
+`font-display` 值的控制。
 
-## Disabling Optimization {#disabling-optimization}
+## 关闭优化 {#disabling-optimization}
 
-If you do not want Blitz.js to optimize your fonts, you can opt-out.
+如果你不想让 Blitz.js 优化你的字体，你可以选择关闭。
 
 ```js
 // blitz.config.js
