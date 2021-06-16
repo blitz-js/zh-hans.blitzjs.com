@@ -3,27 +3,26 @@ title: blitz new
 sidebar_label: blitz new
 ---
 
-Generates a new Blitz project in the current directory. The project will
-include basic scaffolding for a landing page, a database, and all of the
-other configuration that makes Blitz's magic work.
+在当前目录中生成一个新的 Blitz 项目。该项目将包括登录页面的基本脚手架、数
+据库以及使 Blitz 的魔法发挥作用的所有其他配置。
 
 ```bash
 blitz new [name]
 ```
 
-| Argument | Required | Description                                                   |
-| -------- | -------- | ------------------------------------------------------------- |
-| `name`   | Yes      | The project name. Will be used in initial project scaffolding |
+| 参数   | 必须 | 描述                                   |
+| ------ | ---- | -------------------------------------- |
+| `name` | 是   | 项目名称。将被用于初始化的项目脚手架中 |
 
 #### Options
 
-| Argument    | Shorthand | Description                                                                                                     | Default |
-| ----------- | --------- | --------------------------------------------------------------------------------------------------------------- | ------- |
-| `--npm`     |           | Uses `npm` as the project's package manager. If omitted, the project will default to `yarn` if it is installed. | `false` |
-| `--dry-run` | `-d`      | Displays what files would be generated but does not write the files to disk.                                    | `false` |
-| `--no-git`  |           | Skips git repository creation.                                                                                  | `false` |
+| 参数        | 简写 | 描述                                                                                      | 默认    |
+| ----------- | ---- | ----------------------------------------------------------------------------------------- | ------- |
+| `--npm`     |      | 使用 `npm` 作为项目默认的包管理器。如果省略，在已安装 Yarn 的前提下将使用 `yarn` 来安装。 | `false` |
+| `--dry-run` | `-d` | 显示将生成哪些文件但不将文件写入磁盘。                                                    | `false` |
+| `--no-git`  |      | 跳过生成 Git 仓库。                                                                       | `false` |
 
-#### Examples
+#### 示例
 
 ```bash
 blitz new task-manager
