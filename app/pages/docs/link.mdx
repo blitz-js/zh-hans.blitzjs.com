@@ -3,9 +3,9 @@ title: <Link>
 sidebar_label: <Link>
 ---
 
-`<Link>` is used to navigate between pages
+`<Link>`用于页面间的导航
 
-An example of linking to `Home` and `About`:
+一个链接`Home`和`About`页的例子:
 
 ```jsx
 import {Link, Routes} from "blitz"
@@ -32,45 +32,36 @@ function Home() {
 export default Home
 ```
 
-The `Routes` object imported from `blitz` is automatically generated based
-on the pages in your app. If your page component is named `About`, then
-you can link to it with `Routes.About`. For more information, see the
-[Route Manifest documentation](./route-manifest).
+从`blitz`导入的`Routes`对象是根据你的应用程序中的页面自动生成的。如果你的
+页面组件名称叫 `About`, 那么你可以使用`Routes.About`链接到该组件。可以参
+考[Route Manifest 文档](./route-manifest)了解更多信息。
 
-`Link` accepts the following props:
+`Link`组件可以接受以下属性:
 
-- `href` - The path inside `pages` directory. This is the only required
-  prop.
-- `as` - The path that will be rendered in the browser URL bar. Used for
-  dynamic routes
+- `href` - `pages`目录中的路径，这是唯一需要的属性
+- `as` - 将在浏览器 URL 栏里显示的路径，用于动态路由
 - [`passHref`](#if-the-child-is-a-custom-component-that-wraps-an-a-tag) -
-  Forces `Link` to send the `href` property to its child. Defaults to
-  `false`
-- `prefetch` - Prefetch the page in the background. Defaults to `true`.
-  Any `<Link />` that is in the viewport (initially or through scroll)
-  will be preloaded. Prefetch can be disabled by passing
-  `prefetch={false}`. When `prefetch` is set to `false`, prefetching will
-  still occur on hover. Pages using
-  [Static Generation](./get-static-props.mdx) will preload `JSON` files
-  with the data for faster page transitions. Prefetching is only enabled
-  in production.
-- [`replace`](#replace-the-url-instead-of-push) - Replace the current
-  `history` state instead of adding a new url into the stack. Defaults to
-  `false`
-- [`scroll`](#disable-scrolling-to-the-top-of-the-page) - Scroll to the
-  top of the page after a navigation. Defaults to `true`
-- [`shallow`](./shallow-routing) - Update the path of the current page
-  without rerunning [`getStaticProps`](./get-static-props) or
-  [`getServerSideProps`](./get-server-side-props). Defaults to `false`
+  强制 `Link` 将 `href` 属性传递给子元素。默认值为 `false`
+- `prefetch` - 在后台预取页面。默认值为`true`。任何在视口中(初始或滚动后)
+  的`<Link />`都将被预加载。通过设置 `prefetch={false}`可以禁用预取功能。
+  当`prefetch`被设置为`false`时，鼠标悬停在 `<Link />`上时仍会触发预取。使
+  用[静态生成](./get-static-props.mdx)的页面将预加载带有数据的`JSON` 文件
+  ，以实现更快的页面转换。预取功能只在生产环境中启用。
+- [`replace`](#replace-the-url-instead-of-push) - 替换当前的`history`状态
+  ，而不是在 `history`堆栈中添加新的 url。默认值为`false`
+- [`scroll`](#disable-scrolling-to-the-top-of-the-page) - 滚动至导航后的页
+  面顶部。默认值为`true`
+- [`shallow`](./shallow-routing) - 更新当前页面的路径，不需要重新运
+  行[`getStaticProps`](./get-static-props)或
+  [`getServerSideProps`](./get-server-side-props)。默认值为`false`
 
-External URLs, and any links that don't require a route navigation using
-`/pages`, don't need to be handled with `Link`; use the anchor tag for
-such cases instead.
+对于外部的 URL 以及任何不需要使用`/pages`路由导航的链接，不需要用`Link`来
+处理。这种情况下,可以使用 a 标签代替。
 
-## Dynamic routes {#dynamic-routes}
+## 动态路由 {#dynamic-routes}
 
-A `Link` to a dynamic route works like the other links. A link to the page
-`pages/post/[pid].js` will look like this:
+`Link`组件链接至动态路由的原理和其他链接相似。一个链接
+到`pages/post/[pid].js`页的 link 写法如下:
 
 ```jsx
 <Link href={Routes.Post({ pid: "abc" })}>
@@ -78,7 +69,7 @@ A `Link` to a dynamic route works like the other links. A link to the page
 </Link>
 ```
 
-Here's an example of how to create a list of links:
+下面是一个如何创建 link 列表的例子:
 
 ```jsx
 const pids = ["id1", "id2", "id3"]
@@ -92,13 +83,13 @@ const pids = ["id1", "id2", "id3"]
 }
 ```
 
-## If the child is a custom component that wraps an `<a>` tag {#if-the-child-is-a-custom-component-that-wraps-an-a-tag}
+## 如果子项是一个包含`<a>`标签的自定义组件{#if-the-child-is-a-custom-component-that-wraps-an-a-tag}
 
-If the child of `Link` is a custom component that wraps an `<a>` tag, you
-must add `passHref` to `Link`. This is necessary if you’re using libraries
-like [styled-components](https://styled-components.com/). Without this,
-the `<a>` tag will not have the `href` attribute, which might hurt your
-site’s SEO.
+如果`Link`的子组件是一个包含 `<a>` 标签的自定义组件，那么你必须在`Link`中
+添加`passHref`属性。如果你在使用像
+[styled-components](https://styled-components.com/)这样的库时，这个操作是
+必须的。如果不这样做，`<a>`标签将会没有 `href` 属性，这可能会损坏网站的
+SEO。
 
 ```jsx
 import { Link } from "blitz"
@@ -121,15 +112,15 @@ function NavLink({ href, name }) {
 export default NavLink
 ```
 
-> **Note**: If you’re using [emotion](https://emotion.sh/)’s JSX pragma
-> feature (`@jsx jsx`), you must use `passHref` even if you use an `<a>`
-> tag directly.
+> **注意**: 如果你在使用[emotion](https://emotion.sh/)的 JSX pragma 功能
+> (`@jsx jsx`),你必须使用`passHref`属性，即使你直接使用的是`<a>`标签。
 
-## If the child is a function component {#if-the-child-is-a-function-component}
+## 如果子项是一个函数式组件 {#if-the-child-is-a-function-component}
 
-If the child of `Link` is a function component, in addition to using
-`passHref`, you must wrap the component in
-[`React.forwardRef`](https://reactjs.org/docs/react-api.html#reactforwardref):
+如果`Link`的子组件是一个函数式组件，除了需要使用`passHref`属性之外，你还必
+须把组件包
+在[`React.forwardRef`](https://reactjs.org/docs/react-api.html#reactforwardref)
+中。
 
 ```jsx
 import { Link, Routes } from "blitz"
@@ -155,10 +146,10 @@ function Home() {
 export default Home
 ```
 
-## With URL Object {#with-url-object}
+## 携带 URL 对象 {#with-url-object}
 
-`Link` can also receive an URL object and it will automatically format it
-to create the URL string. Here's how to do it:
+`Link`组件也可以接收一个 URL 对象，它会自动格式化该 URL 对象，以便创建 URL
+字符串。写法如下:
 
 ```jsx
 import { Link } from "blitz"
@@ -176,15 +167,14 @@ function Home() {
 export default Home
 ```
 
-The above example will be a link to `/about?name=test`. You can use every
-property as defined in the
-[Node.js URL module documentation](https://nodejs.org/api/url.html#url_url_strings_and_url_objects).
+上述示例将会链接到`/about?name=test`。你可以使
+用[Node.js URL 模块文档](https://nodejs.org/api/url.html#url_url_strings_and_url_objects)中
+定义的每一个属性。
 
-## Replace the URL instead of push {#replace-the-url-instead-of-push}
+## 替换 URL 而非推送 {#replace-the-url-instead-of-push}
 
-The default behavior of the `Link` component is to `push` a new URL into
-the `history` stack. You can use the `replace` prop to prevent adding a
-new entry, as in the following example:
+`Link`组件的默认行为是将新的 URL`push`到`history`堆栈中。你可以使
+用`replace`属性来阻止向 history 堆栈中增加新内容，如下示例:
 
 ```jsx
 <Link href={Routes.About()} replace>
@@ -194,8 +184,10 @@ new entry, as in the following example:
 
 ## Using a component that supports `onClick` {#using-a-component-that-supports-on-click}
 
-`Link` supports any component that supports the `onClick` event, in the
-case you don't provide an `<a>` tag, consider the following example:
+## 使用支持`onClick` 的组件 {#using-a-component-that-supports-on-click}
+
+`Link`支持任何支持`onClick`事件的组件，如果你不提供`<a>` 标签，考虑如下示
+例:
 
 ```jsx
 <Link href={Routes.About()}>
@@ -203,15 +195,16 @@ case you don't provide an `<a>` tag, consider the following example:
 </Link>
 ```
 
-The child of `Link` is `<img>` instead of `<a>`. `Link` will send the
-`onClick` property to `<img>` but won't pass the `href` property.
+`Link`的子项是 `<img>` 标签而非`<a>` 标签。`Link`会将`onClick`属性传递
+给`<img>`，但是不会传递`href`属性。
 
 ## Disable scrolling to the top of the page {#disable-scrolling-to-the-top-of-the-page}
 
-The default behavior of `Link` is to scroll to the top of the page. When
-there is a hash defined it will scroll to the specific id, like a normal
-`<a>` tag. To prevent scrolling to the top / hash `scroll={false}` can be
-added to `Link`:
+## 禁止滚动到页面顶部 {#disable-scrolling-to-the-top-of-the-page}
+
+`Link`的默认行为会滚动到页面，当有 hash 定义时，页面将会像普通的`<a>`标签
+一样滚动到对于的 id 上。为了阻止滚动到页面顶部/hash 上，可以给 `Link` 添
+加`scroll={false}`：
 
 ```jsx
 <Link href="/?counter=10" scroll={false}>
