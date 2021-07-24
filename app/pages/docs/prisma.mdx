@@ -1,22 +1,18 @@
 ---
-title: Prisma Utilities
-sidebar_label: Prisma Utilities
+title: Prisma 实用程序
+sidebar_label: Prisma 实用程序
 ---
 
 ### `enhancePrisma(PrismaClient)` {#enhance-prisma-prisma-client}
 
-`enhancePrisma` is a little wrapper that makes integration with Blitz apps
-a bit nicer.
+`enhancePrisma` 是一个小包装器，可以更好地与 Blitz 应用程序集成。
 
-- It ensures you only have one instance of Prisma Client in your
-  application to reduce the number of database connections. But in
-  serverless deployment, you will still have one instance per serverless
-  function.
-- It ensures Prisma client is not used in your client bundle.
-- It adds a `db.$reset() => Promise<void>` function for use in tests like
-  this:
-- It automatically closes the database connection at the end of your tests
-  if you are using [the Blitz jest preset](./testing)
+- 它确保你的应用程序中只有一个 Prisma 客户端实例，以减少数据库连接的数量。
+  但是在 Serverless 部署中，每个 Serverless 功能仍然有一个实例。
+- 它确保你的客户端打包中不适用 Prisma 客户端。
+- 它添加了一个 `db.$reset() => Promise<void>` 函数，用于如下测试：
+- 如果你使用了 [Blitz jest preset](./testing)，它会在测试结束时自动关闭数
+  据库连接。
 
 ```ts
 beforeEach(async () => {
@@ -24,7 +20,7 @@ beforeEach(async () => {
 })
 ```
 
-#### Example Usage
+#### 示例用法
 
 ```ts
 import { enhancePrisma } from "blitz"
