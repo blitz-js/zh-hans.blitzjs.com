@@ -1,47 +1,37 @@
 ---
-title: Shallow Routing
-sidebar_label: Shallow Routing
+title: 浅层路由
+sidebar_label: 浅层路由
 ---
 
-Shallow routing allows you to change the URL without running data fetching
-methods again, that includes [`getServerSideProps`](get-server-side-props)
-and [`getStaticProps`](get-static-props).
-
-You'll receive the updated `pathname` and the `query` via the
-[`router` object](router#router-object) (added by
-[`useRouter`](router#use-router) or [`withRouter`](router#use-router)),
-without losing state.
-
-To enable shallow routing, set the `shallow` option to `true`. Consider
-the following example:
+浅层路由允许你改变 URL，无需再次调用数据获取方法，包括
+[`getServerSideProps`](get-server-side-props) 和
+[`getStaticProps`](get-static-props)。你将在不丢失状态的情况下，通
+过[`router` 对象](router#router-object) (由
+[`useRouter`](router#use-router)或者 [`withRouter`](router#use-router)添加
+)获取更新后的`pathname` 和 `query` 。要启用浅层路由，需要将`shallow`配置项
+设置`true`。考虑如下示例：
 
 ```ts
 import { useEffect } from "react"
 import { useRouter } from "blitz"
-
 // Current URL is '/'
 function Page() {
   const router = useRouter()
-
   useEffect(() => {
     // Always do navigations after the first render
     router.push("/?counter=10", undefined, { shallow: true })
   }, [])
-
   useEffect(() => {
     // The counter changed!
   }, [router.query.counter])
 }
-
 export default Page
 ```
 
-The URL will get updated to `/?counter=10` and the page won't get
-replaced, only the state of the route is changed.
-
-You can also watch for URL changes via
-[`componentDidUpdate`](https://reactjs.org/docs/react-component.html#componentdidupdate)
-as shown below:
+URL 将会更新为`/?counter=10`,并且页面不会被替换，只有路由状态会发生改变。
+你也可以通过下面示例中
+的[`componentDidUpdate`](https://reactjs.org/docs/react-component.html#componentdidupdate)来
+监听 URL 的变更。
 
 ```ts
 componentDidUpdate(prevProps) {
@@ -53,15 +43,14 @@ componentDidUpdate(prevProps) {
 }
 ```
 
-## Caveats {#caveats}
+## 注意事项 {#caveats}
 
-Shallow routing **only** works for same page URL changes. For example,
-let's assume we have another page called `pages/about.ts`, and you run
-this:
+浅层路由**仅仅**旨在相同页面的 URL 发生变化时可用。例如，假设有另一个
+叫`pages/about.ts`的页面，并且你执行了以下代码：
 
 ```ts
 router.push("/?counter=10", "/about?counter=10", { shallow: true })
 ```
 
-Since that's a new page, it'll unload the current page, load the new one
-and wait for data fetching even though we asked to do shallow routing.
+因为这是一个新页面，即使我们设置了渐层路由，页面仍旧会卸载(unload)当前页面
+，加载新的页面，并等待获取数据。
