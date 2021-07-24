@@ -1,10 +1,9 @@
 ---
-title: <Head> Component
+title: <Head> 组件
 sidebar_label: <Head>
 ---
 
-We expose a built-in component for appending elements to the `head` of the
-page:
+我们提供了一个可以将元素追加到页面 `head` 中的内置组件。
 
 ```jsx
 import { Head } from "blitz"
@@ -27,9 +26,8 @@ function IndexPage() {
 export default IndexPage
 ```
 
-To avoid duplicate tags in your `head` you can use the `key` property,
-which will make sure the tag is only rendered once, as in the following
-example:
+为了避免在 `head` 中出现重复的标签，可以使用 `key` 属性，该属性将确保标签
+仅呈现一次，如下所示：
 
 ```jsx
 import { Head } from "blitz"
@@ -52,14 +50,12 @@ function IndexPage() {
 export default IndexPage
 ```
 
-In this case only the second `<meta property="og:title" />` is rendered.
-`meta` tags with duplicate `name` attributes are automatically handled.
+在这种情况下，仅渲染第二个 `<meta property="og:title" />`。具有重复 `name`
+属性的 `meta` 标签会被自动处理。
 
-> The contents of `head` get cleared upon unmounting the component, so make sure each page completely defines what it needs in `head`, without making assumptions about what
-> other pages added.
+> 在卸载该组件时会清除 `head` 里的内容，所以请确保完整定义每个页面所需要的
+> `head` 内容，而无需对添加的其他页面做出任何假设。
 
-`title`, `meta` or any other elements (e.g.
-`script`) need to be contained as **direct** children of the `Head` element,
-or wrapped into maximum one level of `<React.Fragment>` or
-arrays—otherwise the
-tags won't be correctly picked up on client-side navigations.
+`title`、`meta` 或其他元素（例如 `script`）必须包含在 `Head` 元素的**直
+接**子代中，或包装为 `<React.Fragment>` 的最顶级或数组中——否则不会在客户端
+导航上正确加载标签。
