@@ -1,17 +1,17 @@
 ---
-title: How To Impersonate Other Users
-sidebar_label: How To Impersonate Other Users
+title: 如何扮演其他用户
+sidebar_label: 如何扮演其他用户
 ---
 
-Impersonation is often a critical tool for SaaS applications as it allows
-admins to view the application from the perspective of a specific user
-without knowing their credentials.
+扮演通常是 SaaS 应用的关键工具，因为它允许管理员从特定的角度来访问应用，而
+无需知道他们的身份凭据。
 
-Here's an example of what your final result should look like:
-![Screenshot of what it looks like](https://pbs.twimg.com/media/EsWuHShXcAEgEtw?format=jpg&name=large)
+这是一个你最终成果会达到的一个的示例：
+![成果会如何的截图](https://pbs.twimg.com/media/EsWuHShXcAEgEtw?format=jpg&name=large)
 
-First, add a `impersonatingFromUserId` type to your
-[session](/docs/session-management#customize-session-public-data-in-typescript).
+首先，增加一个 `impersonatingFromUserId` 类型到你的
+[会话](/docs/session-management#customize-session-public-data-in-typescript)
+中。
 
 ```ts
 // types.ts
@@ -31,8 +31,7 @@ declare module "blitz" {
 }
 ```
 
-Create the following two mutations which will give you the ability to
-start the impersonation as well as stopping it.
+创建以下两个 mutations，将使你能够启动和停止扮演。
 
 ```ts
 // app/auth/mutations/impersonateUser.ts
@@ -91,7 +90,7 @@ export default resolver.pipe(resolver.authorize(), async (_, ctx) => {
 })
 ```
 
-Add a form similar to this in order to switch users.
+添加类似于此的表单以切换用户。
 
 ```tsx
 import { useMutation, queryClient } from "blitz"
@@ -127,7 +126,7 @@ export const ImpersonateUserForm = () => {
 }
 ```
 
-Lastly, add the following component at the top of your Layout(s).
+最后，在布局的顶部添加以下组件。
 
 ```tsx
 // app/core/components/ImpersonatingUserNotice.tsx
@@ -155,4 +154,4 @@ export const ImpersonatingUserNotice = () => {
 }
 ```
 
-You're done! You are now able to impersonate a user and stop again.
+你做到了！你现在可以扮演一个用户并停止扮演了。
