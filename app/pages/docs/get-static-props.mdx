@@ -5,56 +5,52 @@ sidebar_label: getStaticProps API
 
 <Card type="info">
 
-`getStaticProps` should only be used for pages that do not require
-authentication. The statically generated pages will be publicly available
-via your server and via a CDN if you have one. Therefore they cannot
-contain any personal or sensitive data.
+`getStaticProps` 应只被用于不需要身份验证的页面。静态生成的页面将通过你的
+服务器和 CDN（如果有的话）公开提供。因此其中不能包含任何个人数据或敏感数据
+。
 
-Also, this is why there is no `req` and `res` objects for
-`getStaticProps`, because the pages are generated at build time, not at
-runtime. And at build time, there is no user http request to handle.
+另外，这也是为什么 `getStaticProps` 没有 `req` 和 `res` 对象的原因，因为这
+些页面是在构建过程而非运行过程中生成的。并且在构建过程中，没有用户端 HTTP
+请求需要处理。
 
 </Card>
 
-If you export an `async` function called `getStaticProps` from a
-[page](./pages), Blitz will pre-render this page at build time using the
-props returned by `getStaticProps`.
+如果你从 [page](./pages) 中导出一个名为 `getStaticProps` 的 `async` 函数
+，Blitz 将在构建过程中使用 `getStaticProps` 返回的 props 来预渲染这个页面
+。
 
 ```jsx
 export async function getStaticProps(context) {
   return {
-    props: {}, // will be passed to the page component as props
+    props: {}, // 将会以 props 形式传递给页面组件
   }
 }
 ```
 
-The `context` parameter is an object containing the following keys:
+`context` 参数是一个包含如下键的对象：
 
-- `params` contains the route parameters for pages using dynamic routes.
-  For example, if the page name is `[id].js` , then `params` will look
-  like `{ id: ... }`. To learn more, take a look at the
-  [Dynamic Routing documentation](/docs/routing#dynamic-route-segments).
-  You should use this together with `getStaticPaths`, which we’ll explain
-  later.
-- `preview` is `true` if the page is in the preview mode and `undefined`
-  otherwise. See the [Preview Mode documentation](./preview-mode).
-- `previewData` contains the preview data set by `setPreviewData`. See the
-  [Preview Mode documentation](./preview-mode).
+- `params` 包含使用动态路由页面的路由参数。例如，如果页面的名称为
+  `[id].js`，，那么 `params` 将会像 `{ id: ... }` 这样。想要了解更多，请查
+  阅 [动态路由文档](/docs/routing#dynamic-route-segments)。你需要同时配合
+  使用 `getStaticPaths`，我们将会在下文介绍更多。
+- `preview` 是 `true` 的前提是页面是预览模式，否则为 `undefined`。请查阅
+  [预览模式文档](./preview-mode)。
+- `previewData` 包含通过 `setPreviewData` 设置的预览数据。请查阅
+  [预览模式文档](./preview-mode)。
 
-- `locale` contains the active locale (if enabled).
-- `locales` contains all supported locales (if enabled).
-- `defaultLocale` contains the configured default locale (if enabled).
+- `locale` 包含当前激活的 locale 配置（如果已开启）。
+- `locales` 包含所有支持的 locales（如果已开启）。
+- `defaultLocale` 包含配置后的默认 local（如果已开启）。
 
-`getStaticProps` should return an object with:
+`getStaticProps` 应返回一个带有以下内容的对象：
 
-- `props` - A **required** object with the props that will be received by
-  the page component. It should be a
-  [serializable object](https://en.wikipedia.org/wiki/Serialization)
-- `revalidate` - An **optional** amount in seconds after which a page
-  re-generation can occur. More on
-  [Incremental Static Regeneration](/docs/get-static-props#incremental-static-regeneration)
-- `notFound` - An **optional** boolean value to allow the page to return a
-  404 status and page. Below is an example of how it works:
+- `props` - 一个**必须的**对象，其值将会被页面组件获取到。必须
+  是[可序列化的对象](https://en.wikipedia.org/wiki/Serialization)。
+- `revalidate` - 一个**可选的**数量（以秒为单位），页面可以再生的时间。更
+  多请查
+  阅[增量静态再生](/docs/get-static-props#incremental-static-regeneration)。
+- `notFound` - 一个**可选的**布尔值，允许页面返回一个 404 状态及页面。下方
+  是如何使用的示例：
 
   ```js
   export async function getStaticProps(context) {
@@ -68,22 +64,20 @@ The `context` parameter is an object containing the following keys:
     }
 
     return {
-      props: {}, // will be passed to the page component as props
+      props: {}, // 将会以 props 形式传递给页面组件
     }
   }
   ```
 
-  > **Note**: `notFound` is not needed for
-  > [`fallback: false`](/docs/get-static-paths#fallback-false) mode as
-  > only paths returned from `getStaticPaths` will be pre-rendered.
+  > **注意**：[`fallback: false`](/docs/get-static-paths#fallback-false)
+  > 模式不需要 `notFound`，因为只有从 `getStaticPaths` 返回的路径会被预先
+  > 渲染。
 
-- `redirect` - An **optional** redirect value to allow redirecting to
-  internal and external resources. It should match the shape of
-  `{ destination: string, permanent: boolean }`. In some rare cases, you
-  might need to assign a custom status code for older HTTP Clients to
-  properly redirect. In these cases, you can use the `statusCode` property
-  instead of the `permanent` property, but not both. Below is an example
-  of how it works:
+- `redirect` - 一个**可选的**对象，允许重定向到内部或外部资源。格式需要匹
+  配 `{ destination: string, permanent: boolean }`。在某些罕见的场景中，你
+  可能会需要用来将一个自定义的状态码给一个老的 HTTP 客户端以正确地重定向。
+  在这时，你可以使用 `statusCode` 属性而非 `permanent` 属性，但不要同时使
+  用两者。下方是如何使用的示例：
 
   ```js
   export async function getStaticProps(context) {
@@ -100,50 +94,47 @@ The `context` parameter is an object containing the following keys:
     }
 
     return {
-      props: {}, // will be passed to the page component as props
+      props: {}, // 将会以 props 形式传递给页面组件
     }
   }
   ```
 
-  > **Note**: Redirecting at build-time is currently not allowed and if
-  > the redirects are known at build-time they should be added in
-  > [`blitz.config.js`](/docs/blitz-config#redirects).
+  > **注意**：当前不允许在构建过程中进行重定向，如果在构建过程中已知重定向
+  > 内容，则应将其添加到 [`blitz.config.js`](/docs/blitz-config#redirects)
+  > 中。
 
-> **Note**: You can import modules in top-level scope for use in
-> `getStaticProps`. Imports used in `getStaticProps` will
-> [not be bundled for the client-side](#write-server-side-code-directly).
+> **注意**：你可以在顶层作用域来导入模块，以供在 `getStaticProps` 中使用。
+> 在 `getStaticProps` 中使用的导入将
+> [不捆绑在客户端中](#write-server-side-code-directly)。
 >
-> This means you can write **server-side code directly in
-> `getStaticProps`**. This includes reading from the filesystem or a
-> database.
+> 这意味着你可以**在 `getStaticProps` 中直接编写服务端代码。包括从文件系统
+> 或数据库中的读取操作。**
 
-> **Note**: You should not use
+> **注意**：你不应在 `getStaticProps` 中使用
 > [`fetch()`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
-> to call an API route in `getStaticProps`. Instead, directly import the
-> logic used inside your API route. You may need to slightly refactor your
-> code for this approach.
+> 来调用 API 路由。而是直接导入 API 路由内使用的逻辑。你可能需要为这种方法
+> 略微重构一些代码。
 >
-> Fetching from an external API is fine!
+> 从外部获取 API 是没有问题的！
 
-### Simple Example {#simple-example}
+### 简单示例 {#simple-example}
 
-**Example**: Your blog page needs to load it's data from your database or
-from a CMS (content management system).
+**示例**：你的文章页面需要从你的数据库或 CMS（内容管理系统）中加载相关数据
+。
 
 ```jsx
 function Blog({posts}) {
-  // Render posts...
+  // 渲染文章...
 }
 
-// This function gets called during pre-rendering
+// 当前函数在预渲染期间被调用
 export async function getStaticProps() {
-  // 1. Use a Blitz query
-  // 2. Directly access your database
-  // 3. Or call an external API endpoint to get posts
+  // 1. 使用 Blitz query
+  // 2. 直接访问你的数据库
+  // 3. 或调用一个外部 API 端口来获取文章
   const posts = /* ... */
 
-  // By returning { props: posts }, the Blog component
-  // will receive `posts` as a prop at build time
+  // 通过返回 { props: posts }，文章组件将在构建过程中获取到 `posts` 参数。
   return {
     props: {
       posts,
@@ -154,20 +145,19 @@ export async function getStaticProps() {
 export default Blog
 ```
 
-### When should I use `getStaticProps`? {#when-should-i-use-get-static-props}
+### 我何时该使用 `getStaticProps`？ {#when-should-i-use-get-static-props}
 
-You should use `getStaticProps` if:
+你应该在这时使用 `getStaticProps`：
 
-- The data for the page is not private and can be publicly available
-- The data comes from headless CMS.
-- The data can be publicly cached (not user-specific).
-- The page must be pre-rendered (for SEO) and be very fast —
-  `getStaticProps` generates HTML and JSON files, both of which can be
-  cached by a CDN for performance.
+- 为页面提供的数据不是私密且可以公开访问的。
+- 数据来源于 Headless CMS。
+- 数据可以被公开缓存（不特定于用户）。
+- 页面必须（针对 SEO）预渲染并要求速度很快——`getStaticProps` 生成 HTML 和
+  JSON 文件，CDN 可以缓存这两个文件以提高性能。
 
-### TypeScript: Use `GetStaticProps` {#type-script-use-get-static-props}
+### TypeScript：使用 `GetStaticProps` {#type-script-use-get-static-props}
 
-For TypeScript, you can use the `GetStaticProps` type from `blitz`:
+针对 TypeScript，你可以使用 `blitz` 提供的 `GetStaticProps` 类。
 
 ```ts
 import { GetStaticProps } from "blitz"
@@ -177,8 +167,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
 }
 ```
 
-If you want to get inferred typings for your props, you can use
-`InferGetStaticPropsType<typeof getStaticProps>`, like this:
+如果你想要获得 props 的推断类型，你可以像这样使用
+`InferGetStaticPropsType<typeof getStaticProps>`：
 
 ```tsx
 import { InferGetStaticPropsType } from "blitz"
@@ -200,26 +190,24 @@ export const getStaticProps = async () => {
 }
 
 function Blog({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
-  // will resolve posts to type Post[]
+  // 将推断 posts 为 Post[] 类
 }
 
 export default Blog
 ```
 
-### Incremental Static Regeneration {#incremental-static-regeneration}
+### 增量静态再生 {#incremental-static-regeneration}
 
-With `getStaticProps` you don't have to stop relying on dynamic content,
-as **static content can also be dynamic**. Incremental Static Regeneration
-allows you to update _existing_ pages by re-rendering them in the
-background as traffic comes in.
+使用 `getStaticProps` 你无须终止依赖动态内容，因为**静态内容也可以是动态
+的**。增量静态再生允许你可以通过在访问量增加时再后台重新渲染更新 _已经存在
+的_ 的页面来更新内容。
 
-Inspired by [stale-while-revalidate](https://tools.ietf.org/html/rfc5861),
-background regeneration ensures traffic is served uninterruptedly, always
-from static storage, and the newly built page is pushed only after it's
-done generating.
+受 [stale-while-revalidate](https://tools.ietf.org/html/rfc5861) 的启发，
+后台再生可确保始终从静态存储中不间断地提供流量，并且仅在完成生成后才推送新
+建的页面。
 
-Consider our previous [`getStaticProps` example](#simple-example), but now
-with regeneration enabled:
+考虑我们之前的 [`getStaticProps` 示例](#simple-example)，但现在启用了再生
+功能：
 
 ```jsx
 function Blog({ posts }) {
@@ -232,13 +220,12 @@ function Blog({ posts }) {
   )
 }
 
-// This function gets called at build time on server-side.
-// It may be called again, on a serverless function, if
-// revalidation is enabled and a new request comes in
+// 该函数在服务端构建过程中被调用。
+// 如果启用了重新验证功能，则可以再 Serverless 函数中再次调用
 export async function getStaticProps() {
-  // 1. Use a Blitz query
-  // 2. Directly access your database
-  // 3. Or call an external API endpoint to get posts
+  // 1. 使用 Blitz query
+  // 2. 直接访问你的数据库
+  // 3. 或者调用外部 API 端口来获取文章
   const res = await fetch("https://.../posts")
   const posts = await res.json()
 
@@ -246,57 +233,49 @@ export async function getStaticProps() {
     props: {
       posts,
     },
-    // Next.js will attempt to re-generate the page:
-    // - When a request comes in
-    // - At most once every second
-    revalidate: 1, // In seconds
+    // Next.js 将尝试重新生成当前页面：
+    // - 当一个请求到来
+    // - 每秒最多一次
+    revalidate: 1, // 单位为秒
   }
 }
 
 export default Blog
 ```
 
-Now the list of blog posts will be revalidated once per second; if you add
-a new blog post it will be available almost immediately, without having to
-re-build your app or make a new deployment.
+现在，文章帖子列表将每秒重新验证一次；如果你添加新的文章则无需重新构建你的
+应用程序或进行新的部署，而几乎立即可用。
 
-This works perfectly with
-[`fallback: true`](/docs/get-static-paths#fallback-true). Because now you
-can have a list of posts that's always up to date with the latest posts,
-and have a [blog post page](/docs/get-static-paths#fallback-pages) that
-generates blog posts on-demand, no matter how many posts you add or
-update.
+这与 [`fallback: true`](/docs/get-static-paths#fallback-true) 完美配合。因
+为现在你可以拥有始终与最新文章保持最新的文章列表，并且具有
+[文章页面](/docs/get-static-paths#fallback-pages) 无论你添加或更新多少个文
+章，都可以按需生成文章。
 
-#### Static content at scale
+#### 大规模静态内容
 
-Unlike traditional SSR,
-[Incremental Static Regeneration](#incremental-static-regeneration)
-ensures you retain the benefits of static:
+不像传统的 SSR，[增量静态再生](#incremental-static-regeneration)允许你保持
+静态的优势：
 
-- No spikes in latency. Pages are served consistently fast
-- Pages never go offline. If the background page re-generation fails, the
-  old page remains unaltered
-- Low database and backend load. Pages are re-computed at most once
-  concurrently
+- 延迟没有峰值。页面可以被持续快速地发布。
+- 页面永远不会断线。如果后台页面再生失败，则旧页面保持不变。
+- 低数据库和后端负载。页面最多同时计算一次。
 
-### Reading files: Use `process.cwd()` {#reading-files-use-process-cwd}
+### 读取文件：使用 `process.cwd()` {#reading-files-use-process-cwd}
 
-Files can be read directly from the filesystem in `getStaticProps`.
+在 `getStaticProps` 中文件可以从文件系统中直接读取文件。
 
-In order to do so you have to get the full path to a file.
+为此，你需要获取文件的完整路径。
 
-Since Blitz compiles your code into a separate directory you can't use
-`__dirname` as the path it will return will be different from the pages
-directory.
+由于 Blitz 将你的代码编译到一个单独的目录中，因此你不能使用 `__dirname`，
+因为它返回的路径与 pages 目录不同。
 
-Instead you can use `process.cwd()` which gives you the directory where
-Blitz is being executed.
+相反，你可以使用返回 Blitz 正在执行的目录路径的 `process.cwd()`。
 
 ```jsx
 import fs from "fs"
 import path from "path"
 
-// posts will be populated at build time by getStaticProps()
+// 文章将在构建过程中由 getStaticProps() 填充
 function Blog({ posts }) {
   return (
     <ul>
@@ -310,9 +289,8 @@ function Blog({ posts }) {
   )
 }
 
-// This function gets called at build time on server-side.
-// It won't be called on client-side, so you can even do
-// direct database queries. See the "Technical details" section.
+// 该函数在服务端构建过程中被调用。
+// 它不会在客户端被调用，因此你可以直接执行数据库查询。请查阅下文“技术细节”部分。
 export async function getStaticProps() {
   const postsDirectory = path.join(process.cwd(), "posts")
   const filenames = fs.readdirSync(postsDirectory)
@@ -321,16 +299,15 @@ export async function getStaticProps() {
     const filePath = path.join(postsDirectory, filename)
     const fileContents = fs.readFileSync(filePath, "utf8")
 
-    // Generally you would parse/transform the contents
-    // For example you can transform markdown to HTML here
+    // 通常你需要解析/转换内容
+    // 例如你可以在这里将 markdown 转换为 HTML
 
     return {
       filename,
       content: fileContents,
     }
   })
-  // By returning { props: posts }, the Blog component
-  // will receive `posts` as a prop at build time
+  // 通过返回 { props: posts }，Blog 组件将在构建过程中接收到 `posts` 属性。
   return {
     props: {
       posts,
@@ -341,73 +318,61 @@ export async function getStaticProps() {
 export default Blog
 ```
 
-### Technical details {#technical-details}
+### 技术细节 {#technical-details}
 
-#### Only runs at build time
+#### 仅在构建过程中执行
 
-Because `getStaticProps` runs at build time, it does **not** receive data
-that’s only available during request time, such as query parameters or
-HTTP headers as it generates static HTML.
+因为 `getStaticProps` 仅在构建过程中执行，它会生成静态 HTML，而**不会**接
+收仅在请求过程中可用的数据，例如查询参数或 HTTP 头部。
 
-#### Write server-side code directly
+#### 直接编写服务端代码
 
-Note that `getStaticProps` runs only on the server-side. It will never be
-run on the client-side. It won’t even be included in the JS bundle for the
-browser. That means you can write code such as direct database queries
-without them being sent to browsers. You should not fetch an **API route**
-from `getStaticProps` — instead, you can write the server-side code
-directly in `getStaticProps`.
+请注意，`getStaticProps` 仅在服务端运行，永远不会在客户端上运行。它甚至不
+会包含在发送给浏览器的 JS 包中。 这意味着你可以编写如直接查询数据库的代码
+，而无需将其内容发送到浏览器。你不应该从 `getStaticProps` 中获取**API 路
+由**，但可以直接在 `getStaticProps` 中编写服务端代码。
 
-You can use [this tool](https://next-code-elimination.now.sh/) to verify
-what Blitz eliminates from the client-side bundle.
+你可以使用[这个工具](https://next-code-elimination.now.sh/) 来验证 Blitz
+从客户端打包后删除的内容。
 
-#### Statically Generates both HTML and JSON
+#### 同时静态生成 HTML 和 JSON
 
-When a page with `getStaticProps` is pre-rendered at build time, in
-addition to the page HTML file, Blitz generates a JSON file holding the
-result of running `getStaticProps`.
+当在构建过程中预渲染带有 `getStaticProps` 的页面时，除了页面的 HTML 文件外
+，Blitz 还生成了一个包含运行 `getStaticProps` 的结果的一个 JSON 文件。
 
-This JSON file will be used in client-side routing through `<Link>` or the
-Blitz `router`. When you navigate to a page that’s pre-rendered using
-`getStaticProps`, Blitz fetches this JSON file (pre-computed at build
-time) and uses it as the props for the page component. This means that
-client-side page transitions will **not** call `getStaticProps` as only
-the exported JSON is used.
+该 JSON 文件将能在客户端路由中通过 `<Link>` 或 Blitz `router` 来使用。当你
+进入到一个使用 `getStaticProps` 预渲染的页面时，Blitz 会获取这个（在构建过
+程中预先计算出的） JSON 文件并将其作为传递给页面组件的属性。这意味着客户端
+页面因为只使用了导出的 JSON，页面切换时将**不**再调用 `getStaticProps`。
 
-#### Only allowed in a page
+#### 仅在页面中支持
 
-`getStaticProps` can only be exported from a [page](./pages). You can’t
-export it from non-page files.
+`getStaticProps` 仅仅可以从一个[页面](./pages)中导出。你无法从一个非页面文
+件中导出。
 
-One of the reasons for this restriction is that React needs to have all
-the required data before the page is rendered.
+出现此限制的原因之一是，在呈现页面渲染之前，React 需要拥有所有必要的数据。
 
-Also, you must use `export async function getStaticProps() {}` — it will
-**not** work if you add `getStaticProps` as a property of the page
-component.
+同时，你必须使用 `export async function getStaticProps() {}`——如果你将
+`getStaticProps` 作为页面组件的属性添加时将无法被正常使用。
 
-#### Runs on every request in development
+#### 在开发环境中每次请求都会执行
 
-In development (`blitz dev`), `getStaticProps` will be called on every
-request.
+在开发环境中（`blitz dev`），`getStaticProps` 将会在每次请求时被调用。
 
-#### First Render UX
+#### 首屏渲染的用户体验
 
-Even though a page with `getStaticProps` will be pre-rendered on the
-server, it may fallback to the page's loading state if your page contains
-queries that request data missing from the initial page props. This can
-create a flickering effect where the contents of the page rapidly changes
-when the query data gets loaded into the app.
+尽管带有 `getStaticProps` 的页面将会在服务端被预渲染，但如果你的页面包含着
+初始页面需要但缺失的属性的查询，则回退到页面正在加载的状态。当查询到的数据
+加载到应用中时，由于页面内容会快速更改，从而导致产生闪烁的意外效果。
 
-[Click here](./pages#first-render-ux) to discover ways you can improve the
-first render User Experience (UX) of your pages.
+[点击这里](./pages#first-render-ux) 来探索改善你的页面在首屏渲染时的用户体
+验（UX）的方法。
 
-#### Preview Mode
+#### 预览模式
 
-In some cases, you might want to temporarily bypass Static Generation and
-render the page at **request time** instead of build time. For example,
-you might be using a headless CMS and want to preview drafts before
-they're published.
+在某些情况下，你可能希望暂时绕过静态再生，并在**请求过程**而非构建过程渲染
+页面。例如，你可能会使用一个 Headless CMS 且想要在草稿发布之前对其进行预览
+。
 
-This use case is supported by Blitz by the feature called **Preview
-Mode**. Learn more on the [Preview Mode documentation](./preview-mode).
+Blitz 通过称为**预览模式**的功能支持此用例。更多请查
+阅[预览模式文档](./preview-mode)。
