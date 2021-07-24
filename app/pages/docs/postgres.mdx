@@ -1,47 +1,47 @@
 ---
-title: Run Postgres Locally
-sidebar_label: Run Postgres Locally
+title: 本地运行 Postgres
+sidebar_label: 本地运行 Postgres
 ---
 
-There are two basic ways to run Postgres locally:
+有两个基本方式来在本地运行 Postgres：
 
-1. Natively on your computer
-2. Via Docker
+1. 在计算机本地运行
+2. 通过 Docker
 
-Most people run Postgres natively without Docker as it's simpler, runs all
-the time in the background, and because Docker uses extra resources.
+大多数人会在没有 Docker 的情况下本地运行 Postgres，因为这样更简单，可以一
+直在后台运行，而且 Docker 需要使用额外的资源。
 
-## Natively on your computer {#natively-on-your-computer}
+## 在计算机本地运行 {#natively-on-your-computer}
 
-### On Mac {#on-mac}
+### 在 Mac 上 {#on-mac}
 
-There are two very popular options.
+有两种非常流行的选项：
 
-#### Install via Homebrew
+#### 通过 Homebrew 安装
 
-1. Make sure you have [Homebrew](https://brew.sh/) installed.
-2. Run `brew install postgresql`
-3. Run `brew services start postgresql`
+1. 确认你安装了 [Homebrew](https://brew.sh/)。
+2. 运行 `brew install postgresql`
+3. 运行 `brew services start postgresql`
 
-And that's it!
+就这么简单！
 
-#### Install via Postgres.app
+#### 通过 Postgres.app 安装
 
-1. Go to [Postgres.app](https://postgresapp.com/)
-2. Download and install the app
-3. Open the app and click "initalize" to create a new server
+1. 访问 [Postgres.app](https://postgresapp.com/)
+2. 下载并安装应用
+3. 打开应用并点击“初始化”来创建一个新的服务器
 
-And then you are good to go!
+接着你就可以良好访问了！
 
-### On Windows {#on-windows}
+### 在 Windows 上 {#on-windows}
 
-The easiest way is to download and run the installer from
-[the Postgres website](https://www.postgresql.org/download/windows/).
+最简单的方式是从
+[Postgres 网站](https://www.postgresql.org/download/windows/) 上下载并运行
+安装器。
 
-## Via Docker {#via-docker}
+## 通过 Docker {#via-docker}
 
-1. Create a `docker-compose.yml` file inside the root of your project with
-   the following content
+1. 在你的根目录下创建一个 `docker-compose.yml` 文件，并添加以下内容
 
 ```yaml
 version: "3.7"
@@ -51,7 +51,7 @@ services:
     image: postgres:latest
     volumes:
       - data:/var/lib/postgresql/data
-    env_file: ./.env.local #Here we are using the already existing .env.local file
+    env_file: ./.env.local # 这里我们使用已存在的 .env.local 文件
     ports:
       - "5432:5432"
 
@@ -65,8 +65,7 @@ volumes:
   data:
 ```
 
-2. Inside your `.env.local` file add 3 new environment variables which are
-   required by docker
+2. 在你的 `.env.local` 文件内新增 3 个 Docker 所需的新的环境变量
 
 ```bash
 POSTGRES_USER=your_user
@@ -74,15 +73,14 @@ POSTGRES_PASSWORD=your_password
 POSTGRES_DB=your_database_name
 ```
 
-Given these values, update `DATABASE_URL` in `.env.local` to something
-similar like
+给定这些值，将 `.env.local` 中的 `DATABASE_URL` 更新为类似
 `postgresql://your_user:your_password@localhost:5432/your_database_name`
-and in `.env.test.local` to
+的内容，并将 `.env.test.local` 中的内容更新为
 `postgresql://your_user:your_password@localhost:5433/your_database_name`
 
-Please note that test database is using port `5433` instead of `5432`
+请注意，测试数据库使用的是 `5433` 而不是 `5432`
 
-3. Modify your `package.json` to start the database before Blitz
+3. 更新你的 `package.json` 来在运行 Blitz 前启动数据库
 
 ```json
 "scripts": {
@@ -91,6 +89,5 @@ Please note that test database is using port `5433` instead of `5432`
 }
 ```
 
-4. Start your new database and get it to the latest version of your
-   migrations by running `docker-compose up -d` and
-   `blitz prisma migrate dev`.
+4. 通过运行 `docker-compose up -d` 和 `blitz prisma migrate dev` 来启动你
+   的新的数据库并获得最新版本的迁移。
