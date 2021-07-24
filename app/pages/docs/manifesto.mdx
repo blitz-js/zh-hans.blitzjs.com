@@ -1,137 +1,108 @@
 ---
-id: manifesto
-title: The Blitz.js Manifesto
-sidebar_label: Manifesto
+id: 宣言
+title: Blitz.js 悬崖
+sidebar_label: 悬崖
 ---
 
 <!--alex disable easy-->
 
-## Background {#background}
+## 背景 {#background}
 
-Technology follows a repeating cycle of bundling and unbundling. Created
-in 2005, Ruby on Rails became a major bundling force. It made web
-application development easier and more accessible than ever before. This
-benefited everyone, from those learning programming to seniors building
-production systems.
+技术重复循环着“分久必合，合久必分”的准则。2005 年创建的 Ruby on Rails，成
+为了主要的“合”的力量。它使 Web 应用开发比以往的任何时候都更容易访问。这让
+每个人都有所收益——从学习编程的新手到构建架构体系的老手。
 
-A major unbundling happened in 2013 with the release of React because it
-is hyper focused on the rendering layer. As React grew in popularity, so
-did the choices for all the other parts, leaving developers with hundreds
-of decisions to make when starting a new app. While this has contributed
-to JavaScript Fatigue, it's been a powerful driving force for rapid
-frontend innovation.
+一个重要的“分”的力量发生在 2013 年——只专注于渲染层的 React 诞生。随着
+React 越来越受欢迎，所有其它部分的选择也越来越活跃，这让开发人员在启动新的
+应用程序时需要作出数百个决定。虽然这导致了 JavaScript 疲劳，但它也一直是前
+端快速创新的强大驱动力。
 
-Now, in 2020, is the perfect time for another major bundling. Developers
-are yearning for an easier, simpler way to build web applications.
-Beginners want a guiding hand for building a robust app. And seniors want
-a framework that removes mundane tasks and provides a highly scalable
-architecture.
+现在，在 2020 年，是另一个“合”的力量的绝佳时机了。开发人员渴望更轻松、更简
+单的方式来构建 Web 应用。初学者需要一个引领者来构建一个强大的应用。老年人
+需要一个可以消除早期繁琐细节并能提供高度可拓展架构的框架。
 
-Hence the creation of Blitz.
+因此 Blitz 诞生了。
 
-## What is Blitz For? {#what-is-blitz-for}
+## Blitz 用来做什么？ {#what-is-blitz-for}
 
-Blitz is for building tiny to large fullstack database-backed applications
-that have one or more graphical user interfaces like web or mobile apps.
+Blitz 用于构建由小型到大型的有数据库支持全栈应用，这些应用具有一个或多个终
+端用户界面，如 Web 或移动应用。
 
-## Foundational Principles {#foundational-principles}
+## 基本原则 {#foundational-principles}
 
-1. Fullstack & Monolithic
-2. API Not Required
-3. Convention over Configuration
-4. Loose Opinions
-5. Easy to Start, Easy to Scale
-6. Stability
-7. Community over Code
+1. 全栈 & 一体式
+2. 不必需要 API
+3. 约定由于配置
+4. 宽松的约束
+5. 易于启动，易于拓展
+6. 稳定性
+7. 社区重于代码
 
-### 1. Fullstack & Monolithic {#1-fullstack-and-monolithic}
+### 1. 全栈 & 一体式 {#1-fullstack-and-monolithic}
 
-A fullstack, monolithic application is simpler than an application where
-frontend and backend are developed and deployed separately. Monolithic
-doesn't mean it will be slow or hard to scale to large teams. Monolithic
-doesn't mean there isn't separation of concerns. Monolithic means you can
-reason about your app as a single entity.
+一个全栈、一体式的应用会比前后端分离开发和部署的应用更简单。一体式并不意味
+着它会缓慢或难以拓展到大型团队。一体式并不意味着没有关注点分离。一体式意味
+着你可以将你的应用作为单个实体进行推演。
 
 ### 2. API Not Required {#2-api-not-required}
 
-Until now, choosing React for your view layer required you to have a REST
-or GraphQL API even if it wasn't used by third-parties. This additional
-complexity is a significant drawback not shared by traditional server
-rendered apps like Ruby on Rails.
+到目前为止，为你的 React 视图层选择生态库常要求你拥有 REST 或 GraphQL
+API，即使第三方都没有使用它。这种额外的复杂性是 Ruby on Rails 等传统服务器
+渲染应用所没有的重大不足。
 
-Blitz is a framework for the 99% of us at companies with <100 employees.
-The vast majority of these apps don't actually need an API, at least not
-until years down the road when you have the time and resources to build
-one.
+Blitz 是一个适用于员工少于 100 人的公司中 99% 的场景。这些应用绝大多数实际
+上并不需要 API，至少直到几年后你有时间和资源来构建 API 时才需要。
 
-### 3. Convention over Configuration {#3-convention-over-configuration}
+### 3. 约定优于配置 {#3-convention-over-configuration}
 
-Starting a new fullstack React app is currently too hard. You have to
-spend days on things like configuring eslint, prettier, husky, jest,
-cypress, typescript, deciding on a file structure, setting up a database,
-adding authentication and authorization, setting up a router, defining
-routing conventions, and setting up your styling library.
+从零建起一个全栈 React 应用目前来说太难。你必须要花费数天时间来配置
+eslint、prettier、husky、jest、cypress、typescript、决定文件结构、配置数据
+库、添加身份验证和授权、设置路由、定义路由约定以及配置你的样式库。
 
-Blitz makes as many decisions and does as much work for you as possible.
-This makes it lightning fast to start real development. It also greatly
-benefits the community. Common project structure and architectural
-patterns make it easy to move from Blitz app to Blitz app and immediately
-feel at home.
+Blitz 为你做出尽可能多的决定来帮助你提前完成尽可能多的工作。这使得开始真正
+的开发变得如闪电般迅速。这也极大地造福了社区。通用的项目结构和架构模式可以
+轻松地从 Blitz 应用移动到另一个 Blitz 应用，并立即有宾至如归的感觉。
 
-Convention over configuration doesn't mean no configuration. It means
-configuration is optional. Blitz will provide all the escape hatches you
-need for bespoke customization.
+约定由于配置并不意味着没有配置。这意味着配置是可选的。Blitz 将为你提供各种
+定制通道。
 
-### 4. Loose Opinions {#4-loose-opinions}
+### 4. 宽松的约束 {#4-loose-opinions}
 
-Blitz is opinionated. The out-of-the-box experience guides you on a path
-perfect for most applications. However, Blitz isn't arrogant. It
-understands there are very good reasons for deviating from convention, and
-it allows you to do so. For example, Blitz has a conventional file
-structure, but, with few exceptions, doesn't _enforce_ it.
+Blitz 很果断。开箱即用的体验引导你步入适合绝大多数应用的完美路线。然而
+，Blitz 并不傲慢。它理解有非常好的理由来偏离惯例，并且允许你这样做。例如
+，Blitz 具有传统的文件结构，但除了少数例外，它不会 _强制_ 这样做。
 
-And when there's not community consensus, `blitz new` prompts you to
-choose.
+当没有社区共识时，`blitz new` 会提示你进行选择。
 
-### 5. Easy to Start, Easy to Scale {#5-easy-to-start-easy-to-scale}
+### 5. 易于启动，易于扩展 {#5-easy-to-start-easy-to-scale}
 
-A framework that's only easy for one end of an application lifecycle is
-not a good framework. Both starting and scaling must be easy.
+仅在应用程序生命周期的一个环节容易使用的框架不是好的框架。启动和拓展都必须
+很容易。
 
-Easy to start includes being easy for beginners and being easy to migrate
-existing Next.js apps to Blitz.
+易于启动包括易于初学者和易于将现有的 Next.js 应用程序迁移到 Blitz。
 
-Scaling is important in all forms: lines of code, number of people working
-in the codebase, and code execution.
+拓展在所有方面都很重要：代码行数、在代码库中工作的人数以及代码执行。
 
-### 6. Stability {#6-stability}
+### 6. 稳定性 {#6-stability}
 
-In the fast-paced world of JavaScript, a stable, predictable release cycle
-is a breath of fresh air. A stable release cycle ensures minimal breaking
-changes, and it ensures you know exactly what and when a breaking change
-will occur. It also minimizes bugs in stable releases by ensuring features
-are in beta for a minimum amount of time.
-[Ember is the model citizen](https://emberjs.com/releases/) in this
-regard.
+在快节奏的 JavaScript 世界中，稳定、可预测的发布周期是一股清流。稳定的发布
+周期可确保将破坏性更改降至最低，并确保你确切的了解破坏性更改将发生的内容和
+时间。它还通过确保功能处于测试阶段的时间最短，从而最大限度地减少稳定版本中
+的错误。[Ember 是这方面的模范公民](https://emberjs.com/releases/)。
 
-The exact details of the Blitz release cycle are to be determined, but
-we'll follow a pattern similar to Ember which strictly follows SemVer with
-stable releases every 6 weeks and LTS releases every 6 months.
+Blitz 发布周期的确切细节有待确定，但我们将遵循类似于 Ember 的模式，严格遵
+循 SemVer，每 6 周发布一次稳定版本，每 6 个月发布一次 LTS。
 
-Blitz will follow a public RFC (request for comments) process so all users
-and companies can participate in proposing and evaluating new features.
+Blitz 将遵循公共 RFC（意见征求）流程，因此所有用户和公司都可以参与提议和评
+估新功能。
 
-If a Blitz API needs to be removed, it will be deprecated in a minor
-release. Major releases will simply remove APIs already deprecated in a
-previous release.
+如果需要删除 Blitz API，它将会在次要版本中被弃用。主要版本将简单地删除先前
+版本中已弃用的 API。
 
-### 7. Community over Code {#7-community-over-code}
+### 7. 社区重于代码 {#7-community-over-code}
 
-The Blitz community is the most important aspect of the framework, by far.
-We have a comprehensive [Code of Conduct](./code-of-conduct). LGBTQ+,
-women, and minorities are especially welcome.
+到目前为止，Blitz 社区是该框架最重要的环节。我们有一个全面
+的[行为准则](./code-of-conduct)。LGBTQ+、女性和少数民族尤其受欢迎。
 
-We are all in this together, from the youngest to the oldest. We are all
-more similar than we are different. We can and should solve problems
-together. We should learn from other communities, not compete against
-them.
+无论最年轻的还是到最老的，我们都携手与共。我们的相似性都比我们的不同大。我
+们应该向其它社区学习，而不是与他们竞争。
