@@ -1,21 +1,19 @@
 ---
-title: Third Party Login with Passport.js
-sidebar_label: Third Party Login w/Passport.js
+title: 通过 Passport.js 来第三方登录
+sidebar_label: 通过 w/Passport.js 来第三方登录
 ---
 
-Blitz provides an adapter that lets you use an existing
-[Passport.js authentication strategy](http://www.passportjs.org/).
+Blitz 提供一个可以让你使用已有的
+[Passport.js 身份验证策略](http://www.passportjs.org/) 的适配器。
 
-Currently only passport strategies that use a `verify` callback are
-supported. In the Twitter example below, the second argument to
-`TwitterStrategy()` is the `verify` callback.
+目前仅支持使用 `verify` 回调的 passport 策略。在下面的 Twitter 示例中
+，`TwitterStrategy()` 的第二个参数是 `verify` 回调。
 
-## Setup {#setup}
+## 设置 {#setup}
 
-### 1. Add the Passport.js API Route {#1-add-the-passport-js-api-route}
+### 1. 增加 Passport.js API 路由 {#1-add-the-passport-js-api-route}
 
-Add a new api route at `app/api/auth/[...auth].ts` with the following
-contents.
+在 `app/api/auth/[...auth].ts` 中添加一个新的 api 路由，内容如下：
 
 ```ts
 // app/api/auth/[...auth].ts
@@ -27,40 +25,37 @@ export default passportAuth({
   errorRedirectUrl: "/",
   strategies: [
     {
-      strategy: new PassportStrategy(), // Provide initialized passport strategy here
+      strategy: new PassportStrategy(), // 提供初始化的 passport 策略
     },
   ],
 })
 ```
 
-If you need, you can place the api route at a different path but the
-filename must be `[...auth].js` or `[...auth].ts`.
+如果你需要，你可以将 api 路由替换为一个不同的路径，但是文件名必须为
+`[...auth].js` 或 `[...auth].ts`。
 
 #### URLs
 
-The `passportAuth` adapter adds two API endpoints for each installed
-strategy.
+`passportAuth` 适配器为每个安装的策略添加两个 API 端口。
 
-With the handler at `app/api/auth/[...auth].ts`, it adds the following:
+使用位于 `app/api/auth/[...auth].ts` 的处理程序，它添加了以下内容：
 
-1. `/api/auth/[strategyName]` - URL to initiate login
-2. `/api/auth/[strategyName]/callback` - Callback URL to complete login
+1. `/api/auth/[strategyName]` - 启动登录的 URL
+2. `/api/auth/[strategyName]/callback` - 完成登录的回调 URL
 
-For example with `passport-twitter` strategy, the URLs for Twitter will
-be:
+例如通过 `passport-twitter` 策略，Twitter 的 URLs 将会为：
 
-1. `/api/auth/twitter` - URL to initiate login
-2. `/api/auth/twitter/callback` - Callback URL to complete login
+1. `/api/auth/twitter` - 启动登录的 URL
+2. `/api/auth/twitter/callback` - 完成登录的回调 URL
 
-You can determine the `strategyName` in the strategy's documentation by
-looking for this: `passport.authenticate('github')`. So in this case, the
-`strategyName` is `github`.
+你可以通过查找以下内容来确定策略文档中的
+`strategyName`：`passport.authenticate('github')`。所以在这种情况下
+，`strategyName` 是 `github`。
 
-#### SSL Proxy Configuration
+#### SSL 代理配置
 
-You may need to set `secureProxy` option to `true` in case your app is
-located behind SSL proxy (Nginx). Proxy should be set to manage
-`x-forwarded-proto` header correctly.
+你可能需要将 `secureProxy` 选项设置为 `true`，以防你的应用位于 SSL 代理
+（Nginx）后面。代理应正确地设置来管理 `x-forwarded-proto` header。
 
 ```ts
 // app/api/auth/[...auth].ts
@@ -77,11 +72,10 @@ export default passportAuth({
 })
 ```
 
-#### Access Middleware Context
+#### 访问中间件内容
 
-You can access the middleware context by providing a callback to the
-`passportAuth` adapter. The first argument of the callback is `ctx`. You
-can then access the session context via `ctx.session`
+你可以通过给 `passportAuth` 适配器提供一个回调来访问中间件上下文。回调的第
+一个参数是 `ctx`。你可以通过 `ctx.session` 来访问这个会话上下文。
 
 ```ts
 // app/api/auth/[...auth].ts
@@ -103,19 +97,17 @@ export default passportAuth((ctx) => ({
 }))
 ```
 
-Note: If your environment variables are not typed, you must add a type
-assertion to each environment variable when using the callback (as shown
-in the example above).
+注意：如果你的环境变量还没类型化，你必须在使用回调时为每个环境变量添加类型
+断言（如上所示）。
 
-### 2. Add a Passport Strategy {#2-add-a-passport-strategy}
+### 2. 增加一个 Passport 策略 {#2-add-a-passport-strategy}
 
-Add a strategy to the `strategies` array argument for `passportAuth` in
-the API route, and then follow the strategy's documentation for setup.
+在 API 路由中为 `strategies` 数组参数添加一个策略，然后按照该策略的文档进
+行设置。
 
-Here's an example of adding `passport-twitter`.
+例如如下添加 `passport-twitter` 的示例：
 
-Note that the `callbackURL` uses the callback endpoint as described above
-(`/api/auth/twitter/callback`)
+注意 `callbackURL` 使用上述回调端口（`/api/auth/twitter/callback`）
 
 ```ts
 import { passportAuth } from "blitz"
@@ -171,39 +163,37 @@ export default passportAuth({
 })
 ```
 
-Note: The above `passport-twitter` example requires your `User` prisma
-model to have `email String @unique` and `name String`.
+注意：上述的 `passport-twitter` 示例要求你的 `User` prisma 模型具有
+`email String @unique` 和 `name String`。
 
-### 3. Log in with this Passport Strategy {#3-log-in-with-this-passport-strategy}
+### 3. 通过这个 Passport 策略登录 {#3-log-in-with-this-passport-strategy}
 
-Add a link to your app with URL format of `/api/auth/[strategyName]`.
+使用 URL 格式 `/api/auth/[strategyName]` 添加指向你的应用的链接。
 
-For the above twitter example, the link would be like this:
+对于上述的 Twitter 示例，相关的链接会像这样：
 
 ```tsx
-<a href="/api/auth/twitter">Log In With Twitter</a>
+<a href="/api/auth/twitter">通过 Twitter 登录</a>
 ```
 
-## Detailed Usage Instructions {#detailed-usage-instructions}
+## 详细使用说明 {#detailed-usage-instructions}
 
-Upon successful authentication with the third-party, the user will be
-redirected back to the above auth API route. When that happens, the
-`verify` callback will be called.
+与第三方成功认证后，用户将被重定向回上述权限 API 路由上。发生这种情况时，
+将调用 `verify` 回调。
 
-When the `verify` callback is called, the user has been authenticated with
-the third-party, but **a session has not yet been created for your Blitz
-app**.
+当调用 `verify` 回调时，用户已通过第三方的身份验证，但**尚未为你的 Blitz
+应用创建会话**。
 
-### Create a Session {#create-a-session}
+### 创建一个会话 {#create-a-session}
 
-**To create a new Blitz session**, you need to call the `done()` function
-from your `verify` callback.
+**要创建一个新的 Blitz 会话**，你需要从你的 `verify` 回调中调用 `done()`
+函数。
 
 ```ts
 done(undefined, result)
 ```
 
-where `result` is an object of type `VerifyCallbackResult`
+其中 `result` 是 `VerifyCallbackResult` 类型的对象。
 
 ```ts
 export type VerifyCallbackResult = {
@@ -213,59 +203,53 @@ export type VerifyCallbackResult = {
 }
 ```
 
-The Blitz adapter will then call `session.$create()` for you and redirect
-the user back to the correct place in your application.
+Blitz 适配器将接着为你调用 `session.$create()`，并且将用户重定向到应用中正
+确的地方。
 
-### Return an Error {#return-an-error}
+### 返回一个错误 {#return-an-error}
 
-If instead, you want to prevent creating a session because of some error,
-then call `done()` with an error as the first argument. The user will then
-be redirected back to the correct location.
+如果相反，由于某些错误，你想要阻止创建会话，则调用 `done()` 并将错误作为第
+一个参数。然后用户将被重定向回正确的位置。
 
 ```ts
 return done(new Error("it broke"))
 ```
 
-### Showing the Error to the User {#showing-the-error-to-the-user}
+### 向用户显示错误 {#showing-the-error-to-the-user}
 
-Any error during this process will be provided as the `authError` query
-parameter.
+此过程中的任何错误都将作为 `authError` 查询参数提供。
 
-For example with `errorRedirectUrl = '/'` and
-`done(new Error("it broke"))`, the user will be redirected to:
+例如，使用 `errorRedirectUrl = '/'` 和 `done(new Error("it broke"))`，用户
+将被重定向到：
 
 ```
 /?authError=it broke
 ```
 
-### Post Authentication Redirects {#post-authentication-redirects}
+### 身份验证后重定向 {#post-authentication-redirects}
 
-There are four different ways to determine the redirect URL where a user
-should be sent after they are authenticated. They are listed here in order
-of priority. A URL provided with method #1 will override all other URLs.
+有四种不同的方法可以确定用户在通过身份验证后应该被发送到的重定向 URL。它们
+在此处按优先级列出。与方法 #1 一起提供的 URL 将覆盖所有其它 URL。
 
-1. Add `redirectUrl` to the `verify` callback result
-   - Example: `done(undefined, {publicData, redirectUrl: '/'})`
-2. Add a `redirectUrl` query parameter to the "initiate login" url
-   - Example: `example.com/api/auth/twitter?redirectUrl=/dashboard`
-   - Example:
-     `example.com/api/auth/twitter?redirectUrl=${router.pathname}`
-3. Via the config passed to `passportAuth`
-   - If success, it will use `config.successRedirectUrl`
-   - If error, it will use `config.errorRedirectUrl`
-4. If none of the above are provided, it will redirect to `/`
+1. 增加 `redirectUrl` 给 `verify` 回调结果
+   - 示例：`done(undefined, {publicData, redirectUrl: '/'})`
+2. 增加一个 `redirectUrl` 查询参数给“初始化登录” URL
+   - 例如：`example.com/api/auth/twitter?redirectUrl=/dashboard`
+   - 例如：`example.com/api/auth/twitter?redirectUrl=${router.pathname}`
+3. 通过传递给 `passportAuth` 的配置
+   - 如果成功，将会使用 `config.successRedirectUrl`
+   - 如果失败，将会使用 `config.errorRedirectUrl`
+4. 如果上述任何没有被提供，将会重定向到 `/`
 
-Note: If there is an error, methods #1 and #2 will override
-`config.errorRedirectUrl`
+注意：如果有错误，方法 #1 和 #2 将会覆盖 `config.errorRedirectUrl`。
 
-This should give you maximum flexibility to do anything you need. If this
-doesn't meet your needs, please open an issue on GitHub!
+这应该给你最大的灵活性来做你需要的任何事情。如果这不能满足你的需求，请在
+Github 上开启 issue！
 
 ### `authenticateOptions` {#authenticate-options}
 
-Some strategies have to call an option like `scope` or `successMessage`
-inside the `passport.authenticate()` method. Add these options to the
-`passportAuth` object like this:
+一些策略需要在 `passport.authenticate()` 方法中调用一个选项，如 `scope` 或
+`successMessage`。增加类似如下的选项给 `passportAuth` 对象：
 
 ```ts
 import { passportAuth } from "blitz"
@@ -300,7 +284,7 @@ export default passportAuth({
           const email = profile.emails && profile.emails[0]?.value
 
           if (!email) {
-            // This can happen if you haven't enabled email access in your twitter app permissions
+            // 如果你没有在你的 Twitter 应用中开启邮箱访问权限后会出现
             return done(
               new Error("GitHub OAuth response doesn't have email.")
             )
@@ -328,5 +312,5 @@ export default passportAuth({
 })
 ```
 
-Note: Without the `authenticateOptions` the `profile` parameter inside the
-`verify` function would not contain any values.
+注意：没有 `authenticateOptions`，`verify` 函数中的 `profile` 参数将不会包
+含任何值。
