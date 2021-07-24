@@ -1,13 +1,13 @@
 ---
-title: Auth Hooks & Utilities
-sidebar_label: Hooks & Utilities
+title: 权限 Hooks & 公用库
+sidebar_label: Hooks & 公用库
 ---
 
 ## `useSession()` {#use-session}
 
 `useSession(options?) => Partial<PublicData> & {isLoading: boolean}`
 
-### Example {#example}
+### 示例 {#example}
 
 ```ts
 import { useSession } from "blitz"
@@ -15,15 +15,15 @@ import { useSession } from "blitz"
 const session = useSession()
 ```
 
-### Arguments {#arguments}
+### 参数 {#arguments}
 
 - `options:`
-  - Optional
-  - `initialPublicData: PublicData` - Use this with SSR to set public data
-    from the server session
-  - `suspense: boolean` - Defaults to `true`
+  - 可选
+  - `initialPublicData: PublicData` - 将此与 SSR 一起使用以设置来自服务器
+    会话的公共数据
+  - `suspense: boolean` - 默认为 `true`
 
-### Returns {#returns}
+### 返回 {#returns}
 
 - `session: Partial<PublicData> & {isLoading: boolean}`
 
@@ -31,9 +31,9 @@ const session = useSession()
 
 `useAuthenticatedSession(options?) => PublicData & {isLoading: boolean}`
 
-This will throw `AuthenticationError` if the user is not logged in
+如果用户没有登录将抛出 `AuthenticationError`
 
-### Example {#example-1}
+### 示例 {#example-1}
 
 ```ts
 import { useAuthenticatedSession } from "blitz"
@@ -41,15 +41,15 @@ import { useAuthenticatedSession } from "blitz"
 const session = useAuthenticatedSession()
 ```
 
-### Arguments {#arguments-1}
+### 参数 {#arguments-1}
 
 - `options:`
-  - Optional
-  - `initialPublicData: PublicData` - Use this with SSR to set public data
-    from the server session
-  - `suspense: boolean` - Defaults to `true`
+  - 可选
+  - `initialPublicData: PublicData` - 将此与 SSR 一起使用以设置来自服务器
+    会话的公共数据
+  - `suspense: boolean` - 默认为 `true`
 
-### Returns {#returns-1}
+### 返回 {#returns-1}
 
 - `session: PublicData & {isLoading: boolean}`
 
@@ -57,9 +57,9 @@ const session = useAuthenticatedSession()
 
 `useAuthorize() => void`
 
-This will throw `AuthenticationError` if the user is not logged in
+如果用户没有登录将返回 `AuthenticationError`
 
-### Example {#example-2}
+### 示例 {#example-2}
 
 ```ts
 import { useAuthorize } from "blitz"
@@ -67,22 +67,21 @@ import { useAuthorize } from "blitz"
 useAuthorize()
 ```
 
-### Arguments {#arguments-2}
+### 参数 {#arguments-2}
 
-- None
+- 空
 
-### Returns {#returns-2}
+### 返回 {#returns-2}
 
-- Nothing
+- 无
 
 ## `useRedirectAuthenticated()` {#use-redirect-authenticated}
 
 `useRedirectAuthenticated(to: string) => void`
 
-This will redirect a logged in user to the given url path. It does nothing
-for logged out users.
+这会将登录用户重定向到给定的 URL 路径中。它对注销的用户没有任何作用。
 
-### Example {#example-3}
+### 示例 {#example-3}
 
 ```ts
 import { useRedirectAuthenticated } from "blitz"
@@ -90,25 +89,24 @@ import { useRedirectAuthenticated } from "blitz"
 useRedirectAuthenticated("/dashboard")
 ```
 
-### Arguments {#arguments-3}
+### 参数 {#arguments-3}
 
 - `to: string`
-  - **Required**
-  - The url path to redirect logged in users to
+  - **必须**
+  - 让已登录用户重定向到的 URL 路径
 
-### Returns {#returns-3}
+### 返回 {#returns-3}
 
-- Nothing
+- 无
 
 ## `generateToken()` {#generate-token}
 
 #### `generateToken(numberOfCharacters: number = 32) => string`
 
-This is a convenience wrapper around
-[nanoid](https://github.com/ai/nanoid) for generating tokens for things
-like password resets.
+这是一个基于 [nanoid](https://github.com/ai/nanoid) 的便利包装器，用于为密
+码重置等任务生成令牌。
 
-#### Example Usage
+#### 示例用法
 
 ```ts
 import { generateToken } from "blitz"
@@ -120,12 +118,11 @@ const token = generateToken()
 
 #### `hash256(value: string) => string`
 
-This is a convenience wrapper that uses the node
-[crypto](https://nodejs.org/api/crypto.html) module to hash a string with
-the `sha256` algorithm. It is used for things like hashing password reset
-tokens before saving them in the database.
+这是一个基于 [crypto](https://nodejs.org/api/crypto.html) 模块的便利包装器
+，使用 `sha256` 算法散列字符串。它用于将密码重置令牌保存到数据库之前对其进
+行哈希处理。
 
-#### Example Usage
+#### 示例用法
 
 ```ts
 import { hash256 } from "blitz"
@@ -135,9 +132,9 @@ const hashedToken = hash256(token)
 
 ## `SecurePassword` {#secure-password}
 
-`SecurePassword` is a convenience wrapper around
-[secure-password](https://github.com/emilbayes/secure-password) to provide
-a nice way to hash passwords and verify password hashes.
+`SecurePassword` 是一个基于
+[secure-password](https://github.com/emilbayes/secure-password) 的便利包装
+器，提供一个哈希密码并验证密码哈希值的良好方式。
 
 ```ts
 import { SecurePassword } from "blitz"
@@ -148,36 +145,33 @@ await SecurePassword.verify(passwordHash, password)
 
 #### `SecurePassword.hash(password: string) => Promise<string>`
 
-This is used when a user sets a new password.
+当用户设置一个新密码时会被使用。
 
-It takes a password string and returns a secure hash for storing in your
-database.
+它需要一个密码字符串并返回一个安全的哈希值来存储在你的数据库中。
 
 #### `SecurePassword.verify(passwordHash: string, password: string) => Promise<ResultCode>`
 
-This is used when a user logs in to verify they used the correct password.
+当用户登录时验证密码是否正确时使用。
 
-It takes a password hash from your database and the given password. It
-will verify the given password is correct and return a result code, or if
-incorrect, it will throw `AuthenticationError`.
+它从数据库中接收一个密码哈希值和传来的密码。它会检查传来的密码是否正确并返
+回处理代码，或如果不正确则抛出错误 `AuthenticationError`。
 
-##### Result Codes
+##### 处理代码
 
 **`SecurePassword.VALID`**
 
-The password was verified and is valid
+该密码已被验证且通过验证。
 
 **`SecurePassword.VALID_NEEDS_REHASH`**
 
-The password was verified and is valid, but needs to be rehashed with new
-parameters
+该密码已被验证且通过验证，但需要新的参数来重新哈希。
 
 **`SecurePassword.HASH_BYTES`**
 
-Size of the `hash` Buffer returned by `hash` and `hashSync` and used by
-`verify` and `verifySync`.
+由 `hash` 和 `hashSync` 返回的 `hash` Buffer 大小，被 `verify` 和
+`verifySync` 使用。
 
-#### Example Usage
+#### 示例用法
 
 ```ts
 import { SecurePassword, AuthenticationError } from "blitz"
@@ -196,7 +190,7 @@ export const authenticateUser = async (
   )
 
   if (result === SecurePassword.VALID_NEEDS_REHASH) {
-    // Upgrade hashed password with a more secure hash
+    // 通过更安全的哈希来更新哈希过的密码
     const improvedHash = await SecurePassword.hash(password)
     await db.user.update({
       where: { id: user.id },
