@@ -3,12 +3,11 @@ title: <Document>
 sidebar_label: <Document>
 ---
 
-The `Document` component in `app/pages/_document.tsx` can be used to
-augment your application's `<html>` and `<body>` tags. This is necessary
-because Blitz pages skip the definition of the surrounding document's
-markup.
+在 `app/pages/_document.tsx` 中的 `Document` 组件可以用于增强应用的
+`<html>` 和 `<body>` 标签。这是必须的，因为 Blitz 页会跳过周围文档标记的定
+义。
 
-The default `_document.tsx` file looks like this:
+默认的 `_document.tsx` 文件像这样：
 
 ```tsx
 import {
@@ -20,7 +19,7 @@ import {
 } from "blitz"
 
 class MyDocument extends Document {
-  // Only uncomment if you need to customize this behaviour
+  // 只有当你需要自定义这个行为时取消注释
   // static async getInitialProps(ctx: DocumentContext) {
   //   const initialProps = await Document.getInitialProps(ctx)
   //   return {...initialProps}
@@ -42,54 +41,47 @@ class MyDocument extends Document {
 export default MyDocument
 ```
 
-`<Html>`, `<DocumentHead />`, `<Main />` and `<BlitzScript />` are
-required for the page to be properly rendered.
+要正确地渲染页面，必须使用
+`<Html>`、`<DocumentHead />`、`<Main />`和`<BlitzScript />`。
 
-Custom attributes are allowed as props, like `lang`:
+自定义属性是被允许作为 props 的，比如 `lang`：
 
 ```jsx
 <Html lang="en">
 ```
 
-The `ctx` parameter is an object containing the following keys:
+`ctx` 参数是一个包含以下键的对象：
 
-- `pathname` - Current route. That is the path of the page in /pages
+- `pathname` - 当前路线。是在 /pages 中的文件路径。
 - `req`:
-  [The HTTP IncomingMessage object](https://nodejs.org/api/http.html#http_class_http_incomingmessage).
+  [HTTP IncomingMessage 对象](https://nodejs.org/api/http.html#http_class_http_incomingmessage)。
 - `res`:
-  [The HTTP response object](https://nodejs.org/api/http.html#http_class_http_serverresponse).
-- `err` - Error object if any error is encountered during the rendering
-- `renderPage`: `Function` - a callback that runs the actual React
-  rendering logic (synchronously). It's useful to decorate this function
-  in order to support server-rendering wrappers for things like
-  styled-components
+  [HTTP response 对象](https://nodejs.org/api/http.html#http_class_http_serverresponse)。
+- `err` - 渲染期间遇到任何错误的错误对象。
+- `renderPage`: `Function` - 一个回调，它实际运行 React 渲染逻辑（同步）。
+  装饰此功能以支持诸如 styled-components 之类的服务端渲染包装器会很有用。
 
-## Caveats {#caveats}
+## 注意事项 {#caveats}
 
-- `Document` is only rendered in the server, event handlers like `onClick`
-  won't work
-- React components outside of `<Main />` will not be initialized by the
-  browser. Do _not_ add application logic here. If you need shared
-  components in all your pages (like a menu or a toolbar), take a look at
-  the [`App`](./app-component) component instead
-- `Document`'s `getInitialProps` function is not called during client-side
-  transitions, nor when a page is
-  [statically optimized](./pages#automatic-static-optimization)
-- Make sure to check if `ctx.req` / `ctx.res` are defined in
-  `getInitialProps`. Those variables will be `undefined` when a page is
-  being statically exported by
-  [Automatic Static Optimization](./pages#automatic-static-optimization)
-- Common errors include adding a `<title>` in the `<Head />` tag . These
-  should be avoided in `app/pages/_document.js` as they lead to unexpected
-  behavior
+- `Document` 仅在服务端渲染，像 `onClick` 之类的事件处理器将不起作用。
+- 在 `<Main />` 之外的 React 组件不会被浏览器初始化。_不要_ 在此处添加应用
+  逻辑。如果你需要在所有页面中共享组件（例如菜单和工具栏），请参考
+  [`App`](./app-component) 组件。
+- 在客户端转换期间，或在页
+  面[静态优化](./pages#automatic-static-optimization)时，不调用 `Document`
+  的 `getInitialProps` 函数。
+- 确保检查 `ctx.req` / `ctx.res` 是否已经定义在了 `getInitialProps`。通过
+  [自动静态优化](./pages#automatic-static-optimization) 静态导出页面时，这
+  些变量将为 `undefined`。
+- 常见的错误包括在 `<Head />` 标签中添加 `<title>`。应该避免在
+  `app/pages/_document.js` 中使用，因为这会导致意外的行为。
 
-## Customizing `renderPage` {#customizing-render-page}
+## 自定义 `renderPage` {#customizing-render-page}
 
-> It should be noted that the only reason you should be customizing
-> `renderPage` is for usage with **css-in-js** libraries that need to wrap
-> the application to properly work with server-side rendering.
+> 应该注意的是，你要自定义 `renderPage` 的唯一原因是与 **css-in-js** 库配
+> 合使用，这些库需要将应用包装以正确地与服务端渲染一起使用。
 
-It takes as argument an options object for further customization:
+它使用一个 options 对象作为进一步定制的参数：
 
 ```jsx
 import { Document } from "blitz"
@@ -100,9 +92,9 @@ class MyDocument extends Document {
 
     ctx.renderPage = () =>
       originalRenderPage({
-        // useful for wrapping the whole react tree
+        // 对包裹整个 React 树很有用
         enhanceApp: (App) => App,
-        // useful for wrapping in a per-page basis
+        // 对于包裹每页基础很有用
         enhanceComponent: (Component) => Component,
       })
 
