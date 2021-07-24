@@ -1,20 +1,18 @@
 ---
-title: Environment Variables
-sidebar_label: Environment Variables
+title: 环境变量
+sidebar_label: 环境变量
 ---
 
-Blitz comes with built-in support for environment variables, which allows
-you to do the following:
+Blitz 内置了对环境变量的支持，你可以执行以下操作：
 
-- [Use `.env*` files to load environment variables](#loading-environment-variables)
-- [Expose environment variables to the browser](#exposing-environment-variables-to-the-browser)
+- [使用 `.env*` 文件来加载环境变量](#loading-environment-variables)
+- [将环境变量暴露给浏览器](#exposing-environment-variables-to-the-browser)
 
-## Loading Environment Variables {#loading-environment-variables}
+## 加载环境变量 {#loading-environment-variables}
 
-Blitz has built-in support for loading environment variables from
-`.env.local` into `process.env`.
+Blitz 内置支持将环境变量从 `.env.local` 加载到 process.env 中。
 
-An example `.env.local`:
+一个 `.env.local` 文件的示例:
 
 ```bash
 DB_HOST=localhost
@@ -22,12 +20,12 @@ DB_USER=myuser
 DB_PASS=mypassword
 ```
 
-This loads `process.env.DB_HOST`, `process.env.DB_USER`, and
-`process.env.DB_PASS` into the Node.js environment automatically allowing
-you to use them on the server.
+这样会将 `process.env.DB_HOST`、`process.env.DB_USER` 和
+`process.env.DB_PASS` 自动加载到 Node.js 环境中，从而允许你在服务器上使用
+它们。
 
-> **Note**: Blitz will automatically expand variables inside of your
-> `.env*` files. This allows you to reference other secrets, like so:
+> **注意**: Blitz 会自动在你的 `.env*` 文件中扩展变量。这使你可以引用其它
+> 私密内容，比如：
 >
 > ```bash
 > # .env
@@ -36,10 +34,9 @@ you to use them on the server.
 > HOST=http://$HOSTNAME:$PORT
 > ```
 >
-> If you are trying to use a variable with a `$` in the actual value, it
-> needs to be escaped like so: `\$`.
+> 如果你尝试在值中使用带有 `$` 的变量，则需要这样进行转义：`\$`。
 >
-> For example:
+> 例如：
 >
 > ```bash
 > # .env
@@ -48,24 +45,22 @@ you to use them on the server.
 > CORRECT=pre\$A # becomes "pre$A"
 > ```
 
-## Exposing Environment Variables to the Browser {#exposing-environment-variables-to-the-browser}
+## 向浏览器暴露环境变量 {#exposing-environment-variables-to-the-browser}
 
-By default all environment variables loaded through `.env*` files are only
-available in the Node.js environment, meaning they won't be exposed to the
-browser.
+默认情况下，通过 `.env` 文件夹加载的所有环境变量仅在 Node.js 环境中可用，
+这意味着它们不会向浏览器公开。
 
-There are two ways you can expose a variable to the browser.
+你可以通过这两种方式将变量公开给浏览器。
 
-### Option 1: `NEXT_PUBLIC_` Prefix {#option-1-next-public-prefix}
+### 选择 1：`NEXT_PUBLIC_` 前缀 {#option-1-next-public-prefix}
 
-Prefix the variable with `NEXT_PUBLIC_`. For example:
+给变量加上前缀 `NEXT_PUBLIC_`。例如：
 
 ```bash
 NEXT_PUBLIC_ANALYTICS_ID=abcdefghijk
 ```
 
-The value will be inlined into JavaScript sent to the browser because of
-the `NEXT_PUBLIC_` prefix.
+由于前缀 `NEXT_PUBLIC_`，该值会被内联到发送给浏览器的 JavaScript 中。
 
 ```js
 // pages/index.js
@@ -81,10 +76,9 @@ function HomePage() {
 export default HomePage
 ```
 
-### Option 2: `env` in `blitz.config.js` {#option-2-env-in-blitz-config-js}
+### 选择 2：`blitz.config.js` 中的 `env` {#option-2-env-in-blitz-config-js}
 
-Any keys defined in `env` in your Blitz config will be inlined into
-JavaScript sent to the browser.
+Blitz 配置中 `env` 中定义的任何键都将内联到发送给浏览器的 JavaScript 中。
 
 ```js
 // blitz.config.js
@@ -97,16 +91,14 @@ module.exports = {
 }
 ```
 
-## Different Values per Environment {#different-values-per-environment}
+## 每个环境的不同值 {#different-values-per-environment}
 
-In general only one `.env.local` file is needed. However, sometimes you
-might want to add some defaults for the `development` or `production`
-environment.
+通常，只需要一个 `.env.local` 文件。但是，又是你可能想为 `development` 或
+`production` 环境添加一些默认值。
 
-Blitz allows you to set defaults in `.env` (all environments),
-`.env.development` (development environment), `.env.production`
-(production environment), and `.env.test` (test environment). These files
-with defaults should be checked into git.
+Blitz 允许你在 `.env`（所有环境）、`.env.development` (开发
+environment)、`.env.production`（生产环境）和`.env.test` (测试
+environment) 中设置默认值。这些具有默认值的文件应该被 Git 跟踪。`
 
-Appending `.local` will override the defaults. Examples: `.env.local`,
-`.env.test.local`. These files should **not** be checked into git.
+附加上 `.local` 结尾的将会覆盖默认值。例如 `.env.local` 和
+`.env.test.local`。这些文件**不应该**被 git 跟踪。
