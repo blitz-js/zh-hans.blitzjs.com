@@ -1,35 +1,31 @@
 ---
-title: Preview Mode
-sidebar_label: Preview Mode
+title: 预览模式
+sidebar_label: 预览模式
 ---
 
-In the [Pages documentation](./pages), we talked about how to pre-render a
-page at build time (**Static Generation**) using
-[`getStaticProps`](./get-static-props) and
-[`getStaticPaths`](./get-static-paths).
+在[页面文档](./pages) 中，我们说明了如何在构建过程中使用
+[`getStaticProps`](./get-static-props) 和
+[`getStaticPaths`](./get-static-paths) 来预渲染一个页面的方法。
 
-Static Generation is useful when your pages fetch data from a headless
-CMS. However, it’s not ideal when you’re writing a draft on your headless
-CMS and want to **preview** the draft immediately on your page. You’d want
-Blitz to render these pages at **request time** instead of build time and
-fetch the draft content instead of the published content. You’d want Blitz
-to bypass Static Generation only for this specific case.
+当你的页面从一个 Headless CMS 中获取数据的时候，“静态生成”会很有用。然而，
+这在当你想要在你的 Headless CMS 页面中撰写草稿并能立即**预览**草稿的场景下
+并不理想。你会希望 Blitz 在**请求过程**而非构建过程渲染这些页面，同时获取
+草稿的内容而非已发布的内容。你会希望 Blitz 能在这种特殊情况下绕过“静态生成
+”。
 
-Blitz has the feature called **Preview Mode** which solves this problem.
-Here’s an instruction on how to use it.
+Blitz 提供**预览模式**功能来解决这个问题。接下来是如何使用的操作说明。
 
-## Step 1. Create and access a preview API route {#step-1-create-and-access-a-preview-api-route}
+## 步骤 1：创建和访问一个预览 API 路由 {#step-1-create-and-access-a-preview-api-route}
 
-> Take a look at the [API Routes documentation](./api-routes) first if
-> you’re not familiar with Blitz API Routes.
+> 如果你还不熟悉 Blitz 的 API 路由，请先阅读
+> [API 路由文档](./api-routes)。
 
-First, create a **preview API route**. It can have any name - e.g.
-`app/api/preview.js` (or `.ts` if using TypeScript).
+首先，创建一个**预览 API 路由**。其可以是任何名称，例如
+`app/api/preview.js`（或在你使用 TypeScript 时用 `.ts`）。
 
-In this API route, you need to call `setPreviewData` on the response
-object. The argument for `setPreviewData` should be an object, and this
-can be used by `getStaticProps` (more on this later). For now, we’ll use
-`{}`.
+在这个 API 路由中，你需要在响应对象中调用
+`setPreviewData`。`setPreviewData` 的参数需要是一个对象，且可以被
+`getStaticProps` 使用（稍后深入说明）。目前我们先使用 `{}`。
 
 ```js
 const handler = (req, res) => {
@@ -40,18 +36,15 @@ const handler = (req, res) => {
 export default handler
 ```
 
-`res.setPreviewData` sets some **cookies** on the browser which turns on
-the preview mode. Any requests to Blitz containing these cookies will be
-considered as the **preview mode**, and the behavior for statically
-generated pages will change (more on this later).
+`res.setPreviewData` 为浏览器设置了一些可以用来进入预览模式的
+**cookies**。任何包含这些 cookies 的请求传递给 Blitz，将会被视为**预览模
+式**，此时静态生成文件的行为将会被改变（稍后深入说明）。
 
-You can test this manually by creating an API route like below and
-accessing it from your browser manually:
+你可以通过创建一个像如下的 API 路由来手动测试，并在你的浏览器中访问：
 
 ```js
-// A simple example for testing it manually from your browser.
-// If this is located at app/api/preview.js, then
-// open /api/preview from your browser.
+// 一个简单的示例来手动在你的浏览器中测试。
+// 如果当前位置是 app/api/preview.js，则打开在浏览器中打开 /api/preview。
 const handler = (req, res) => {
   res.setPreviewData({})
   res.end("Preview mode enabled")
@@ -59,129 +52,116 @@ const handler = (req, res) => {
 export default handler
 ```
 
-If you use your browser’s developer tools, you’ll notice that the
-`__prerender_bypass` and `__next_preview_data` cookies will be set on this
-request.
+如果你在你的浏览器中使用了开发者工具，你这时可以看到 `__prerender_bypass`
+和 `__next_preview_data` cookies 已被附加到请求体中。
 
-### Securely accessing it from your Headless CMS {#securely-accessing-it-from-your-headless-cms}
+### 从你的 Headless CMS 中安全地访问 {#securely-accessing-it-from-your-headless-cms}
 
-In practice, you’d want to call this API route _securely_ from your
-headless CMS. The specific steps will vary depending on which headless CMS
-you’re using, but here are some common steps you could take.
+实践中，你希望从 Headless CMS 中 _安全地_ 访问这个 API 路由。具体的步骤会
+因你所使用的 Headless CMS 而有所不同。但如下包含你可以采取的一些常见步骤。
 
-These steps assume that the headless CMS you’re using supports setting
-**custom preview URLs**. If it doesn’t, you can still use this method to
-secure your preview URLs, but you’ll need to construct and access the
-preview URL manually.
+这些步骤假设你使用到的 Headless CMS 支持设置**自定义预览网址**。如果不支持
+，你依然可以使用这些方法来保护预览网址，但你需要手动构造和访问预览网址。
 
-**First**, you should create a **secret token string** using a token
-generator of your choice. This secret will only be known by your Blitz app
-and your headless CMS. This secret prevents people who don’t have access
-to your CMS from accessing preview URLs.
+**首先**，你需要使用 Token 生成器创建一个**私密 Token 字符串**，且其仅能被
+你的 Blitz 应用和你的 Headless CMS 识别。该私密方式可防止无权访问你的 CMS
+的人来访问预览网址。
 
-**Second**, if your headless CMS supports setting custom preview URLs,
-specify the following as the preview URL. (This assumes that your preview
-API route is located at `app/api/preview.js`.)
+**其次**，如果你的 Headless CMS 支持设置自定义预览网址，指定以下内容作为预
+览 URL。（此时假设你的预览 API 路由位于 `app/api/preview.js`）。
 
 ```bash
 https://<your-site>/api/preview?secret=<token>&slug=<path>
 ```
 
-- `<your-site>` should be your deployment domain.
-- `<token>` should be replaced with the secret token you generated.
-- `<path>` should be the path for the page that you want to preview. If
-  you want to preview `/posts/foo`, then you should use
-  `&slug=/posts/foo`.
+- `<your-site>` 应该是你的部署域名。
+- `<token>` 应该替换为你生成的秘钥。
+- `<path>` 应该是你要预览的页面路径。如果你想要预览 `/posts/foo`，则应该使
+  用 `&slug=/posts/foo`。
 
-Your headless CMS might allow you to include a variable in the preview URL
-so that `<path>` can be set dynamically based on the CMS’s data like so:
-`&slug=/posts/{entry.fields.slug}`
+你的 Headless CMS 可能允许你在预览 URL 中包含一个变量，以便可以根据 CMS 的
+数据来动态设置 `<path>`，例如：`&slug=/posts/{entry.fields.slug}`。
 
-**Finally**, in the preview API route:
+**最终**，在预览 API 路由中：
 
-- Check that the secret matches and that the `slug` parameter exists (if
-  not, the request should fail).
+- 检查秘钥是否匹配，且当前 `slug` 参数是否存在（如果不存在，则请求将会失败
+  ）。
 -
-- Call `res.setPreviewData`.
-- Then redirect the browser to the path specified by `slug`. (The
-  following example uses a
-  [307 redirect](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/307)).
+- 调用 `res.setPreviewData`。
+- 然后将浏览器重定向到 `slug` 指定的路径。（以下示例使用
+  [307 redirect](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/307)）
+  。
 
 ```js
 export default async (req, res) => {
-  // Check the secret and next parameters
-  // This secret should only be known to this API route and the CMS
+  // 检查秘钥和下一个参数。
+  // 这个秘钥只允许被当前 API 路由和 CMS 读取。
   if (req.query.secret !== "MY_SECRET_TOKEN" || !req.query.slug) {
     return res.status(401).json({ message: "Invalid token" })
   }
 
-  // Fetch the headless CMS to check if the provided `slug` exists
-  // getPostBySlug would implement the required fetching logic to the headless CMS
+  // 请求 Headless CMS 来检查提供的 `slug` 是否存在
+  // getPostBySlug 将为 Headless CMS 实现所需的提取逻辑
   const post = await getPostBySlug(req.query.slug)
 
-  // If the slug doesn't exist prevent preview mode from being enabled
+  // 如果 slug 不存在，将阻止预览模式被启用
   if (!post) {
     return res.status(401).json({ message: "Invalid slug" })
   }
 
-  // Enable Preview Mode by setting the cookies
+  // 通过设置 cookies 来开启预览模式
   res.setPreviewData({})
 
-  // Redirect to the path from the fetched post
-  // We don't redirect to req.query.slug as that might lead to open redirect vulnerabilities
+  // 从获取到的文章重定向到相关路径
+  // 我们不会直接重定向到 req.query.slug，因为这可能会导致重定向安全性漏洞
   res.writeHead(307, { Location: post.slug })
   res.end()
 }
 ```
 
-If it succeeds, then the browser will be redirected to the path you want
-to preview with the preview mode cookies being set.
+如果一切成功，则浏览器将携带被设置的预览模式 Cookie 来被重定向到你想要预览
+的路径。
 
-## Step 2. Update `getStaticProps` {#step-2-update-get-static-props}
+## 步骤 2：更新 `getStaticProps` {#step-2-update-get-static-props}
 
-The next step is to update `getStaticProps` to support the preview mode.
+接下来的一步是更新 `getStaticProps` 来支持预览模式。
 
-If you request a page which has `getStaticProps` with the preview mode
-cookies set (via `res.setPreviewData`), then `getStaticProps` will be
-called at **request time** (instead of at build time).
+如果你请求的页面具有通过预览模式 Cookie 设置（`res.setPreviewData`）的
+`getStaticProps`，则 `getStaticProps` 将在**请求过程**而非构建过程中被调用
+。
 
-Furthermore, it will be called with a `context` object where:
+此外，将使用 `context` 对象来调用该对象，其中：
 
-- `context.preview` will be `true`.
-- `context.previewData` will be the same as the argument used for
-  `setPreviewData`.
+- `context.preview` 值将 `true`。
+- `context.previewData` 将与用于 `setPreviewData` 的参数相同。
 
 ```js
 export async function getStaticProps(context) {
-  // If you request this page with the preview mode cookies set:
+  // 如果你通过预览模式 Cookie请求此页面：
   //
-  // - context.preview will be true
-  // - context.previewData will be the same as
-  //   the argument used for `setPreviewData`.
+  // - context.preview 将会为 true
+  // - `context.previewData` 将与用于 `setPreviewData` 的参数相同。
 }
 ```
 
-We used `res.setPreviewData({})` in the preview API route, so
-`context.previewData` will be `{}`. You can use this to pass session
-information from the preview API route to `getStaticProps` if necessary.
+我们在预览 API 路由中使用了 `res.setPreviewData({})`，因此
+`context.previewData` 将会为 `{}`。如有必要，你可以使用它来将 Session 信息
+从预览 API 路由传递到 `getStaticProps` 上。
 
-If you’re also using `getStaticPaths`, then `context.params` will also be
-available.
+如果你还使用 `getStaticPaths`，那么 `context.params` 也将可用。
 
-### Fetch preview data {#fetch-preview-data}
+### 获取预览数据 {#fetch-preview-data}
 
-You can update `getStaticProps` to fetch different data based on
-`context.preview` and/or `context.previewData`.
+你可以更新 `getStaticProps` 来基于 `context.preview` 和/或
+`context.previewData` 来获取不同的数据。
 
-For example, your headless CMS might have a different API endpoint for
-draft posts. If so, you can use `context.preview` to modify the API
-endpoint URL like below:
+例如，你的 Headless CMS 可能针对草稿文章有一个不同的 API 端口。如果是这样
+，你可以使用 `context.preview` 来像如下修改 API 端口 URL：
 
 ```js
 export async function getStaticProps(context) {
-  // If context.preview is true, append "/preview" to the API endpoint
-  // to request draft data instead of published data. This will vary
-  // based on which headless CMS you're using.
+  // 如果 context.preview 是 true，则将“/preview”添加到 API 端口上
+  // 来获取草稿数据而非已发布的数据。这里根据你使用的 Headless CMS 会有所不同。
   const res = await fetch(
     `https://.../${context.preview ? "preview" : ""}`
   )
@@ -189,65 +169,61 @@ export async function getStaticProps(context) {
 }
 ```
 
-That’s it! If you access the preview API route (with `secret` and `slug`)
-from your headless CMS or manually, you should now be able to see the
-preview content. And if you update your draft without publishing, you
-should be able to preview the draft.
+就是这样！如果你手动或者通过 Headless CMS 来访问这个预览 API 路由（携带
+`secret` 和 `slug`），你现在可以看到预览的内容了。如果你在不发布的状态下更
+新了你的草稿，你将能够预览你的草稿。
 
 ```bash
-# Set this as the preview URL on your headless CMS or access manually,
-# and you should be able to see the preview.
+# 设置如下为你的 Headless CMS 预览 URL 或手动访问，然后你将能够进行预览。
 https://<your-site>/api/preview?secret=<token>&slug=<path>
 ```
 
-## More Details {#more-details}
+## 更多细节 {#more-details}
 
-### Clear the preview mode cookies {#clear-the-preview-mode-cookies}
+### 清空预览模式的 Cookies {#clear-the-preview-mode-cookies}
 
-By default, no expiration date is set for the preview mode cookies, so the
-preview mode ends when the browser is closed.
+默认情况下，预览模式的 Cookie 是没有设置过期时间的，因此关闭浏览器时预览模
+式也将结束。
 
-To clear the preview cookies manually, you can create an API route which
-calls `clearPreviewData` and then access this API route.
+要想手动清除预览 Cookies，你可以创建一个叫作 `clearPreviewData` 的 API 路
+由然后访问这个路由。
 
 ```js
 export default (req, res) => {
-  // Clears the preview mode cookies.
-  // This function accepts no arguments.
+  // 清除预览模式 Cookies。
+  // 该函数不接收参数。
   res.clearPreviewData()
   // ...
 }
 ```
 
-### Specify the preview mode duration {#specify-the-preview-mode-duration}
+### 指定预览模式的持续时间 {#specify-the-preview-mode-duration}
 
-`setPreviewData` takes an optional second parameter which should be an
-options object. It accepts the following keys:
+`setPreviewData` 具有第二个可选参数，该参数应为 options 对象。它接收如下键
+：
 
-- `maxAge`: Specifies the number (in seconds) for the preview session to
-  last for.
+- `maxAge`：指定预览 session 要持续的数字（以秒为单位）。
 
 ```js
 setPreviewData(data, {
-  maxAge: 60 * 60, // The preview mode cookies expire in 1 hour
+  maxAge: 60 * 60, // 预览模式 Cookie 过期时间为 1 小时
 })
 ```
 
-### `previewData` size limits {#preview-data-size-limits}
+### `previewData` 大小限制 {#preview-data-size-limits}
 
-You can pass an object to `setPreviewData` and have it be available in
-`getStaticProps`. However, because the data will be stored in a cookie,
-there’s a size limitation. Currently, preview data is limited to 2KB.
+你可以将一个对象传递给 `setPreviewData`，并使其在 `getStaticProps` 中可用
+。但是，由于数据将存储在 Cookie 中，因此存在大小限制。当前预览数据限制在
+2KB 下。
 
-### Works with `getServerSideProps` {#works-with-get-server-side-props}
+### 与 `getServerSideProps` 配合使用 {#works-with-get-server-side-props}
 
-The preview mode works on `getServerSideProps` as well. It will also be
-available on the `context` object containing `preview` and `previewData`.
+预览模式也可以在 `getServerSideProps` 上配合使用。它也将可在包含 `preview`
+和 `previewData` 的 `context` 对象上使用。
 
-### Works with API Routes {#works-with-api-routes}
+### 与 API 路由配合使用 {#works-with-api-routes}
 
-API Routes will have access to `preview` and `previewData` under the
-request object. For example:
+API 路由将有权访问请求对象下的 `preview` 和 `previewData`。例如：
 
 ```js
 export default function myApiRoute(req, res) {
@@ -257,11 +233,10 @@ export default function myApiRoute(req, res) {
 }
 ```
 
-### Unique per `blitz build` {#unique-per-blitz-build}
+### 每次唯一的 `blitz build` {#unique-per-blitz-build}
 
-The bypass cookie value and private key for encrypting the `previewData`
-changes when a `blitz build` is ran, this ensures that the bypass cookie
-can’t be guessed.
+每当运行 `blitz build` 时，用于加密 `previewData` 的旁路 cookie（bypass
+cookie）和秘钥都会改变，从而确保旁路 Cookie 不会被猜测到。
 
-> **Note:** To test Preview Mode locally over HTTP your browser will need
-> to allow third-party cookies and local storage access.
+> **注意：** 想要通过 HTTP 在本地测试预览模式，你的浏览器将需要允许第三方
+> Cookie 和本地存储访问权。
