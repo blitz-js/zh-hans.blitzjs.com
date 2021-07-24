@@ -1,17 +1,15 @@
 ---
-title: Auth Overview
-sidebar_label: Overview
+title: 权限总览
+sidebar_label: 总览
 ---
 
-New Blitz apps have authentication and authorization already set up by
-default with user sign-up, log-in, and log-out. Your `db/schema.prisma`
-file has a `User` and `Session` model and the auth code is in the
-`app/auth/` folder.
+默认情况下，一个全新的 Blitz 应用已通过用户注册、登录和注销功能内置了身份
+验证和授权。你的 `db/schema.prisma` 文件有一个 `User` 和 `Session` 模型，
+认证相关代码在 `app/auth` 文件夹下。
 
-Blitz has built-in session management that works with email/password auth
-and with any third-party providers.
+Blitz 有内置的会话管理，支持邮件/密码身份验证服务或任何第三方提供方一起使
+用。
 
-Blitz session management follows the same approach as the state of the art
-[SuperTokens library](https://supertokens.io). The CTO of SuperTokens,
-[Rishabh Poddar](https://twitter.com/rishpoddar), designed and oversaw our
-implementation. We're extremely grateful for Rishabh's help! 🙏
+Blitz 的会话管理遵循与 [SuperTokens 库](https://supertokens.io) 相同的设计
+风格。SuperToken 的 CTO [Rishabh Poddar](https://twitter.com/rishpoddar)
+设计并监督了我们的实现。我们非常感谢 Rishabh 的帮助！🙏
