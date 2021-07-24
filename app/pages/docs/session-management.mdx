@@ -1,96 +1,88 @@
 ---
-title: Session Management
-sidebar_label: Session Management
+title: 会话管理
+sidebar_label: 会话管理
 ---
 
-Blitz has built in session management that can be used with any type of
-authentication or identity providers.
+Blitz 内置了会话管理，可用于身份提供商或任何类型的身份验证。
 
-Session management performs the following functions:
+会话管理包含以下功能：
 
-1. Tracking whether a user is logged in or not
-2. Attribute multiple requests to the same user, even when they are logged
-   out
-3. Protection against CSRF attacks
+1. 跟踪用户是否登录
+2. 将多个请求归于同一个用户，即使他们已注销
+3. 防范 CSRF 攻击
 
-## TLDR {#tldr}
+## 太长不读型 {#tldr}
 
-You login, logout, and otherwise modify the session via the
-[`SessionContext`](#sessioncontext) object which is
-[accessible anywhere on the server](#session-on-the-server).
+你可以通过 [`SessionContext`](#sessioncontext) 对象登录、注销或以其它方式
+修改会话，该对象[可在服务器上的任何地方访问](#session-on-the-server)。
 
-### Login {#login}
+### 登录 {#login}
 
-For login you will have form component in your UI that will submit a login
-mutation like the one shown below.
+对于登录，你的 UI 中将有可以提交如下所示的登录 mutation 的表单组件。
 
 ```ts
 // app/auth/mutations/login.ts
 import { Ctx } from "blitz"
 
 export default async function login(input: SomeTSInputType, ctx: Ctx) {
-  // 1. Validate input data
-  // 2. Validate user credentials
-  // 3. Fetch user data
+  // 1. 验证输入的数据
+  // 2. 验证用户凭据
+  // 3. 获取用户的数据
 
-  // 4. Create a new session (log in)
+  // 4. 创建一个新的 session（登录）
   await ctx.session.$create({ userId: user.id, role: user.role }) // highlight-line
 }
 ```
 
-### Logout {#logout}
+### 注销 {#logout}
 
-For logout you will have a button in your UI that will submit a logout
-mutation like the one shown below.
+对于注销，你的 UI 中将有可以提交如下所示的注销 mutation 的表单组件。
 
-Revoking a session will immediately delete all client-side query cache
-causing all queries on the page to be refetched. This ensures any
-sensitive data in the cache is deleted.
+撤销一个会话将立即删除所有客户端查询缓存，从而导致页面的所有查询都需要被重
+新加载。这可以确保删除缓存中的任何敏感数据。
 
 ```ts
 // app/auth/muations/logout.ts
 import { Ctx } from "blitz"
 
 export default async function logout(_: any, ctx: Ctx) {
-  // 1. Revoke the current user session, logging them out.
+  // 1. 撤销当前用户的 session，进行注销
   return await ctx.session.$revoke() // highlight-line
 }
 ```
 
-### Change Session PublicData of Current User {#change-session-public-data-of-current-user}
+### 改变当前用户的会话公共数据 {#change-session-public-data-of-current-user}
 
-Each session has [`PublicData`](#publicdata), data which is available on
-the client and has the potential to be read by third-parties because it's
-stored in a cookie readable by any Javascript code. This is usually used
-to store the current user id, user role, and perhaps current organization
-id.
+每个会话都有 [`PublicData`](#publicdata)，这些数据可用被客户端使用，并且由
+于它存储在任何 JavaScript 代码可读取的 cookie 中，有可能被第三方库读取。这
+常被用来存储当前的用户 ID、用户角色，可能还有当前的组织 ID。
 
-You can change the session public data in any query or mutation like this:
+你可以在任何 query 或 mutation 中更改会话的公共数据，如下所示：
 
 ```ts
 // app/mutations/someMutation.ts
 import { Ctx } from "blitz"
 
 export default async function someMutation(input: any, ctx: Ctx) {
-  // This merges the input data with whatever is already in current publicData
+  // 这会将输入数据与当前 publicData 中已有的数据合并
   await ctx.session.$setPublicData({ orgId: 1 }) // highlight-line
 }
 ```
 
-## Access Session on the Server {#access-session-on-the-server}
+## 在服务端访问会话 {#access-session-on-the-server}
 
-### In Queries & Mutations {#in-queries-and-mutations}
+### 在 Queries 和 Mutations 中 {#in-queries-and-mutations}
 
-[`SessionContext`](#sessioncontext) is available off of `ctx` which is
-provided as the second parameter to all queries and mutations because of
-the `sessionMiddleware` that's in `blitz.config.js`.
+[`SessionContext`](#sessioncontext) 可以从 `ctx` 中使用，因为
+`sessionMiddleware` 配置于 `blitz.config.js` 中，它可以作为第二个参数提供
+给所有 queries 和 mutations。
 
 ```ts
 // app/queries/someQuery.ts
 import { Ctx } from "blitz"
 
 export default async function someQuery(input: any, ctx: Ctx) {
-  // Access the SessionContext class
+  // 访问 SessionContext 类
   ctx.session.userId
   ctx.session.role
   ctx.session.$create(/*...*/)
@@ -99,10 +91,10 @@ export default async function someQuery(input: any, ctx: Ctx) {
 }
 ```
 
-### In `getServerSideProps` or API Routes {#in-get-server-side-props-or-api-routes}
+### 在 `getServerSideProps` 或 API 路由中 {#in-get-server-side-props-or-api-routes}
 
-You can also get the session context inside `getServerSideProps` or inside
-API routes with `getSession` like this:
+你还可以在 `getServerSideProps` 或 API 路由中使用 `getSession` 获取会话上
+下文，如下所示：
 
 ```ts
 import { getSession } from "blitz"
@@ -115,15 +107,14 @@ export const getServerSideProps = async ({ req, res }) => {
 }
 ```
 
-## Access Session on the Client {#access-session-on-the-client}
+## 在客户端访问会话 {#access-session-on-the-client}
 
-Blitz provides a `useSession()` hook that returns
-[`PublicData`](#publicdata) with `isLoading` property. This hook can be
-used anywhere in your application.
+Blitz 提供了一个 `useSession()` Hook，它返回带有 `isLoading` 属性的
+[`PublicData`](#publicdata)。这个 Hook 可以在你的应用中的任何地方使用。
 
-Note: `useSession()` uses suspense by default, so you need a `<Suspense>`
-component above it in the tree. Or you can set
-`useSession({suspense: false})` to disable suspense.
+注意：`useSession()` 默认使用 Suspense，所以你需要在包含它的组件树之上有一
+个 `<Suspense>` 组件。或者你可以设置 `useSession({ suspense: false })` 来
+禁用 Suspense。
 
 ```ts
 import { useSession } from "blitz"
@@ -138,9 +129,8 @@ function SomeComponent() {
 }
 ```
 
-If you are using [`getServerSideProps`](./get-server-side-props), then you
-can pass the session public data to `useSession()` with the
-`initialPublicData` option.
+如果你正在使用 [`getServerSideProps`](./get-server-side-props)，那么你可以
+使用 `initialPublicData` 选项将会话公共数据传递给 `useSession()`。
 
 ```ts
 import { useSession, GetServerSideProps } from "blitz"
@@ -161,40 +151,33 @@ const SomePage: BlitzPage = ({ initialPublicData }) => {
 }
 ```
 
-## Production Deployment Requirements {#production-deployment-requirements}
+## 生产环境要求 {#production-deployment-requirements}
 
-In production, you must provide the `SESSION_SECRET_KEY` environment
-variable with at least 32 characters. This is your private key for signing
-JWT tokens.
+生产环境中，你必须提供其值至少 32 个字符的 `SESSION_SECRET_KEY` 环境变量。
+这是你用于签署 JWT 令牌的秘钥。
 
-On macOS and Linux, you can generate it by running `openssl rand -hex 16`
-in your terminal.
+在 macOS 和 Linux 上，你可以通过在终端运行 `openssl rand -hex 16` 来生成它
+。
 
-## Anonymous Sessions {#anonymous-sessions}
+## 匿名会话 {#anonymous-sessions}
 
-If a user is not logged in, an anonymous session will automatically be
-created for them. You can use `ctx.session.$setPublicData()` and
-`ctx.session.$setPrivateData()` for anonymous sessions the same as for
-logged in users. Any data you set for an anonymous session will
-automatically be transferred to an authentication session when a user logs
-in.
+如果用户没有登录，将自动为他们创建一个匿名会话。你可以和登录用户类似地将
+`ctx.session.$setPublicData()` 和 `ctx.session.$setPrivateData()` 用于匿名
+会话。当用户登录时，你为匿名会话设置的任何数据都将自动传输到身份验证过的会
+话中。
 
-Anonymous sessions are JWT tokens that are stored on the client as an
-httpOnly cookie that never expires.
+匿名会话通过将 JWT 令牌存储到客户端上实现永不过期的 httpOnly cookie。
 
-`PublicData` for anonymous sessions is kept in the session JWT and not
-stored in the database. Anonymous sessions will only be saved in your
-database if you call `session.$setPrivateData()`.
+匿名会话的 `PublicData` 保存到会话 JWT 中，不存储在数据库中。只有你调用
+`session.$setPrivateData()`，匿名会话才会保存在你的数据库中。
 
-The anonymous session will be created on the first network request,
-whether SSR or via an API. This will happen as long as `sessionMiddleware`
-is in your middleware chain for that request.
+匿名会话将在第一次网络请求时创建，无论这次请求是 SSR 还是 API。只要
+`sessionMiddleware` 位于该请求的中间件中就会执行这种情况。
 
-One use case for this is saving shopping cart items for anonymous users.
-If an anonymous user later signs up or logs in, the anonymous session data
-can be merged into their new authenticated session.
+一个用例是为匿名用户保存购物车内容。如果匿名用户稍后注册或登录，匿名会话数
+据可以合并到为其新生成的经过身份验证的会话中。
 
-Anonymous session `PublicData` looks like this:
+匿名会话 `PublicData` 看起来会是这样：
 
 ```
 {
@@ -202,16 +185,16 @@ Anonymous session `PublicData` looks like this:
 }
 ```
 
-## Customize Session Public Data in Typescript {#customize-session-public-data-in-typescript}
+## 在 TypeScript 中自定义会话公共数据 {#customize-session-public-data-in-typescript}
 
-If using Typescript, first update the `Session.PublicData` type in
-`types.ts` like this:
+如果使用 TypeScript，第一次在 `types.ts` 中更新 `Session.PublicData` 会像
+这样：
 
 ```diff
 import {DefaultCtx, SessionContext, SimpleRolesIsAuthorized} from "blitz"
 import {User} from "db"
 
-// Note: You should switch to Postgres and then use a DB enum for role type
+// 注意：你应该切换到 Postgres 并且给角色类型使用一个 DB 枚举类型
 export type Role = "ADMIN" | "USER"
 
 declare module "blitz" {
@@ -229,21 +212,20 @@ declare module "blitz" {
 }
 ```
 
-Then change all uses of `ctx.session.$create()` to pass in the new fields.
+接着改变所有使用到 `ctx.session.$create()` 的地方为其添加新的字段：
 
 ```ts
 ctx.session.$create({ userId: 1, role: "ADMIN", orgId: 1 })
 ```
 
-You can also use `ctx.session.$setPublicData()` to update session data for
-an already logged in user. This will _merge_ values with the existing
-public data.
+你也可以使用 `ctx.session.$setPublicData()` 来为已登录的用户更新会话数据。
+这将与已存在的公共数据进行 _合并_。
 
 ```ts
 ctx.session.$setPublicData({ orgId: 1 })
 ```
 
-To access public data on the client:
+要访问客户端上的公共数据：
 
 ```ts
 import { useSession } from "blitz"
@@ -257,24 +239,23 @@ function SomeComponent() {
 }
 ```
 
-To access public data on the server:
+在服务端上访问公共数据：
 
 ```ts
 // app/queries/someQuery.ts
 import { Ctx } from "blitz"
 
 export default async function someQuery(input: any, ctx: Ctx) {
-  // Access the SessionContext class
+  // 访问 SessionContext 类
   ctx.session.orgId
 
   return
 }
 ```
 
-## Session Configuration {#session-configuration}
+## 会话配置 {#session-configuration}
 
-You can customize session management by passing an object to the
-`sessionMiddleware` factory function.
+你可以通过将对象传递给 `sessionMiddleware` 工厂函数来自定义会话管理。
 
 ```js
 // blitz.config.js
@@ -293,15 +274,15 @@ module.exports = {
 }
 ```
 
-Available options:
+可用选项：
 
 ```ts
 type SessionConfig = {
-  cookiePrefix?: string /* default: 'blitz' */
-  sessionExpiryMinutes?: number /* Default: 30 days */
-  sameSite?: "strict" | "lax" | "none" /* Default: 'lax' */
-  domain?: string /* Default: undefined. Can set as `.yourDomain.com` to work across subdomains */
-  publicDataKeysToSyncAcrossSessions?: string[] /* Default: ['role', 'roles'] */
+  cookiePrefix?: string /* 默认：'blitz' */
+  sessionExpiryMinutes?: number /* 默认：30 days */
+  sameSite?: "strict" | "lax" | "none" /* 默认：'lax' */
+  domain?: string /* 默认：undefined。可以被设置为 `.yourDomain.com` 来工作在子域名上 */
+  publicDataKeysToSyncAcrossSessions?: string[] /* 默认：['role', 'roles'] */
   getSession: (handle: string) => Promise<SessionModel | null>
   getSessions: (userId: string | number) => Promise<SessionModel[]>
   createSession: (session: SessionModel) => Promise<SessionModel>
@@ -326,24 +307,22 @@ interface SessionModel extends Record<any, any> {
 }
 ```
 
-## Customize Session Persistence & Database Access {#customize-session-persistence-and-database-access}
+## 自定义会话持久性和数据库访问 {#customize-session-persistence-and-database-access}
 
-By default, session persistence is zero-config with Prisma. However, you
-can customize this to save sessions somewhere else, like Redis. You can
-also customize this if you have Prisma but want to customize the attribute
-names on the user or session model.
+默认情况下，会话持久性是 Prisma 的零配置。但你可以自定义它来将会话保存在其
+他地方，例如 Redis。如果你有 Prisma 但想要自定义用户或会话模型上的属性名称
+，你也可以自定义它。
 
-Customize session persistence by overriding the database access functions
-defined above in `SessionConfig`. The functions can do anything, but they
-must conform to the defined input and outputs types.
+可以通过重写上面在 `SessionConfig` 中定义的数据库访问函数来自定义会话持久
+性。这个函数可以做任何事情，但必须符合定义的输入和输出类型。
 
-For reference, here's
-[the default config that works with Prisma](https://github.com/blitz-js/blitz/blob/canary/packages/core/src/server/auth/sessions.ts#L65-L88).
+作为参考，这里是
+[适用于 Prisma 的默认配置](https://github.com/blitz-js/blitz/blob/canary/packages/core/src/server/auth/sessions.ts#L65-L88)。
 
-## Manual API Requests {#manual-api-requests}
+## 手动 API 请求 {#manual-api-requests}
 
-When making a request from the client to an API route, you need to include
-the anti-CSRF token in the `anti-csrf` header like this:
+当从客户端向 API 端口发出请求时，你需要在 `anti-csrf` header 中包含
+anti-CSRF 令牌，如下所示：
 
 ```ts
 import { getAntiCSRFToken } from "blitz"
@@ -351,11 +330,11 @@ import { getAntiCSRFToken } from "blitz"
 const antiCSRFToken = getAntiCSRFToken()
 
 if (antiCSRFToken) {
-  // Set fetch request header["anti-csrf"] = antiCSRFToken
+  // 设置获取请求的 header["anti-csrf"] = antiCSRFToken
 }
 ```
 
-And then you can get the sessionContext in the API route like this:
+然后你可以像这样在 API 路由中获取 sessionContext：
 
 ```ts
 import { getSession } from "blitz"
@@ -368,57 +347,52 @@ export default async function ({ req, res }) {
 }
 ```
 
-## Technical Details of How it Works {#technical-details-of-how-it-works}
+## 工作原理的技术细节 {#technical-details-of-how-it-works}
 
-Authenticated sessions use opaque tokens that are stored in the database.
+经过身份验证的会话使用存储在数据库中的不透明令牌。
 
-### Implementation Details {#implementation-details}
+### 实现细节 {#implementation-details}
 
-#### Session Creation
+#### 会话创建
 
-- At login, the server creates two opaque tokens:
-  - An access token.
-  - An anti-csrf token.
-- Both are a 32 character long `string`.
-- The access token is sent to the frontend via an `httpOnly`, `secure`
-  cookie.
-- The anti-csrf token is sent to the frontend via a normal, `secure`
-  cookie that can be read from Javascript.
-- The SHA256 hash of the access token will be stored in the database. This
-  token has the following properties mapped to it:
+- 登录时，服务端创建两个不透明令牌：
+  - 一个访问令牌（access token）。
+  - 一个 anti-csrf 令牌（anti-csrf 令牌）。
+- 每个都有 32 个长度的字符串 `string`。
+- 访问令牌通过 `httpOnly` 和 `安全` 的 cookie 发送给前端。
+- Anti-csrf 令牌通过可以被 JavaScript 读取的正常、`安全`的 cookie 发送给前
+  端。
+- 访问令牌的 SHA256 哈希值存储在数据库中。此令牌具有能映射到它的以下属性：
   - userId
-  - expiry time
-  - session data
-- The anti-csrf token is stored alongside the access token.
-- Creating a new session while another one exists results in the headers /
-  cookies changing. However, the older session will still be alive.
-- For serious production apps, a cronjob is needed to remove all expired
-  tokens on a regular basis.
+  - 过期时间
+  - 会话数据
+- Anti-csrf 令牌和访问令牌存储在一起。
+- 在另一个会话存在时创建一个新的会话，会导致 headers/cookies 改变。但是较
+  旧的会话仍将有效。
+- 对于严肃的生产环境应用，需要定期删除所有过期的令牌。
 
-#### Session Verification
+#### 会话验证
 
-- For each request that requires CSRF protection, the frontend sends the
-  anti-csrf token in the request header.
-- An incoming access token is verified by checking that it's in the db and
-  that it has not expired. After each verification, the expiry time of the
-  access token is updated.
-- CSRF attacks are prevented by checking that the incoming anti-csrf token
-  (from the header) is the one associated with the session.
+- 对于每个需要 CSRF 保护的请求，前端在请求头中发送 anti-csrf 令牌。
+- 传入的访问令牌通过检查它存在于数据库中并且没有过期来通过验证。每次验证后
+  ，都会更新访问令牌的到期时间。
+- 通过检查传入的 anti-csrf 令牌（来自 header）是否与会话相关联来防止 CSRF
+  攻击。
 
-#### Session Revocation/Logout
+#### 会话撤销/注销
 
-- This is done by deleting the session from the database.
-- Logout additionally clears the cookies, and a header is sent signaling
-  the frontend to remove the anti-csrf token from the localstorage
+- 这是通过从数据库中删除会话来完成的。
+- 注销还会清除 cookies，并发送一个 header 来通知前端从本地存储中删除
+  anti-csrf 令牌。
 
-## Types {#types}
+## 类型 {#types}
 
 #### `SessionContext`
 
 ```ts
 interface SessionContext extends PublicData {
   /**
-   * null if anonymous
+   * 如果是匿名则为 null
    */
   userId: unknown
   $handle: string | null
