@@ -15,7 +15,7 @@ const NewsletterForm = ({className, hasDarkMode}) => {
         name="EMAIL"
         type="email"
         required
-        placeholder="Enter Your Email Address"
+        placeholder="输入你的邮箱地址"
         className={`w-full p-2 text-base placeholder-current bg-transparent border ${
           hasDarkMode ? "border-blue-light dark:border-white" : "border-white"
         } border-opacity-50 rounded-sm font-secondary`}

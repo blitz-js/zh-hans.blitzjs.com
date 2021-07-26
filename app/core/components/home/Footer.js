@@ -24,8 +24,7 @@ export function Footer({className, hasDarkMode}) {
         <div className="grid px-6 mx-auto max-w-7xl lg:grid-cols-3 gap-x-24 my-14 lg:mt-24 lg:mb-12 gap-y-7">
           <div className="flex flex-col justify-between space-y-7">
             <p className="text-lg font-semibold">
-              Want to receive the latest news and updates from the Blitz team? Sign up for our
-              newsletter!
+              想要接收来自 Blitz 团队最新的新闻和更新？注册我们的新闻列表！
             </p>
             <div className="pb-5 lg:pb-0">
               <NewsletterForm hasDarkMode={hasDarkMode} />
@@ -33,19 +32,19 @@ export function Footer({className, hasDarkMode}) {
           </div>
           <div className="flex flex-col justify-between space-y-7 lg:col-span-2">
             <div className="grid gap-7 md:grid-cols-3">
-              <LinkList title="Docs">
+              <LinkList title="文档">
                 <Link href="/docs">
-                  <a>All Docs</a>
+                  <a>所有文档</a>
                 </Link>
                 <Link href="/docs/get-started">
-                  <a>Get Started</a>
+                  <a>开始入手</a>
                 </Link>
                 <Link href="/docs/contributing">
-                  <a>How To Contribute</a>
+                  <a>如何贡献</a>
                 </Link>
               </LinkList>
 
-              <LinkList title="Community">
+              <LinkList title="社区">
                 <Link href="https://discord.blitzjs.com/">
                   <a target="_blank" rel="noopener noreferrer">
                     Discord
@@ -53,7 +52,7 @@ export function Footer({className, hasDarkMode}) {
                 </Link>
                 <Link href="https://github.com/blitz-js/blitz/discussions">
                   <a target="_blank" rel="noopener noreferrer">
-                    Forum Discussions
+                    论坛讨论
                   </a>
                 </Link>
                 <Link href="https://twitter.com/blitz_js">
@@ -63,7 +62,7 @@ export function Footer({className, hasDarkMode}) {
                 </Link>
               </LinkList>
 
-              <LinkList title="Other">
+              <LinkList title="其它">
                 <Link href="https://github.com/blitz-js/blitz">
                   <a target="_blank" rel="noopener noreferrer">
                     GitHub
@@ -71,12 +70,12 @@ export function Footer({className, hasDarkMode}) {
                 </Link>
                 <Link href="https://github.com/blitz-js/blitz/wiki">
                   <a target="_blank" rel="noopener noreferrer">
-                    Wiki
+                    维基
                   </a>
                 </Link>
                 <Link href="https://store.blitzjs.com">
                   <a target="_blank" rel="noopener noreferrer">
-                    Swag
+                    商店
                   </a>
                 </Link>
               </LinkList>
@@ -90,11 +89,11 @@ export function Footer({className, hasDarkMode}) {
             >
               <Link href="https://vercel.com/?utm_source=blitzjs">
                 <a target="_blank" rel="noopener noreferrer">
-                  Hosted on <IoLogoVercel className="inline" /> Vercel
+                  托管在 <IoLogoVercel className="inline" /> Vercel
                 </a>
               </Link>
               <br />
-              Copyright &copy; {new Date().getFullYear()} Brandon Bayer and Blitz.js Contributors
+              Copyright &copy; {new Date().getFullYear()} Brandon Bayer 和 Blitz.js 贡献者们
             </div>
           </div>
         </div>

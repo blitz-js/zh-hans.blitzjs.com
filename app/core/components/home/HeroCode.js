@@ -9,7 +9,7 @@ const pageTokenized = tokenize.jsx(
   `// app/pages/projects/new.tsx
 import { Link, Routes, useRouter, useMutation, BlitzPage } from "blitz"
 import Layout from "app/core/layouts/Layout"
-// Notice how we import the server function directly
+// 注意我们是如何直接导入服务端函数的
 import createProject, {CreateProject} from "app/projects/mutations/createProject"
 import { ProjectForm } from "app/projects/components/ProjectForm"
 
@@ -25,9 +25,9 @@ const NewProjectPage: BlitzPage = () => {
         submitText="Create Project"
         schema={CreateProject}
         onSubmit={async (values) => {
-          // This is equivalent to calling the server function directly
+          // 这里和直接调用服务端函数是等价的
           const project = await createProjectMutation(values)
-          // Notice the 'Routes' object Blitz provides for routing
+          // 注意 Blitz 提供的用来路由的 'Routes' 对象
           router.push(Routes.ProjectsPage({projectId: project.id}}))
         }}
       />
@@ -48,19 +48,19 @@ import { resolver } from "blitz"
 import db from "db"
 import * as z from "zod"
 
-// This provides runtime validation + type safety
+// 这里提供运行时验证 + 类型安全
 export const CreateProject = z
   .object({
     name: z.string(),
   })
 
-// resolver.pipe is a functional pipe
+// resolver.pipe 是一个函数式管道
 export default resolver.pipe(
-  // Validate the input data
+  // 验证输入数据
   resolver.zod(CreateProject),
-  // Ensure user is logged in
+  // 确保用户已经登陆
   resolver.authorize(),
-  // Perform business logic
+  // 执行业务逻辑
   async (input) => {
     const project = await db.project.create({ data: input })
     return project

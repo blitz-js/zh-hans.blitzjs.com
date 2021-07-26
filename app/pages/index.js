@@ -51,16 +51,15 @@ const Home = ({randomContributors}) => {
               <div className="grid grid-cols-1 gap-10 px-6 mx-auto max-w-7xl lg:grid-cols-3 xl:grid-cols-2 md:gap-6 xl:-mt-10">
                 <div className="z-10 space-y-10 lg:w-full">
                   <h2 className="-mt-8 font-medium text-5xl-squashed lg:-mt-0 font-secondary xl:text-6xl xl:font-medium dark:text-transparent bg-clip-text bg-gradient-to-r from-blue-gradient-white to-blue-gradient-light-blue">
-                    The Fullstack React Framework
+                    React 全栈框架
                   </h2>
                   <p className="text-lg xl:text-xl xl:font-medium text-off-white lg:text-transparent lg:bg-clip-text lg:bg-gradient-to-r lg:from-blue-gradient-white lg:to-blue-gradient-light-blue xl:w-4/5">
-                    Blitz is a batteries-included framework that&apos;s inspired by Ruby on Rails,
-                    is built on Next.js, and features a &quot;Zero-API&quot; data layer abstraction
-                    that eliminates the need for REST/GraphQL.
+                    Blitz 是一个基于 Next.js、功能齐备，并提供一个能消除 REST/GraphQL 依赖的零 API
+                    数据抽象层的框架，受到了 Ruby on Rails 的启发。
                   </p>
                   <div className="flex space-x-4">
                     <ButtonLink className="w-2/3 lg:w-auto rounded-tl-xl" href="/docs/get-started">
-                      Try Blitz in Under 5 Mins
+                      在五分钟内浅尝 Blitz
                     </ButtonLink>
                     <ButtonLink
                       href="https://github.com/blitz-js/blitz"
@@ -97,24 +96,21 @@ const Home = ({randomContributors}) => {
             </div>
             <div className="z-10 px-6 mx-auto space-y-12 text-lg text-center text-white lg:space-y-0 lg:space-x-12 lg:flex lg:text-left max-w-7xl xl:font-mediumxl:text-xl">
               <FeatureIcon icon="layers">
-                “Zero-API” data layer lets you{" "}
-                <strong>import server code directly into your components</strong> instead of having
-                to manually add API endpoints and do client-side fetching and caching.
+                “零 API” 数据层允许你 <strong>直接导入服务端代码到你的组件中</strong> 而无需手动增加
+                API 端口和在客户端上请求与缓存。
               </FeatureIcon>
               <FeatureIcon icon="lighteningBolt">
-                New Blitz apps come with all the{" "}
-                <strong>boring stuff already set up for you!</strong> Like ESLint, Prettier, Jest,
-                user sign up, log in, and password reset.
+                新的 Blitz 应用<strong>为你解决了所有枯燥繁琐的事务！</strong>比如
+                ESlint、Prettier、Jest、用户注册、登陆和密码重置。
               </FeatureIcon>
               <FeatureIcon icon="graphUp">
-                Provides <strong>helpful defaults and conventions</strong> for things like routing,
-                file structure, and authentication while also being extremely flexible.
+                为路由、文件结构和身份验证等提供有用的默认值和约定，同时还非常灵活。
               </FeatureIcon>
             </div>
             <div className="grid w-full gap-5 px-6 mx-auto text-white xl:gap-10 max-w-7xl lg:grid-cols-2">
               <Link href="/#" passHref>
                 <StyledLink className="flex items-center justify-between pb-1 text-lg border-b border-opacity-50 border-blue-mid lg:col-span-2 font-secondary xl:text-xl">
-                  <span>Top Videos</span>
+                  <span>热门视频</span>
 
                   {/*
                   <span className="flex items-center">
@@ -130,7 +126,9 @@ const Home = ({randomContributors}) => {
 
             <div className="relative w-full mx-auto space-y-10 lg:space-y-20 xl:space-y-36 max-w-7xl">
               <h2 className="px-6 text-3xl font-semibold xl:text-5xl xl:w-1/2">
-                Everything You Need For Production Apps
+                你想要在生产环境上
+                <br className="hidden xl:block" />
+                所用到的一切
               </h2>
               <div className="w-full">
                 <Hand
@@ -139,52 +137,44 @@ const Home = ({randomContributors}) => {
                 />
                 <Scrollbar className="lg:hidden" thumbHeight="4px">
                   <div className="grid pb-4 ml-6 features-grid lg:gap-y-14">
-                    <Feature title="Fullstack & Monolithic">
+                    <Feature title="全栈 & 一体化">
                       <p>
-                        Includes everything from the database to your frontend all inside a single
-                        app. Only one thing to develop. Only one thing to deploy.
+                        在一个单独的应用中包含了从数据库到前端的一切内容。只需在一处开发，只需在一处部署。
                       </p>
-                      <p>And you can deploy to a server or serverless.</p>
+                      <p>并且你可以部署到一个服务器或 Serverless 上。</p>
                     </Feature>
-                    <Feature title="API Not Required">
+                    <Feature title="API 不再必须">
                       <p>
-                        Instead of fetching data from the backend, you import your server code
-                        directly into your components. At build time, that function import is
-                        swapped out with an auto generated HTTP API.
+                        不同于从后端读取数据，你可以直接导入你的服务端代码到你的组件中。在构建时，导入的该函数会被一个自动生成的
+                        HTTP API 所包裹。
                       </p>
-                      <p>The generated API can also be used by apps & third-parties.</p>
+                      <p>自动生成的 API 也可被其它应用和第三方库所使用。</p>
                     </Feature>
-                    <Feature title="Loose Opinions">
+                    <Feature title="宽松的限制">
                       <p>
-                        The out-of-the-box experience guides you on a path perfect for most
-                        applications. But when you need to go off the beaten path, you are totally
-                        free to do so.
+                        开箱即用的体验将引导你走上适合大多数应用的完美路线。哪怕当你需要偏离常规路线时，你也可以完全自由地进行转换。
                       </p>
                       <p>
-                        And nearly everything is pluggable. For example, we don&apos;t mandate which
-                        styling or form libraries you use.
+                        同时几乎任何东西都是可插拔的。例如，我们不强制要求你使用哪种样式或表单库。
                       </p>
                     </Feature>
-                    <Feature title="Convention over Configuration">
+                    <Feature title="约定大于配置">
                       <p>
-                        Blitz does all the boring set up and configuration for you. The common
-                        project structure and architectural patterns make it easy to move from one
-                        Blitz app to another and immediately feel at home.
+                        Blitz
+                        为你处理了所有繁琐的设置和配置。通用的项目结构和架构模式可以让你轻松地从一个
+                        Blitz 应用移动宾至如归地移动到另一个应用上。
                       </p>
                     </Feature>
-                    <Feature title="Easy to Start, Easy to Scale">
-                      <p>Easy for beginners and easy to migrate existing Next.js apps to Blitz.</p>
-                      <p>
-                        Easy to scale in all forms: lines of code, number of people working in the
-                        codebase, and code execution.
-                      </p>
+                    <Feature title="易于开始，便捷拓展">
+                      <p>对初学者友好，也很容易将现有的 Next.js 应用程序迁移到 Blitz。</p>
+                      <p>易于以各种形式拓展：代码行数、在代码库中协同的人数以及执行代码。</p>
                     </Feature>
-                    <Feature title="Stability">
+                    <Feature title="稳定性">
                       <p>
-                        Once we reach version 1.0, we&apos;ll switch to a stable, predictable
-                        release cycle with multiple channels like stable, LTS, and beta.
+                        一旦我们发布 1.0 版，我们将切换为稳定、可预测的发布周期，包括稳定版、LTS
+                        版和测试版等多种渠道。
                       </p>
-                      <p>We are taking a lot inspiration from Ember in this regard.</p>
+                      <p>在这方面，我们从 Ember 那里获得了很多灵感。</p>
                     </Feature>
                   </div>
                 </Scrollbar>
@@ -193,7 +183,7 @@ const Home = ({randomContributors}) => {
             <div className="absolute w-full h-full row-start-6 lg:h-codesandbox lg:mt-80 row-end-10 rounded-bl-3xl rounded-tr-3xl lg:rounded-bl-4xl lg:rounded-tr-4xl bg-gradient-to-b from-purple-mid to-purple-primary dark:from-purple-off-black dark:to-black"></div>
             <div className="relative hidden w-full px-6 mx-auto space-y-10 max-w-7xl lg:block">
               <h3 className="pb-1 text-xs border-b border-opacity-50 font-secondary border-blue-mid">
-                Blitz CodeSandbox Example
+                Blitz 代码沙箱示例
               </h3>
               <div>
                 <Hand variant="sandbox-right" style={{right: "-13.2rem", bottom: "-35rem"}} />
@@ -210,7 +200,7 @@ const Home = ({randomContributors}) => {
                     alt="Codesandbox placeholder"
                   />
                   <div className="absolute inset-0 bg-gray-800 opacity-0 hover:opacity-70 flex items-center justify-center text-white text-6xl font-bold">
-                    Click to Open in New Tab
+                    点击来打开新的标签页
                   </div>
                 </a>
               </div>
@@ -219,7 +209,7 @@ const Home = ({randomContributors}) => {
             <div className="relative flex flex-col px-6 mx-auto text-white lg:flex-row max-w-7xl space-y-14 lg:space-x-24 lg:space-y-0 xl:space-x-40">
               <div className="space-y-14 lg:w-1/2">
                 <h2 className="z-10 font-medium text-transparent text-5xl-squashed font-secondary bg-clip-text bg-gradient-to-r from-blue-gradient-white to-blue-gradient-light-blue xl:text-6xl">
-                  The Blitz Community - Our Most Important Aspect
+                  Blitz 社区 - 我们最重要的组成部分
                 </h2>
                 <div className="z-10 grid grid-cols-5 gap-1 md:grid-cols-6 lg:grid-cols-5 grid-rows-8 overflow-clip">
                   {randomContributors.map((contributor, i) => (
@@ -247,14 +237,13 @@ const Home = ({randomContributors}) => {
                 <div className="z-10 flex flex-col justify-between space-y-6 lg:justify-end">
                   <div className="flex flex-col space-y-6 lg:h-auto lg:text-transparent text-off-white">
                     <p className="lg:bg-gradient-to-r lg:from-blue-gradient-white lg:to-blue-gradient-light-blue lg:bg-clip-text">
-                      Our community is warm, safe, diverse, inclusive, and fun! LGBTQ+, women, and
-                      minorities are especially welcome.
+                      我们的社区温暖、安全、多样化、包容性强也很有趣！LGBTQ+、女性和少数民族尤其受欢迎。
                     </p>
                     <p className="lg:bg-gradient-to-r lg:from-blue-gradient-white lg:to-blue-gradient-light-blue lg:bg-clip-text">
-                      Please read our{" "}
+                      请阅读我们的{" "}
                       <Link href="/docs/code-of-conduct" passHref>
                         <StyledLink className="underline text-off-white hover:text-blue-light">
-                          Code of Conduct
+                          行为准则
                         </StyledLink>
                       </Link>
                       .
@@ -266,22 +255,21 @@ const Home = ({randomContributors}) => {
                     rel="noopener noreferrer"
                     className="rounded-bl-none rounded-xl lg:w-max"
                   >
-                    Join our Discord Community
+                    加入我们的 Discord 社区
                   </ButtonLink>
                 </div>
                 <div className="z-10 flex flex-col justify-between space-y-6 lg:justify-start">
                   <div className="flex flex-col space-y-6 lg:h-auto lg:text-transparent text-off-white lg:bg-clip-text lg:bg-gradient-to-r lg:from-blue-gradient-white lg:to-blue-gradient-light-blue">
                     <p className="lg:bg-gradient-to-r lg:from-blue-gradient-white lg:to-blue-gradient-light-blue lg:bg-clip-text">
-                      We are all in this together, from the youngest to the oldest. We are all more
-                      similar than we are different. We love to work together.
+                      我们此刻携手共进，无论年轻还是年长。我们的相似超越了彼此的不同。我们喜欢在一起工作。
                     </p>
                     <p className="lg:bg-gradient-to-r lg:from-blue-gradient-white lg:to-blue-gradient-light-blue lg:bg-clip-text">
-                      We invite you to help make Blitz the best framework we&apos;ve ever had!
+                      我们邀请你来帮助 Blitz 成为越来越好的框架！
                     </p>
                   </div>
                   <Link href="/docs/contributing" passHref>
                     <ButtonLink className="rounded-bl-none rounded-xl lg:w-max">
-                      Learn How to Contribute
+                      学习如何贡献
                     </ButtonLink>
                   </Link>
                 </div>
@@ -289,7 +277,7 @@ const Home = ({randomContributors}) => {
             </div>
             <div className="z-10 w-full mx-auto text-white space-y-7 max-w-7xl">
               <h2 className="px-6 text-2xl font-medium text-white font-secondary lg:text-3xl">
-                Architecture Diagram
+                架构图解
               </h2>
               <div className="w-full">
                 <Scrollbar className="lg:hidden" thumbHeight="4px" thumbColor="white">
@@ -305,41 +293,38 @@ const Home = ({randomContributors}) => {
             <div className="absolute w-full h-full row-start-8 row-end-19 xl:row-end-19 -z-20 bg-purple-mid dark:bg-purple-off-black"></div>
             <div className="relative px-6 mx-auto my-6 space-y-12 text-white xl:my-0 max-w-7xl xl:space-y-36">
               <h2 className="text-3xl font-semibold lg:text-transparent lg:bg-clip-text lg:bg-gradient-to-r lg:from-blue-gradient-white lg:to-blue-gradient-light-blue xl:text-5xl">
-                Everything End-to-End From <br className="hidden xl:block" />
-                the Database to the Frontend
+                从数据库到前端，
+                <br className="hidden xl:block" />
+                一切都是端到端
               </h2>
               <div className="grid gap-12 md:grid-cols-2 xl:grid-cols-3">
                 <Hand
                   variant="features-right"
                   className="hidden xl:block xl:-top-40 xl:-right-52"
                 />
-                <FeatureIconTitle icon="thumbsUp" title="Authentication & Authorization">
-                  Built-in authentication is super easy and very secure. Works with any identity
-                  provider, including self-hosted username and password and third-parties like
-                  Auth0.
+                <FeatureIconTitle icon="thumbsUp" title="验证 & 鉴权">
+                  内置的身份验证非常简单和安全。适用于任何身份提供者，包括自托管的用户名和密码以及像
+                  Auth0 这样的第三方。
                 </FeatureIconTitle>
-                <FeatureIconTitle icon="database" title="Database Agnostic">
-                  You can use any database you want. Prisma 2 is the default database client, but
-                  you can remove that and use anything else like Fauna or DynamoDB.
+                <FeatureIconTitle icon="database" title="数据库无感知">
+                  你可以使用任何你想使用的数据库。Prisma 2
+                  是默认的数据库客户端，但你可以删掉它并使用任何其它数据库，如 Fauna 或 DynamoDB。
                 </FeatureIconTitle>
-                <FeatureIconTitle icon="fileCode" title="Recipes">
-                  One command to install code and/or packages into your blitz app. Examples: `blitz
-                  install tailwind` or `blitz install chakra-ui`. Recipes can be created by anyone.
+                <FeatureIconTitle icon="fileCode" title="配方">
+                  一行命令即可安装代码和/或包到你的项目中。例如：`blitz install tailwind` 或 `blitz
+                  install chakra-ui`。任何人都可以定制配方。
                 </FeatureIconTitle>
-                <FeatureIconTitle icon="plugin" title="Backend Architecture">
-                  Blitz is set up for server intensive tasks like sending emails, cron jobs,
-                  background processing, generating PDFs, etc. Currently we have minimal backend
-                  guides, but are working on developing more patterns and adding more docs.
+                <FeatureIconTitle icon="plugin" title="后端架构">
+                  Blitz 是为服务器密集型任务而设计的，例如发送电子邮件、自动化作业、后台处理、生成
+                  PDF 等。目前我们的后端指南较少，但也正在开发更多的模式和添加更多文档中。
                 </FeatureIconTitle>
-                <FeatureIconTitle icon="typescript" title="First Class Typescript Support">
-                  Blitz is built with Typescript and the Blitz data layer is fully end-to-end
-                  typesafe. All types are completely static without needing a separate type
-                  generation process!
+                <FeatureIconTitle icon="typescript" title="一流的 TypeScript 支持">
+                  Blitz 是用 TypeScript 构建的，因此 Blitz
+                  的数据层提供完全端到端的类型安全。同时所有的类型都完全静态，不需要一个单独的类型生成过程！
                 </FeatureIconTitle>
-                <FeatureIconTitle icon="scaffolding" title="Code Scaffolding">
-                  It’s early days, but Blitz code scaffolding is going to be extremely powerful.
-                  Great for both prototyping and for building real apps. Will be able to override
-                  any template and customize for your project.
+                <FeatureIconTitle icon="scaffolding" title="代码脚手架">
+                  现在还为时尚早，但 Blitz
+                  的脚手架将非常强大。非常适合原型设计和构建真正的应用程序。将能够覆盖任何模版并为你的项目进行自定义。
                 </FeatureIconTitle>
               </div>
             </div>
@@ -359,12 +344,12 @@ const Home = ({randomContributors}) => {
                     className="hidden xl:block -left-80 pointer-events-none"
                     style={{top: "-18.05rem"}}
                   />
-                  Our Sponsors
+                  我们的赞助商
                 </h2>
                 <p className="text-lg xl:text-xl">
-                  Your financial contributions help ensure Blitz continues to be developed and{" "}
+                  你的经济帮助有助于确保 Blitz 持续开发和维护！
                   <br className="hidden lg:block" />
-                  maintained! We have monthly sponsorship options starting at $5/month.
+                  我们提供每月 $5 元起步的赞助选项。
                 </p>
                 <div>
                   <ButtonLink
@@ -374,7 +359,7 @@ const Home = ({randomContributors}) => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Support Blitz
+                    支持 Blitz
                   </ButtonLink>
                 </div>
               </div>
@@ -386,14 +371,14 @@ const Home = ({randomContributors}) => {
 
             <div className="w-full px-6 mx-auto space-y-12 text-white lg:space-x-4 lg:space-y-0 lg:flex lg:items-center max-w-7xl">
               <h2 className="pr-2 text-3xl font-semibold lg:w-full lg:text-transparent lg:bg-clip-text lg:bg-gradient-to-r lg:from-blue-gradient-white lg:to-blue-gradient-light-blue xl:text-5xl">
-                So What Should I Do Now?
+                那么我现在应该做什么？
               </h2>
               <div className="flex flex-col w-full space-y-4 md:flex-row md:space-y-0 md:space-x-2">
                 <ButtonLink
                   href="/docs/get-started"
                   className="w-full text-lg py-18 rounded-t-2xl md:rounded-tr-none"
                 >
-                  Try Blitz in Under 5 Mins
+                  在五分钟内浅尝 Blitz
                 </ButtonLink>
                 <ButtonLink
                   target="_blank"
@@ -401,7 +386,7 @@ const Home = ({randomContributors}) => {
                   href="https://discord.blitzjs.com"
                   className="w-full text-lg py-18 rounded-br-2xl md:rounded-tr-2xl"
                 >
-                  Join Discord
+                  加入 Discord
                 </ButtonLink>
               </div>
             </div>
@@ -443,7 +428,7 @@ const getStaticProps = async () => {
 }
 
 Home.meta = {
-  title: "Blitz.js - The Fullstack React Framework",
+  title: "Blitz.js - React 全栈框架",
   description: `Blitz is a hyper-productive fullstack React framework that's built on Next.js and features a "Zero-API" data layer.`,
 }
 
