@@ -80,16 +80,16 @@ const Header = ({
     onNavToggle(newValue)
   }
 
-  const bannerMsg = "Blitz is in beta! 🎉 1.0 expected in Q3 this year"
+  const bannerMsg = "Blitz 尚在 beat 阶段！ 🎉 预计会在今年的 Q3 季度发布 1.0"
 
   const menuLinks = [
     {
-      name: "Documentation",
+      name: "文档",
       href: isDesktop ? "/docs/get-started" : "/docs",
     },
-    {name: "Releases", href: "https://github.com/blitz-js/blitz/releases"},
-    {name: "Wiki", href: "https://github.com/blitz-js/blitz/wiki"},
-    {name: "Swag", href: "https://store.blitzjs.com"},
+    {name: "版本", href: "https://github.com/blitz-js/blitz/releases"},
+    {name: "维基", href: "https://github.com/blitz-js/blitz/wiki"},
+    {name: "商店", href: "https://store.blitzjs.com"},
   ]
 
   return (
@@ -130,7 +130,7 @@ const Header = ({
               rel="noopener noreferrer"
               href="https://github.com/sponsors/blitz-js"
             >
-              <FaHeart className="inline mr-1 align-text-top" /> Donate/Sponsor
+              <FaHeart className="inline mr-1 align-text-top" /> 捐赠/赞助
               <FiArrowUpRight size="0.70rem" className="opacity-50 absolute top-2 right-0" />
             </NavLink>
           </div>
