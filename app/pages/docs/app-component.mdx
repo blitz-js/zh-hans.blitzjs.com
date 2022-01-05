@@ -3,16 +3,16 @@ title: Root <App> Component
 sidebar_label: <App>
 ---
 
-Blitz uses the `App` component in `app/pages/_app.ts` to initialize pages.
-You can modify it to do amazing things like:
+Blitz 使用 `app/pages/_app.ts` 中的 `App` 组件来初始化页面。你可以对齐进行
+修改，来做出各种惊叹的成果：
 
-- Persisting layout between page changes
-- Keeping state when navigating pages
-- Custom error handling using `componentDidCatch`
-- Inject additional data into pages
-- [Add global CSS](./css)
+- 在页面更改时持久化布局系统
+- 浏览不同页面时保持 state
+- 使用 `componentDidCatch` 自定义错误捕获逻辑
+- 将其它数据注入页面
+- [增加全局 CSS](./css)
 
-The default `_app.tsx` file looks like this:
+默认的 `_app.tsx` 文件会像这样：
 
 ```tsx
 // app/pages/_app.tsx
@@ -21,24 +21,10 @@ export default function App({ Component, pageProps }) {
 }
 ```
 
-The `Component` prop is the active `page`, so whenever you navigate
-between routes, `Component` will change to the new `page`. Therefore, any
-props you send to `Component` will be received by the `page`.
+`Component` prop 是当前活动的 `page`，所以每当你在路由之间切换时，此
+`Component` 都会切换为新的 `page`。因此，任何你传递到 `Component` 的 props
+都会被 `page` 接收。
 
-`pageProps` is an object with the initial props that were preloaded for
-your page by one of our data fetching methods like
-[`getStaticProps`](./get-static-props) or
-[`getServerSideProps`](./get-server-side-props), otherwise it's an empty
-object.
-
-### Caveats {#caveats}
-
-- Adding a custom `getInitialProps` in your `App` will disable
-  [Automatic Static Optimization](./pages#automatic-static-optimization)
-  in pages without [Static Generation](./get-static-props).
-- When you add `getInitialProps` in your custom app, you must
-  `import App from "blitz"`, call `App.getInitialProps(appContext)` inside
-  `getInitialProps` and merge the returned object into the return value.
-- `App` currently does not support page data fetching methods like
-  [`getStaticProps`](./get-static-props) or
-  [`getServerSideProps`](./get-server-side-props).
+`pageProps` 是一个带有初始 prop 的对象，该 prop 会通过我们的一种数据获取方
+法如 [`getStaticProps`](./get-static-props) 或
+[`getServerSideProps`](./get-server-side-props) 等预先加载到你的页面中。
