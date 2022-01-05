@@ -1,97 +1,58 @@
 ---
-title: Testing
-sidebar_label: Testing
+title: 测试
+sidebar_label: 测试
 ---
 
-The `blitz` dependency also automatically installs and configures `jest`,
-`@testing-library/react`, `@testing-library/react-hooks`, and
-`@testing-libary/jest-dom` for you.
+`blitz` 依赖项还会自定为你安装并配置 `jest`、`@testing-library/react`,
+`@testing-library/react-hooks` 和 `@testing-libary/jest-dom`。
 
 ## Jest {#jest}
 
-[Jest](https://jestjs.io/) is a delightful testing framework that's simple
-to use. To run tests in your app, you will run `jest` or `jest --watch`
-from the terminal.
+[Jest](https://jestjs.io/) 是一个易于使用且令人轻松的测试框架。要在你的应
+用中运行测试，你将在终端上运行 `jest` 或 `jest --watch`。
 
-To make a new test, make a file named `something.test.ts` (or `.js`,
-`.tsx`, etc). Here's an example:
+要进行新的测试，请创建一个名为 `something.test.ts`（或 `.js`、`.tsx` 等）
+。这是一个例子：
 
 ```ts
 import something from "./somewhere"
-
-it("does something", () => {
-  const result = something()
-  expect(result).toBe(true)
+	@@ -25,17 +23,16 @@ it("does something", () => {
 })
 ```
 
-> For more details on using Jest,
-> [read the Jest documentation](https://jestjs.io/docs/en/using-matchers)
+> 关于使用 Jest 的更多细节
+> ，[阅读 Jest 文档](https://jestjs.io/docs/en/using-matchers)
 
-### Jest Config {#jest-config}
+### Jest 配置 {#jest-config}
 
-Blitz provides a Jest preset that configures lots of complex things for
-you, including Typescript support.
+Blitz 提供了一个 Jest 预设，可以为你配置许多复杂的内容，包括 TypeScript 支
+持。
 
-If you need to
-[customize the jest config](https://jestjs.io/docs/en/configuration), you
-can do so in `jest.config.js`.
+如果你需要[自定义 Jest 配置](https://jestjs.io/docs/en/configuration)，你
+可以在 `jest.config.js` 进行。
 
 ```ts
 // jest.config.js
-module.exports = {
-  preset: "blitz",
+	@@ -44,23 +41,22 @@ module.exports = {
 }
 ```
 
-### Client vs Server Environments {#client-vs-server-environments}
+### 客户端 vs 服务端环境 {#client-vs-server-environments}
 
-The following test files will run in the Jest server environment:
+以下测试文件将在 Jest 服务器环境中运行：
 
-- `*.test.*` files inside an `api`, `queries`, or `mutations` folder
-- `*.server.test.*` files
+- 在 `api`、`queries` 或 `mutations` 文件夹下的 `*.test.*` 文件
+- `*.server.test.*` 文件
 
-All other files will run in the Jest client environment (with jsdom).
+所有其他文件将在 Jest 客户端环境（带有 jsdom）中运行。
 
 ## @testing-library {#testing-library}
 
-[@testing-library](https://testing-library.com/docs/) is a family of
-packages that help you test UI components in a user-centric way. It's a better
-alternative to Enzyme, if you've used that in the past.
+[@testing-library](https://testing-library.com/docs/) 是一组可以帮助你以用
+户为中心的方式来测试 UI 组件的软件库。它是比 Enzyme 更好的选择，如果你过去
+曾经使用过它。
 
-The following packages are installed for you. Refer to their documentation
-as needed.
+自动为你安装了以下软件包。如果需要请参考他们的文档：
 
 - [@testing-library/dom](https://testing-library.com/docs/dom-testing-library/intro)
 - [@testing-library/jest-dom](https://testing-library.com/docs/ecosystem-jest-dom)
-- [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro)
-- [@testing-library/react-hooks](https://react-hooks-testing-library.com/)
-
-## Testing Utilities {#testing-utilities}
-
-Blitz provides some basic testing utilities in the generated
-`test/utils.tsx` file. These are intended for use with Jest and React
-Testing Library to allow advanced configuration for your testing
-environment. Customizing this file can be useful for testing things like
-global providers as well as certain parts of your app which Blitz handles
-internally such as routing and data querying.
-
-### `BlitzProvider` {#blitz-provider}
-
-This component works as the global provider for data queries and mutations
-in your tests. Internally, it wraps the `QueryClient` component from
-`react-query` and adds some additional configuration options.
-
-`BlitzProvider` accepts the following props:
-
-- `client` - The global query client used by React Query. By default the
-  `queryClient` exported from `blitz` is used unless you override it.
-
-- `contextSharing` - Controls whether or not the provider context can be
-  shared across multiple applications. This can be useful when working in
-  certain environments such as micro-frontends. Defaults to `false`.
-
-- `dehydratedState` - The server state passed along to the application
-  containing the results of server-side queries. Useful for testing
-  queries that need to be
-  [prerendered in markup and hydrated on the client](https://react-query.tanstack.com/guides/ssr#using-hydration).
