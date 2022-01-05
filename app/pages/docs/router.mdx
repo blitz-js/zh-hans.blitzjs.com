@@ -3,9 +3,9 @@ title: Router
 sidebar_label: Router
 ---
 
-There are two ways to access `router` within components.
+有两种方法访问组件内的`router`。
 
-1. `useRouter()` (recommended)
+1. `useRouter()` (推荐)
 2. `withRouter()`
 
 ## `useRouter` {#use-router}
@@ -28,10 +28,10 @@ function Thing({ href }) {
 export default Thing
 ```
 
-> `useRouter` is a
-> [React Hook](https://reactjs.org/docs/hooks-intro.html), meaning it
-> cannot be used with classes. You can either use
-> [withRouter](#with-router) or wrap your class in a function component.
+> `useRouter`是一
+> 个[React Hook](https://reactjs.org/docs/hooks-intro.html)，这意味着它不
+> 能和类一起使用。你可以使用[withRouter](#with-router)或者将 class 包装在
+> 一个函数组件中。
 
 ## `withRouter` {#with-router}
 
@@ -45,53 +45,32 @@ function Page({ router }) {
 export default withRouter(Page)
 ```
 
-## `router` object {#router-object}
+## `router` 对象 {#router-object}
 
-Here's the definition of the `router` object returned by `useRouter` and
-`withRouter`:
+下面是`useRouter` 和`withRouter`都会返回的`router`对象的定义:
 
-- `pathname`: `String` - Current route. That is the path of the page in
-  `/pages`, the configured `basePath` or `locale` is not included.
-- `query`: `Object` - All the query string parameters from the current
-  url. Parameter type is always `string`.
-- `params`: `Object` - All the dynamic route parameters for the current
-  route. Parameter types are `string` or `string[]`.
-- `asPath`: `String` - The path (including the query) shown in the browser
-  without the configured `basePath` or `locale`.
-- `isFallback`: `boolean` - Whether the current page is in
-  [fallback mode](/docs/basic-features/data-fetching.md#fallback-pages).
-- `basePath`: `String` - The active [basePath](./blitz-config#base-path)
-  (if enabled).
-- `locale`: `String` - The active locale (if enabled).
-- `locales`: `String[]` - All supported locales (if enabled).
-- `defaultLocale`: `String` - The current default locale (if enabled).
-- `domainLocales`: `Array<{domain, defaultLocale, locales}>` - Any
-  configured domain locales.
-- `isReady`: `boolean` - Whether the router fields are updated client-side
-  and ready for use. Should only be used inside of `useEffect` methods and
-  not for conditionally rendering on the server.
-- `isPreview`: `boolean` - Whether the application is currently in
-  [preview mode](/docs/advanced-features/preview-mode.md). browser
-- [`push()`](#router-push): Make page navigation
-- [`replace()`](#router-replace): Make page navigation without adding to
-  browser history
-- [`back()`](#router-back): Navigate to previous history location
-- [`reload()`](#router-reload): Reload the page
-- [`prefetch()`](#router-prefetch): Prefetch pages for faster client-side
-  transitions
-- [`events`](#router-events): Subscribe to various router events
-- [`beforePopState()`](#router-before-pop-state): For advanced routing
-  needs
+- `pathname`: `String` - 当前路由。这是`/pages`中页面的路径
+- `query`: `Object` - 所有来自当前 url 的字符串查询参数。参数类型始终
+  为`string`。
+- `params`: `Object` - 所有当前路由的动态路由参数。参数类型是`string` 或
+  `string[]`。
+- `asPath`: `String` - 浏览器中显示的实际路径(包括 query 参数)。
+- [`push()`](#router-push): 进行页面导航
+- [`replace()`](#router-replace): 无需向浏览器历史记录中添加记录的情况下进
+  行页面导航
+- [`back()`](#router-back): 导航到先前的历史位置
+- [`reload()`](#router-reload):重新加载页面
+- [`prefetch()`](#router-prefetch): 预取页面以加快客户端过渡的速度
+- [`events`](#router-events): 订阅各种路由事件
+- [`beforePopState()`](#router-before-pop-state): 用于高级路由
 
 ### Router API {#router-api}
 
-The following router APIs can also be used via
-`import {Router} from 'blitz'`
+可以通过添加`import {Router} from 'blitz'`语句来使用以下的路由 API
 
 ### Router.push {#router-push}
 
-Handles client-side transitions, this method is useful for cases where
-[`<Link>`](./link) is not enough.
+处理客户端转换，这个方法适用于[`<Link>`](./link)不够用的情况。
 
 ```jsx
 import { Router } from "blitz"
@@ -99,22 +78,21 @@ import { Router } from "blitz"
 Router.push(url, as, options)
 ```
 
-- `url` - The URL to navigate to. This is usually the name of a `page`
-- `as` - Optional decorator for the URL that will be shown in the browser.
-  Defaults to `url`
-- `options` - Optional object with the following configuration options:
-  - [`shallow`](./shallow-routing): Update the path of the current page
-    without rerunning [`getStaticProps`](./get-static-props) or
-    [`getServerSideProps`](./get-server-side-props). Defaults to `false`
-- `locale` - Optional string, indicates locale of the new page
+- `url` - 需要导航到的 URL。通常会是`page`的名称
+- `as` - URL 的可选装饰器，会显示在浏览器中。默认值为`url`
+- `options` - 可选的对象，拥有如下的配置项:
+  - [`shallow`](./shallow-routing): 无需重新执行
+    [`getStaticProps`](./get-static-props) 或
+    [`getServerSideProps`](./get-server-side-props)方法的情况下更新当前页
+    的路径。默认值为`false`
 
-> You don't need to use `Router` for external URLs,
-> [window.location](https://developer.mozilla.org/en-US/docs/Web/API/Window/location)
-> is better suited for those cases.
+> 对于外部 URL，无需使用 `Router`，这种情况下，使
+> 用[window.location](https://developer.mozilla.org/en-US/docs/Web/API/Window/location)
+> 是更好的选择。
 
-#### Usage
+#### 用法
 
-Navigating to `pages/about.js`, which is a predefined route:
+导航到`pages/about.js`，这是一个预定义的路由:
 
 ```jsx
 import { Router } from "blitz"
@@ -124,7 +102,7 @@ function Page() {
 }
 ```
 
-Navigating `pages/post/[pid].js`, which is a dynamic route:
+导航到 `pages/post/[pid].js`, 这是一个动态路由:
 
 ```jsx
 import { Router } from "blitz"
@@ -134,10 +112,12 @@ function Page() {
 }
 ```
 
-#### With URL object
+#### with URL object
 
 You can use an URL object in the same way you can use it for
 [`<Link>`](./link). Works for both the `url` and `as` parameters:
+
+你可以用同样的方式使用一个 URL 对象，
 
 ```jsx
 import { Router } from "blitz"
@@ -162,9 +142,8 @@ export default ReadMore
 
 ### Router.replace {#router-replace}
 
-Similar to the `replace` prop in [`<Link>`](./link), `Router.replace` will
-prevent adding a new URL entry into the `history` stack, take a look at
-the following example:
+与 [`<Link>`](./link)中的 `replace` 属性相似，`Router.replace` 将会阻止向
+`history` 堆栈中增添新的 URL 入口，看下面的例子:
 
 ```jsx
 import { Router } from "blitz"
@@ -172,13 +151,12 @@ import { Router } from "blitz"
 Router.replace("/home")
 ```
 
-The API for `Router.replace` is exactly the same as that used for
-[`Router.push`](#router-push).
+`Router.replace` API 的用法与[`Router.push`](#router-push) API 完全相同。
 
 ### Router.back {#router-back}
 
-Navigate back in history. Equivalent to clicking the browser’s back
-button. It executes `window.history.back()`.
+导航至历史页面。相当于点击浏览器的后退按钮。它执行的
+是`window.history.back()`。
 
 ```jsx
 import { Router } from "blitz"
@@ -188,8 +166,8 @@ Router.back()
 
 ### Router.reload {#router-reload}
 
-Reload the current URL. Equivalent to clicking the browser’s refresh
-button. It executes `window.location.reload()`.
+重新加载当前的 URL。相当于点击浏览器的刷新按钮。它执行的
+是`window.location.reload()`。
 
 ```jsx
 import { Router } from "blitz"
@@ -199,12 +177,10 @@ Router.reload()
 
 ### Router.prefetch {#router-prefetch}
 
-Prefetch pages for faster client-side transitions. This method is only
-useful for navigations without [`<Link>`](./link) because it takes care of
-prefetching pages automatically.
+预取页面以便实现更快的客户端转换。这个方法只对没有`<Link>`](./link)的导航
+有用，因为它负责自动预取页面。
 
-> This is a production only feature. Blitz.js doesn't prefetch pages on
-> development.
+> 该功能只在生产环境有效。Next.js 在开发环境不会预取页面。
 
 ```jsx
 import { Router } from "blitz"
@@ -212,15 +188,14 @@ import { Router } from "blitz"
 Router.prefetch(url, as)
 ```
 
-- `url` - The path to a `page` inside the `pages` directory
-- `as` - Optional decorator for `url`, used to prefetch
-  [dynamic routes](./routing#dynamic-route-segments). Defaults to `url`
+- `url` - `pages`目录下的`page`路径
+- `as` - `url`可选的装饰器，用于预取
+  [动态路由](./routing#dynamic-route-segments)。默认为`url`
 
-#### Usage
+#### 使用方法
 
-Let's say you have a login page, and after a login, you redirect the user
-to the dashboard. For that case, we can prefetch the dashboard to make a
-faster transition, like in the following example:
+假设现在有一个登录页，登录之后，你将用户重定向到了仪表盘(dashboard)。对于
+这种情况来说，我们可以预取仪表盘页面，以便实现更快的转换，如下示例:
 
 ```jsx
 import { Router } from "blitz"
@@ -257,27 +232,21 @@ export default function Login() {
 
 ### Router.events {#router-events}
 
-You can listen to different events happening inside the Router. Here's a
-list of supported events:
+你可以监听路由内部发生的不同事件。下面是支持的事件列表:
 
-- `routeChangeStart(url)` - Fires when a route starts to change
-- `routeChangeComplete(url)` - Fires when a route changed completely
-- `routeChangeError(err, url)` - Fires when there's an error when changing
-  routes, or a route load is cancelled
-  - `err.cancelled` - Indicates if the navigation was cancelled
-- `beforeHistoryChange(url)` - Fires right before changing the browser's
-  history
-- `hashChangeStart(url)` - Fires when the hash will change but not the
-  page
-- `hashChangeComplete(url)` - Fires when the hash has changed but not the
-  page
+- `routeChangeStart(url)` - 路由开始切换时触发
+- `routeChangeComplete(url)` - 路由切换完毕时触发
+- `routeChangeError(err, url)` - 当路由更改时发生错误，或者取消路由加载时
+  触发
+  - `err.cancelled` - 表明导航是否被取消
+- `beforeHistoryChange(url)` - 浏览器 history 模式开始切换时触发
+- `hashChangeStart(url)` - 开始切换 hash 值但还没有切换页面路由时触发
+- `hashChangeComplete(url)` - 完成 hash 值切换但还没有切换页面路由时触发
 
-> Here `url` is the URL shown in the browser. If you call
-> `Router.push(url, as)` (or similar), then the value of `url` will be
-> `as`.
+> 这里的`url`是浏览器中显示的 URL。如果你调用`Router.push(url, as)` (或者
+> 类似的 API)，那么`url`的值是`as`。
 
-For example, to listen to the router event `routeChangeStart`, do the
-following:
+例如，要监听 `routeChangeStart`事件，可以执行下面的代码:
 
 ```jsx
 import { Router } from "blitz"
@@ -289,8 +258,7 @@ const handleRouteChange = (url) => {
 Router.events.on("routeChangeStart", handleRouteChange)
 ```
 
-If you no longer want to listen to the event, unsubscribe with the `off`
-method:
+如果你不想继续监听这个事件，可以用`off`方法取消订阅该事件。
 
 ```jsx
 import { Router } from "blitz"
@@ -298,9 +266,9 @@ import { Router } from "blitz"
 Router.events.off("routeChangeStart", handleRouteChange)
 ```
 
-If a route load is cancelled (for example, by clicking two links rapidly
-in succession), `routeChangeError` will fire. And the passed `err` will
-contain a `cancelled` property set to `true`, as in the following example:
+如果路由加载被取消了(比如快速点击了两个链接)，`routeChangeError`事件将会被
+触发。该事件传递的`err`属性会包含一个值为 `true`的`cancelled`属性，如下示
+例:
 
 ```jsx
 import { Router } from "blitz"
@@ -312,12 +280,12 @@ Router.events.on("routeChangeError", (err, url) => {
 })
 ```
 
-Router events should be registered when a component mounts
-([useEffect](https://reactjs.org/docs/hooks-effect.html) or
+路由事件应该在组件挂载时
+([useEffect](https://reactjs.org/docs/hooks-effect.html) 或
 [componentDidMount](https://reactjs.org/docs/react-component.html#componentdidmount)
 /
 [componentWillUnmount](https://reactjs.org/docs/react-component.html#componentwillunmount))
-or imperatively when an event happens, as in the following example:
+注册，或者在事件发生时强制执行，如下示例:
 
 ```jsx
 import { Router } from "blitz"
@@ -336,13 +304,11 @@ useEffect(() => {
 
 ### Router.beforePopState {#router-before-pop-state}
 
-In some cases (for example, if using a [Custom Server](./custom-server)),
-you may wish to listen to
-[popstate](https://developer.mozilla.org/en-US/docs/Web/Events/popstate)
-and do something before the router acts on it.
+在某些情况下(比如使用[自定义 Server](./custom-server)时)，你可能希望监
+听[popstate](https://developer.mozilla.org/en-US/docs/Web/Events/popstate)，
+并在路由发挥作用前做点什么。
 
-You could use this to manipulate the request, or force a SSR refresh, as
-in the following example:
+你可以使用这个 API 来操作请求，或者强制进行 SSR 刷新，如下示例:
 
 ```jsx
 import { Router } from "blitz"
@@ -361,15 +327,12 @@ Router.beforePopState(({ url, as, options }) => {
 
 `Router.beforePopState(cb: () => boolean)`
 
-- `cb` - The function to run on incoming `popstate` events. The function
-  receives the state of the event as an object with the following props:
-  - `url`: `String` - the route for the new state. This is usually the
-    name of a `page`
-  - `as`: `String` - the url that will be shown in the browser
-  - `options`: `Object` - Additional options sent by
-    [Router.push](#router-push)
+- `cb` - 执行传入的`popstate`事件的函数。该函数以对象形式接收事件的状态，
+  包含如下属性:
+  - `url`: `String` - 新 state 的路由。 通常是 `page`页的名称
+  - `as`: `String` - 浏览器中显示的 URL
+  - `options`: `Object` - [Router.push](#router-push)传入的附加选项
 
-If the function you pass into `beforePopState` returns `false`, `Router`
-will not handle `popstate` and you'll be responsible for handling it, in
-that case. See
-[Disabling file-system routing](./custom-server#disabling-file-system-routing).
+如果你传入`beforePopState`中的函数返回 `false`，`Router`将不会处
+理`popstate`，在这种情况下，需要你来手动处理。参
+考[禁用文件系统路由](./custom-server#disabling-file-system-routing)。
