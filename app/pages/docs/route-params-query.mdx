@@ -5,10 +5,9 @@ sidebar_label: URL Params & Query
 
 ## `useParams` {#use-params}
 
-This hook returns all the [parameters](./routing#dynamic-route-segments)
-for the current route as an object. The default parameter type is
-`undefined | string | string[]`, but you can optionally provide a type
-argument to narrow the parameters and types that are returned.
+这个钩子将当前路由的所有参数作为一个对象返回。默认的参数类型
+是`undefined | string | string[]`，但是你可以选择性的提供一个类型参数，以
+便减少需要返回的参数和类型。
 
 ```tsx
 import { useParams } from "blitz"
@@ -26,7 +25,7 @@ const params = useParams("array")
 // ReturnType: Record<string, string[]>
 ```
 
-### Example Usage {#example-usage}
+### 使用示例 {#example-usage}
 
 ```tsx
 // File: app/products/pages/products/[id].tsx
@@ -54,10 +53,9 @@ const params = useParams("array")
 
 ## `useParam` {#use-param}
 
-This hook returns a single [parameter](./routing#dynamic-route-segments)
-for the current route. The default return type is
-`undefined | string | string[]`, but you can optionally provide a type
-argument to cast the return type.
+这个钩子返回当前路由的单个参数。默认类型是
+`undefined | string | string[]`，但是你可以选择提供一个类型参数用于转换返
+回类型。
 
 ```tsx
 import { useParam } from "blitz"
@@ -75,7 +73,7 @@ const param = useParam("id", "array")
 // ReturnType: undefined | string[]
 ```
 
-### Example Usage {#example-usage-1}
+### 使用示例 {#example-usage-1}
 
 ```tsx
 // File: app/locations/pages/locations/[id]/[[...zipcode]].tsx
@@ -99,9 +97,7 @@ const slug = useParam("slug", "string")
 
 ## `useRouterQuery` {#use-router-query}
 
-This hook returns all the query parameters from the URL as an object.
-Using query parameters, you can pass key-value pairs via the URL with the
-pattern`?key1=value1&key2=value2`. Parameter type is always `string`.
+这个钩子以对象形式返回 URL 的所有参数。参数类型始终为`string`。
 
 ```tsx
 // URL: /products?sort=asc&limit=10
