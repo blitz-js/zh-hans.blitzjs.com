@@ -1,16 +1,15 @@
 ---
-title: Built-In CSS Support
-sidebar_label: CSS
+title: 内置 CSS 支持
+sidebar_label: 内置 CSS 支持
 ---
 
-Blitz allows you to import CSS files directly into any JavaScript file.
+Blitz 允许你将 CSS 文件直接导入任何 JavaScript 文件。
 
-## Adding a Global Stylesheet {#adding-a-global-stylesheet}
+## 添加全局样式表 {#adding-a-global-stylesheet}
 
-To add a stylesheet to your application, import the CSS file within
-`app/pages/_app.js`.
+要将样式表加入到你的整个应用中，将 CSS 文件导入到 `app/pages/_app.js` 中。
 
-For example, consider the following stylesheet named `styles.css`:
+例如，考虑如下名为 `styles.css` 的样式表“：
 
 ```css
 body {
@@ -22,49 +21,42 @@ body {
 }
 ```
 
-Then, import the `styles.css` file.
+接着，导入这个 `styles.css` 文件。
 
 ```jsx
 import "../styles.css"
-
 export default function App({ Component, pageProps }) {
   return <Component {...pageProps} />
 }
 ```
 
-These styles (`styles.css`) will apply to all pages and components in your
-application. Due to the global nature of stylesheets, and to avoid
-conflicts, you may **only import them inside
-[`_app.js`](./app-component)**.
+这些样式（`styles.css`）将适用于你的应用中的所有页面和组件。由于样式表的全
+局性质，为了避免冲突，你可以**仅将其导入到 [`_app.js`](./app-component)
+中**。
 
-In development, expressing stylesheets this way allows your styles to be
-hot reloaded as you edit them—meaning you can keep application state.
+在开发中，以这种方式表示样式表可以让你的样式更改时进行热更新——这意味着你可
+以保持应用状态。
 
-In production, all CSS files will be automatically concatenated into a
-single minified `.css` file.
+在生产环境中，所有 CSS 文件都将自动合并为一个缩小的 `.css` 文件。
 
-## Adding Component-Level CSS {#adding-component-level-css}
+## 增加组件级 CSS {#adding-component-level-css}
 
-Blitz supports [CSS Modules](https://github.com/css-modules/css-modules)
-using the `[name].module.css` file naming convention.
+BLitz 通过使用 `[name].module.css` 文件命名约定来支持
+[CSS Modules](https://github.com/css-modules/css-modules)。
 
-CSS Modules locally scope CSS by automatically creating a unique class
-name. This allows you to use the same CSS class name in different files
-without worrying about collisions.
+CSS Modules 通过自动创建唯一的类名来在本地范围内定义 CSS。这使你可以再不同
+文件中使用相同的 CSS 类名称，而不必担心冲突。
 
-This behavior makes CSS Modules the ideal way to include component-level
-CSS. CSS Module files **can be imported anywhere in your application**.
+此行为使 CSS Modules 成为包含组件级 CSS 的理想方法。CSS Modules 文件**可以
+被导入到应用程序中的任何位置**。
 
-For example, consider a reusable `Button` component in the `components/`
-folder:
+例如，考虑 `components/` 文件夹中的一个可重用的 `Button` 组件：
 
-First, create `app/components/Button.module.css` with the following
-content:
+首先，创建 `app/components/Button.module.css` 并填充如下内容：
 
 ```css
 /*
-You do not need to worry about .error {} colliding with any other `.css` or
-`.module.css` files!
+你无需担心 .error {} 与任何其它 `.css` 或 `.module.css` 文件产生冲突！
 */
 .error {
   color: white;
@@ -72,18 +64,15 @@ You do not need to worry about .error {} colliding with any other `.css` or
 }
 ```
 
-Then, create `app/components/Button.js`, importing and using the above CSS
-file:
+接下来，创建 `app/components/Button.js`，然后导入并使用上面的 CSS 文件。
 
 ```jsx
 import styles from "./Button.module.css"
-
 export function Button() {
   return (
     <button
       type="button"
-      // Note how the "error" class is accessed as a property on the imported
-      // `styles` object.
+      // 请注意这个“error”类是如何作为导入的样式表对象上的属性来提供访问的
       className={styles.error}
     >
       Destroy
@@ -92,41 +81,36 @@ export function Button() {
 }
 ```
 
-CSS Modules are an _optional feature_ and are **only enabled for files
-with the `.module.css` extension**. Regular `<link>` stylesheets and
-global CSS files are still supported.
+CSS Modules 是 _可选的功能_，并且**仅对拓展名为 `.module.css` 的文件启
+用**。常规的 `<link>` 和全局样式表仍然是被支持的。
 
-In production, all CSS Module files will be automatically concatenated
-into **many minified and code-split** `.css` files. These `.css` files
-represent hot execution paths in your application, ensuring the minimal
-amount of CSS is loaded for your application to paint.
+在生产环境中，所有 CSS Modules 文件都将自动合并为 **许多精简并分割的**
+`CSS` 文件。这些 `CSS` 文件代表着应用中的热执行路径，从而确保为你的应用程
+序只加载当前绘制所需要的相关 CSS。
 
-## Sass Support {#sass-support}
+## Sass 支持 {#sass-support}
 
-Blitz allows you to import Sass using both the `.scss` and `.sass`
-extensions. You can use component-level Sass via CSS Modules and the
-`.module.scss` or `.module.sass` extension.
+Blitz 支持你使用 `.scss` 和 `.sass` 拓展名导入 Sass。你可以通过 CSS
+Modules 风格的 `.module.scss` 或 `.module.sass` 来使用组件级的 Sass。
 
-Before you can use Blitz' built-in Sass support, be sure to install
-[`sass`](https://github.com/sass/sass):
+在你使用 Blitz 的内置 Sass 支持之前，请确保安装了
+[`sass`](https://github.com/sass/sass)：
 
 ```bash
 npm install sass
 ```
 
-Sass support has the same benefits and restrictions as the built-in CSS
-support detailed above.
+Sass 的支持与上述内置 CSS 的支持具有相同的好处和限制。
 
-### Customizing Sass Options {#customizing-sass-options}
+### 自定义 Sass 选项 {#customizing-sass-options}
 
-If you want to configure the Sass compiler you can do so by using
-`sassOptions` in `blitz.config.js`.
+如果你想配置 Sass 编译器，你可以通过使用 `Blitz.config.js` 中的
+`sassOptions` 来配置。
 
-For example to add `includePaths`:
+例如增加 `includePaths`：
 
 ```js
 const path = require("path")
-
 module.exports = {
   sassOptions: {
     includePaths: [path.join(__dirname, "styles")],
@@ -134,41 +118,16 @@ module.exports = {
 }
 ```
 
-## Less and Stylus Support {#less-and-stylus-support}
+## Less 和 Stylus 支持 {#less-and-stylus-support}
 
-To support importing `.less` or `.styl` files you can use the following
-plugins:
+想要支持导入 `.less` 或 `.styl` 文件，你可以使用如下插件：
 
 - [@vercel/next-less](https://github.com/vercel/next-plugins/tree/master/packages/next-less)
 - [@vercel/next-stylus](https://github.com/vercel/next-plugins/tree/master/packages/next-stylus)
 
-If using the less plugin, don't forget to add a dependency on less as
-well, otherwise you'll see an error like:
+如果使用 less 插件，请不要忘记也安装对 less 的依赖项，否则你将看到类似这样
+的报错：
 
 ```bash
 Error: Cannot find module 'less'
 ```
-
-## TypeScript Support for CSS Modules {#typescript-support}
-
-If you are using TypeScript and want typechecking and autocompletition for
-CSS Modules, you can install `typescript-plugin-css-modules`:
-
-```bash
-yarn add -D typescript-plugin-css-modules
-# or
-npm install -D typescript-plugin-css-modules
-```
-
-And add it to your `tsconfig.json`:
-
-```diff
-{
-  "compilerOptions": {
-+   "plugins": [{ "name": "typescript-plugin-css-modules" }]
-  }
-}
-```
-
-If you are having troubles using this plugin, check
-[their documentation](https://github.com/mrmckeb/typescript-plugin-css-modules).
