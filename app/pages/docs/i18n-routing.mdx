@@ -1,37 +1,35 @@
 ---
-title: Internationalized Routing
-sidebar_label: Internationalized Routing
+title: 国际化路由
+sidebar_label: 国际化路由
 ---
 
-Blitz has built-in support for internationalized
+Blitz 内置了对国际化
 ([i18n](https://en.wikipedia.org/wiki/Internationalization_and_localization#Naming))
-routing. You can provide a list of locales, the default locale, and
-domain-specific locales and Blitz will automatically handle the routing.
+路由的支持，你可以提供语言列表、默认语言以及域特定的语言，Blitz 将会自动处
+理路由问题。
 
-The i18n routing support is currently meant to complement existing i18n
-library solutions like
-[`react-intl`](https://formatjs.io/docs/getting-started/installation),
-[`react-i18next`](https://react.i18next.com/),
-[`lingui`](https://lingui.js.org/),
-[`rosetta`](https://github.com/lukeed/rosetta),
-[`next-intl`](https://github.com/amannn/next-intl) and others by
-streamlining the routes and locale parsing.
+i18n 路由支持目前是为了补充现有的 i18n 库的解决方案，如
+[`react-intl`](https://formatjs.io/docs/getting-started/installation)、
+[`react-i18next`](https://react.i18next.com/)、
+[`lingui`](https://lingui.js.org/)、
+[`rosetta`](https://github.com/lukeed/rosetta)、
+[`next-intl`](https://github.com/amannn/next-intl)，以及通过简化路由和区域
+解析来实现的其它功能。
 
-## Getting started {#getting-started}
+## 开始 {#getting-started}
 
-To get started, add the `i18n` config to your `blitz.config.js` file.
+首先，将`i18n`的配置项添加至你的`blitz.config.js`文件中。
 
-Locales are
-[UTS Locale Identifiers](https://www.unicode.org/reports/tr35/tr35-59/tr35.html#Identifiers),
-a standardized format for defining locales.
+Locales
+指[UTS Locale Identifiers](https://www.unicode.org/reports/tr35/tr35-59/tr35.html#Identifiers)，
+这是一种定义区域的标准化格式。
 
-Generally a Locale Identifier is made up of a language, region, and script
-separated by a dash: `language-region-script`. The region and script are
-optional. An example:
+通常区域设置标识符由语言、地区和脚本组成，用破折号分隔:
+`language-region-script`'。区域和脚本是可选的。例如:
 
-- `en-US` - English as spoken in the United States
-- `nl-NL` - Dutch as spoken in the Netherlands
-- `nl` - Dutch, no specific region
+- `en-US` - 在美国使用的英语
+- `nl-NL` - 在荷兰使用的荷兰语
+- `nl` - 荷兰语，无特定地区
 
 ```js
 // blitz.config.js
@@ -66,14 +64,13 @@ module.exports = {
 }
 ```
 
-## Locale Strategies {#locale-strategies}
+## 区域策略 {#locale-strategies}
 
-There are two locale handling strategies: Sub-path Routing and Domain
-Routing.
+有两种区域处理策略，子路径路由和域路由。
 
-### Sub-path Routing {#sub-path-routing}
+### 子路径路由 {#sub-path-routing}
 
-Sub-path Routing puts the locale in the url path.
+子路径路由会将区域语言放在 url 路径中。
 
 ```js
 // blitz.config.js
@@ -85,20 +82,18 @@ module.exports = {
 }
 ```
 
-With the above configuration `en-US`, `fr`, and `nl-NL` will be available
-to be routed to, and `en-US` is the default locale. If you have a
-`pages/blog.js` the following urls would be available:
+使用上述配置，`en-US`, `fr`和`nl-NL`将可被路由到，并且`en-US`是默认的语言
+环境。如果你有一个`pages/blog.js`文件，以下的 url 将可用:
 
 - `/blog`
 - `/fr/blog`
 - `/nl-nl/blog`
 
-The default locale does not have a prefix.
+默认语言环境的 ulr 中没有前缀。
 
-### Domain Routing {#domain-routing}
+### 域路由 {#domain-routing}
 
-By using domain routing you can configure locales to be served from
-different domains:
+通过使用域路由，你可以配置服务于不同域的语言环境。
 
 ```js
 // blitz.config.js
@@ -128,37 +123,31 @@ module.exports = {
 }
 ```
 
-For example if you have `pages/blog.js` the following urls will be
-available:
+例如，如果你有一个`pages/blog.js`文件，以下的 url 将可用:
 
 - `example.com/blog`
 - `example.fr/blog`
 - `example.nl/blog`
 - `example.nl/nl-BE/blog`
 
-## Automatic Locale Detection {#automatic-locale-detection}
+## 自动检测语言环境 {#automatic-locale-detection}
 
-When a user visits the application root (generally `/`), Blitz will try to
-automatically detect which locale the user prefers based on the
-[`Accept-Language`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language)
-header and the current domain.
+当用户访问应用程序的根目录时(通常情况下是`/`), Blitz 会根据
+`Accept-Language`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language)请求头以及当前的域，尝试自动检测用户首选的语言环境。
 
-If a locale other than the default locale is detected, the user will be
-redirected to either:
+如果检测到默认语言之外的其他语言，用户将会被重定向至以下任一位置:
 
-- **When using Sub-path Routing:** The locale prefixed path
-- **When using Domain Routing:** The domain with that locale specified as
-  the default
+- **使用子路径路由时:** 语言环境前缀路径
+- **使用域路由时:** 将具有该语言环境的域指定为默认值
 
-When using Domain Routing, if a user with the `Accept-Language` header
-`fr;q=0.9` visits `example.com`, they will be redirected to `example.fr`
-since that domain handles the `fr` locale by default.
+使用域路由时，如果用户带着`Accept-Language: fr;q=0.9`请求头访
+问`example.com`，将会被重定向到`example.fr`, 因为该域默认处理`fr`语言。
 
-When using Sub-path Routing, the user would be redirected to `/fr`.
+当使用子路径路由时，用户将会被重定向至`/fr`。
 
-### Disabling Automatic Locale Detection {#disabling-automatic-locale-detection}
+### 禁用语言环境自动检测 {#disabling-automatic-locale-detection}
 
-The automatic locale detection can be disabled with:
+语言环境自动检测可以通过如下方式禁用:
 
 ```js
 // blitz.config.js
@@ -169,37 +158,33 @@ module.exports = {
 }
 ```
 
-When `localeDetection` is set to `false` Blitz will no longer
-automatically redirect based on the user's preferred locale and will only
-provide locale information detected from either the locale based domain or
-locale path as described above.
+当`localeDetection`被设置为`false`时,Blitz 将不再基于用户的首选语言自动重
+定向路由，只会基于语言环境的域或者如上所述的语言环境路径,提供检测到的语言
+环境信息。
 
-## Accessing the locale information {#accessing-the-locale-information}
+## 访问语言环境信息 {#accessing-the-locale-information}
 
-You can access the locale information via the Blitz router. For example,
-using the [`useRouter()`](/docs/router/#userouter) hook the following
-properties are available:
+你可以通过 Blitz 路由访问语言环境信息。 例如，使
+用[`useRouter()`](/docs/router/#userouter)hook 时，以下的属性将可用:
 
-- `locale` contains the currently active locale.
-- `locales` contains all configured locales.
-- `defaultLocale` contains the configured default locale.
+- `locale` 包含当前活跃的语言环境
+- `locales` 包含所有已配置的语言环境
+- `defaultLocale` 包含配置的默认语言
 
-When [pre-rendering](/docs/pages#automatic-static-optimization) pages with
-`getStaticProps` or `getServerSideProps`, the locale information is
-provided in [the context](/docs/get-static-props) provided to the
-function.
+当使用`getStaticProps` 或
+`getServerSideProps`API[预渲染(pre-rendering)](/docs/pages#automatic-static-optimization)页
+面时，语言环境信息会在函数的[context](/docs/get-static-props)参数中携带。
 
-When leveraging `getStaticPaths`, the configured locales are provided in
-the context parameter of the function under `locales` and the configured
-defaultLocale under `defaultLocale`.
+当使用`getStaticPaths`API 时，已配置的语言环境在函数的 contex 参数
+的`locales`中，默认语言环境在 content 参数中的`defaultLocale`中。
 
-## Transition between locales {#transition-between-locales}
+## 语言环境之间的转换 {#transition-between-locales}
 
-You can use `Link` or `Router` to transition between locales.
+你可以使用`Link` 或者 `Router`来转换语言环境。
 
-For `Link`, a `locale` prop can be provided to transition to a different
-locale from the currently active one. If no `locale` prop is provided, the
-currently active `locale` is used during client-transitions. For example:
+`Link`组件可以提供一个名为`locale`的 prop 用来将当前活跃的环境转换到另一个
+不同的环境。如果不提供`locale` prop, 当前活跃的`locale`会在客户端的路由转
+换中使用，例如:
 
 ```jsx
 import { Link } from "blitz"
@@ -213,8 +198,8 @@ export default function IndexPage(props) {
 }
 ```
 
-When using the `Router` methods directly, you can specify the `locale`
-that should be used via the transition options. For example:
+当直接使用`Router`方法时，你可以通过转换配置项来指定需要使用的`locale`内容
+.例如:
 
 ```jsx
 import { useRouter } from "blitz"
@@ -234,8 +219,8 @@ export default function IndexPage(props) {
 }
 ```
 
-If you have a `href` that already includes the locale you can opt-out of
-automatically handling the locale prefixing:
+如果你有一个已经包含语言环境的`href`，你可以选择不使用自动处理语言环境前缀
+的功能。
 
 ```jsx
 import { Link } from "blitz"
@@ -249,42 +234,38 @@ export default function IndexPage(props) {
 }
 ```
 
-## Leveraging the NEXT_LOCALE cookie {#leveraging-the-next-locale-cookie}
+## 利用 NEXT_LOCALE cookie {#leveraging-the-next-locale-cookie}
 
-Blitz supports overriding the accept-language header with a
-`NEXT_LOCALE=the-locale` cookie. This cookie can be set using a language
-switcher and then when a user comes back to the site it will leverage the
-locale specified in the cookie.
+Blitz 支持通过`NEXT_LOCALE=the-locale`cookie 来重写 accept-language 请求头
+，可以使用语言转换器来设置此 cookie，当用户返回网站时，该网站会使用 cookie
+中存储的语言环境。
 
-For example, if a user prefers the locale `fr` but a `NEXT_LOCALE=en`
-cookie is set the `en` locale will be used instead until the cookie is
-removed or expired.
+例如，如果用户的语言偏好是`fr`语言，但是 cookie 中设置的
+是`NEXT_LOCALE=en`，那么网页将会使用`en`语言，直到 cookie 被删除或者过期。
 
-## Search Engine Optimization {#search-engine-optimization}
+## 搜索引擎优化 {#search-engine-optimization}
 
-Since Blitz knows what language the user is visiting it will automatically
-add the `lang` attribute to the `<html>` tag.
+由于 Blitz 知道用户正在访问哪种语言，它会自动在`<html>` 标签中加上`lang`属
+性。
 
-Blitz doesn't know about variants of a page so it's up to you to add the
-`hreflang` meta tags using [`Head`](/docs/head-component). You can learn
-more about `hreflang` in the
-[Google Webmasters documentation](https://support.google.com/webmasters/answer/189077).
+Blitz 不知道页面的变体，所以你可以自行在[`Head`](/docs/head-component)组件
+中添加`hreflang` meta 标签，你可以
+在[Google Webmasters 文档](https://support.google.com/webmasters/answer/189077)中
+了解关于`hreflang`的详细信息.
 
-## How does this work with Static Generation? {#how-does-this-work-with-static-generation}
+## 静态生成的工作原理 {#how-does-this-work-with-static-generation}
 
-### Automatically Statically Optimized Pages {#automatically-statically-optimized-pages}
+### 自动静态优化页面 {#automatically-statically-optimized-pages}
 
-For pages that are
-[automatically statically optimized](/docs/pages#automatic-static-optimization),
-a version of the page will be generated for each locale.
+对于那些被[自动静态优化](/docs/pages#automatic-static-optimization)的页面
+，会为每种语言环境生成一个版本的页面。
 
-### Non-dynamic getStaticProps Pages {#non-dynamic-get-static-props-pages}
+### 非动态的 getStaticProps 页 {#non-dynamic-get-static-props-pages}
 
-For non-dynamic `getStaticProps` pages, a version is generated for each
-locale like above. `getStaticProps` is called with each `locale` that is
-being rendered. If you would like to opt-out of a certain locale from
-being pre-rendered, you can return `notFound: true` from `getStaticProps`
-and this variant of the page will not be generated.
+对于非动态的`getStaticProps`页，都会像上文所述那样，会为每种语言环境生成一
+个版本的页面。 `getStaticProps`API 会在每个正在渲染的`locale`中被调用。如
+果你不想使用某一个语言环境的预渲染，你可以从`getStaticProps`中返回
+`notFound: true`，这种页面的变体就不会被渲染。
 
 ```js
 export async function getStaticProps({ locale }) {
@@ -309,13 +290,11 @@ export async function getStaticProps({ locale }) {
 }
 ```
 
-### Dynamic getStaticProps Pages {#dynamic-get-static-props-pages}
+### 动态的 getStaticProps 页 {#dynamic-get-static-props-pages}
 
-For dynamic `getStaticProps` pages, any locale variants of the page that
-is desired to be prerendered needs to be returned from
-[`getStaticPaths`](/docs/get-static-paths). Along with the `params` object
-that can be returned for the `paths`, you can also return a `locale` field
-specifying which locale you want to render. For example:
+对于动态的`getStaticProps`页，任何希望被预渲染的语言环境变体都需要
+从[`getStaticPaths`](/docs/get-static-paths)API 中返回。 `params`对象可以
+在`paths`中返回，你也可以返回一个`locale`字段，指定你想要渲染的语言，例如:
 
 ```js
 // pages/blog/[slug].js
